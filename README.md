@@ -1,5 +1,5 @@
 # LinuxLabs
-##Начнем-с
+## Начнем-с
 Имеем в наличии  
 cat /etc/redhat-release
 ```CentOS Linux release 7.6.1810 (Core)```
