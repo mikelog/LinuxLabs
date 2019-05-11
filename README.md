@@ -129,3 +129,7 @@ Found initrd image: /boot/initramfs-0-rescue-d9f5cf103bf448d3b3ff84ba8b528f9e.im
 ```# grubby --default-kernel
 /boot/vmlinuz-4.19.36
 ```
+```/sbin/reboot```
+и надеюсь у вас все удачно как у меня =)
+```[mikelog@localhost ~]$ uname -r
+4.19.36```
