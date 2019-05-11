@@ -125,4 +125,7 @@ Found initrd image: /boot/initramfs-0-rescue-d9f5cf103bf448d3b3ff84ba8b528f9e.im
 ```grubby --set-default /boot/vmlinuz-4.19.36```
 
 
-
+И проверим какое ядро по дефолту в буте:
+```# grubby --default-kernel
+/boot/vmlinuz-4.19.36
+```
