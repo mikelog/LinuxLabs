@@ -1,0 +1,16 @@
+NAME                            MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sda                               8:0    0    8G  0 disk  
+├─sda1                            8:1    0    1G  0 part  
+│ └─md0                           9:0    0 1024M  0 raid1 /boot
+└─sda2                            8:2    0    7G  0 part  
+  └─md1                           9:1    0    7G  0 raid1 
+    ├─centos_linux--lab2v2-root 253:0    0  6.2G  0 lvm   /
+    └─centos_linux--lab2v2-swap 253:1    0  820M  0 lvm   [SWAP]
+sdb                               8:16   0    8G  0 disk  
+├─sdb1                            8:17   0    1G  0 part  
+│ └─md0                           9:0    0 1024M  0 raid1 /boot
+└─sdb2                            8:18   0    7G  0 part  
+  └─md1                           9:1    0    7G  0 raid1 
+    ├─centos_linux--lab2v2-root 253:0    0  6.2G  0 lvm   /
+    └─centos_linux--lab2v2-swap 253:1    0  820M  0 lvm   [SWAP]
+sr0                              11:0    1 1024M  0 rom   
