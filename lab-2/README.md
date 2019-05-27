@@ -182,3 +182,19 @@ dracut  /boot/initramfs-$(uname -r).img $(uname -r) --force
 grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
 grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sda
 ```
+34. /sbin/reboot
+35. после ребута
+```
+vgremove  centos /dev/sda2
+pvremove /dev/sda2
+mdadm  /dev/md0 --fail /dev/sda1
+mdadm  /dev/md0 --remove /dev/sda1
+fdisk /dev/sda
+t
+2
+fd
+w
+mdadm  /dev/md0  -a /dev/sda1
+mdadm  /dev/md1  -a /dev/sda2
+
+И главное, перепроверять на 100500 все конфиги, одна опечатка ведет в rescue mode =)
