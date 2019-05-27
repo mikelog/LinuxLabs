@@ -12,18 +12,19 @@ uname -sr
 
 Нам понадобится:
 
-..*wget
-..*gcc
-..*vim, но  можно и обойтись vi  или nano, тут кому как привычнее.
+* wget
+* gcc
+* vim, но  можно и обойтись vi  или nano, тут кому как привычнее.
 Сначала лучше обновиться, а то вдруг все уже интересующие вкусности нового ядра с обновками придут.
+
 yum update -y
 
 Либо просто идем на https://www.kernel.org/ и тянем интересующее нас ядро.
 Я выбрал последнее из longterm
-Я сохраняю все сорсы в /usr/src, мне так удобнее, поэтому 
+Я сохраняю все сорсы в /usr/src, мне так удобнее, поэтому
 cd /usr/src
 wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.xz
-Распаковываем архив 
+Распаковываем архив
 unzx -v linux-4.19.36.tar.xz
 или
 xz -d -v linux-4.19.36.tar.xz
@@ -38,7 +39,7 @@ gpg: Can't check signature: No public key```
 то имеем секс =)
 Ладно мчим дальше, берем key ID
 gpg --recv-keys 6092693E
-и если с выходом в нет у вас все ок, то 
+и если с выходом в нет у вас все ок, то
 ```gpg: keyring `/root/.gnupg/secring.gpg' created
 gpg: requesting key 6092693E from hkp server keys.gnupg.net
 gpg: /root/.gnupg/trustdb.gpg: trustdb created
@@ -49,7 +50,7 @@ gpg: no ultimately trusted keys found
 gpg: Total number processed: 3
 gpg:               imported: 3  (RSA: 3)
 ```
- и опять верификация 
+ и опять верификация
 gpg --verify linux-4.19.36.tar.sign
 и если вам выдало похожее без всяких Error или Bad Signature
 ```gpg: Signature made Sat 20 Apr 2019 10:16:42 AM MSK using RSA key ID 6092693E
@@ -60,7 +61,7 @@ gpg: WARNING: This key is not certified with a trusted signature!
 gpg:          There is no indication that the signature belongs to the owner.
 Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
 ```
-идем дальше 
+идем дальше
 tar xvf linux-4.19.36.tar.sign
 cd linux-4.19.36
 cp -v /boot/config-$(uname -r) .config
@@ -73,18 +74,18 @@ yum groupinstall "Development Tools" -y
 yum install ncurses-devel bison flex elfutils-libelf-devel openssl-devel
 
 И переходим к самому таинству, а именно:
- make menuconfig 
+ make menuconfig
  и настраиваем конфиг в текстовом гуе.
 В принципе, если вы знаете точные названия параметров, то можно обойтись и vim .config
 
 После того, как изменили конфиг и сохранили его.
 make
-Чтобы ускорить можно в несколько потоков это сделать 
+Чтобы ускорить можно в несколько потоков это сделать
 make -j 4
 или в зависимости от количества ядер CPU
 make -j $(nproc)
 у меня не хватило места, я потушишил машину, расширил диск и далее:
-в моем случае случаее всего две партиции и поэтому 
+в моем случае случаее всего две партиции и поэтому
 fdisk -l /dev/sda
 d 2 - удаляем вторую партицию
 n p - добавляем ее  и по дефолту дальше все
@@ -94,11 +95,11 @@ w - записываем
 pvresize
 pvdisplay
 
-должны увидеть 
+должны увидеть
 ``` Free PE               2048```
-Далее в моем случае 
+Далее в моем случае
 lvextend -l +2048 /dev/centos/root
-и так как я профавлил на установке и у меня xfs то 
+и так как я профавлил на установке и у меня xfs то
  xfs_growfs /dev/centos/root
 
 и

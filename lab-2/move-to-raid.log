@@ -1,1237 +1,0 @@
-Script started on Sat 25 May 2019 01:06:30 PM MSK
-]0;root@linux-lab2v2:/home/mikelog[?1034h[root@linux-lab2v2 mikelog]# ls -l
-total 120
--rw-r--r--. 1 root root 122880 May 25 12:29 move-to-mdadm-raid.log
--rw-r--r--. 1 root root      0 May 25 13:06 move-to-raid.log
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsblk 
-NAME                          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                             8:0    0    8G  0 disk 
-├─sda1                          8:1    0    1G  0 part /boot
-└─sda2                          8:2    0    7G  0 part 
-  ├─centos_linux--lab2v2-root 253:0    0  6.2G  0 lvm  /
-  └─centos_linux--lab2v2-swap 253:1    0  820M  0 lvm  [SWAP]
-sdb                             8:16   0    8G  0 disk 
-sr0                            11:0    1 1024M  0 rom  
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# sfdisk -d /dev/sda | sfdisk --force /dev/sdb
-Checking that no-one is using this disk right now ...
-OK
-
-Disk /dev/sdb: 1044 cylinders, 255 heads, 63 sectors/track
-sfdisk:  /dev/sdb: unrecognized partition table type
-
-Old situation:
-sfdisk: No partitions found
-
-New situation:
-Units: sectors of 512 bytes, counting from 0
-
-   Device Boot    Start       End   #sectors  Id  System
-/dev/sdb1   *      2048   2099199    2097152  83  Linux
-/dev/sdb2       2099200  16777215   14678016  8e  Linux LVM
-/dev/sdb3             0         -          0   0  Empty
-/dev/sdb4             0         -          0   0  Empty
-Warning: partition 1 does not end at a cylinder boundary
-Warning: partition 2 does not start at a cylinder boundary
-Warning: partition 2 does not end at a cylinder boundary
-Successfully wrote the new partition table
-
-Re-reading the partition table ...
-
-If you created or changed a DOS partition, /dev/foo7, say, then use dd(1)
-to zero the first 512 bytes:  dd if=/dev/zero of=/dev/foo7 bs=512 count=1
-(See fdisk(8).)
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# [K[root@linux-lab2v2 mikelog]# [K[root@linux-lab2v2 mikelog]# sfdisk -d /dev/sda | sfdisk --force /dev/sdb[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Clsblk [K
-NAME                          MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sda                             8:0    0    8G  0 disk 
-├─sda1                          8:1    0    1G  0 part /boot
-└─sda2                          8:2    0    7G  0 part 
-  ├─centos_linux--lab2v2-root 253:0    0  6.2G  0 lvm  /
-  └─centos_linux--lab2v2-swap 253:1    0  820M  0 lvm  [SWAP]
-sdb                             8:16   0    8G  0 disk 
-├─sdb1                          8:17   0    1G  0 part 
-└─sdb2                          8:18   0    7G  0 part 
-sr0                            11:0    1 1024M  0 rom  
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# [K[root@linux-lab2v2 mikelog]#  modprobe linear
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# modprobe raid1
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# fdisk -l
-
-Disk /dev/sda: 8589 MB, 8589934592 bytes, 16777216 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disk label type: dos
-Disk identifier: 0x0006681b
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sda1   *        2048     2099199     1048576   83  Linux
-/dev/sda2         2099200    16777215     7339008   8e  Linux LVM
-
-Disk /dev/mapper/centos_linux--lab2v2-root: 6652 MB, 6652166144 bytes, 12992512 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-
-
-Disk /dev/mapper/centos_linux--lab2v2-swap: 859 MB, 859832320 bytes, 1679360 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-
-
-Disk /dev/sdb: 8589 MB, 8589934592 bytes, 16777216 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disk label type: dos
-Disk identifier: 0x00000000
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sdb1   *        2048     2099199     1048576   83  Linux
-/dev/sdb2         2099200    16777215     7339008   8e  Linux LVM
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]#  fdisk /dev/sdb
-Welcome to fdisk (util-linux 2.23.2).
-
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
-
-
-Command (m for help): 1 t
-Partition number (1,2, default 2): 
-Hex code (type L to list all codes): fd  q
-Changed type of partition 'Linux LVM' to 'unknown'
-
-Command (m for help): q
-
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]#  fdisk /dev/sdb
-Welcome to fdisk (util-linux 2.23.2).
-
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
-
-
-Command (m for help): t
-Partition number (1,2, default 2): 1
-Hex code (type L to list all codes): fd
-Changed type of partition 'Linux' to 'Linux raid autodetect'
-
-Command (m for help): ^[[A^[[A        t
-Partition number (1,2, default 2): 2
-Hex code (type L to list all codes): fs d
-Changed type of partition 'Linux LVM' to 'Linux raid autodetect'
-
-Command (m for help): w
-The partition table has been altered!
-
-Calling ioctl() to re-read partition table.
-Syncing disks.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --zero-superblock /dev/sdb1
-mdadm: Unrecognised md component device - /dev/sdb1
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --zero-superblock /dev/sdb1[K
-sdb   sdb1  sdb2  
-[root@linux-lab2v2 mikelog]# mdadm --zero-superblock /dev/sdb
-sdb   sdb1  sdb2  
-[root@linux-lab2v2 mikelog]# mdadm --zero-superblock /dev/sdb1
-mdadm: Unrecognised md component device - /dev/sdb1
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --zero-superblock /dev/sdb1[K2
-mdadm: Unrecognised md component device - /dev/sdb2
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --create /dev/md0 --metadata=0.90  --level=1 --raid-disks=2 missing /dev/sdb1
-mdadm: array /dev/md0 started.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --create /dev/md0 --metadata=0.90  --level=1 --raid-disks=2 missing /dev/sdb1[1P[1@1[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K2
-mdadm: array /dev/md1 started.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# cat /proc/mdstat
-Personalities : [linear] [raid1] 
-md1 : active raid1 sdb2[1]
-      7338944 blocks [2/1] [_U]
-      
-md0 : active raid1 sdb1[1]
-      1048512 blocks [2/1] [_U]
-      
-unused devices: <none>
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --detail --scan
-ARRAY /dev/md0 metadata=0.90 UUID=94af69b4:00f4e746:c3fc6654:4dcba5a6
-ARRAY /dev/md1 metadata=0.90 UUID=431a3e88:bc57d262:c3fc6654:4dcba5a6
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --detail --scan > /etc/mdadm.conf
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]#  mv /boot/initramfs-$(uname -r).img /boot/initramfs-$(uname -r).img.old
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# dracut --mdadmconf --force /boot/initramfs-$(uname -r).img $(uname -r)
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mkfs.xfs /dev/md0 
-meta-data=/dev/md0               isize=512    agcount=4, agsize=65532 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=1        finobt=0, sparse=0
-data     =                       bsize=4096   blocks=262128, imaxpct=25
-         =                       sunit=0      swidth=0 blks
-naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
-log      =internal log           bsize=4096   blocks=855, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsbk
-bash: lsbk: command not found
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsbk[Klk 
-NAME                          MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
-sda                             8:0    0    8G  0 disk  
-├─sda1                          8:1    0    1G  0 part  /boot
-└─sda2                          8:2    0    7G  0 part  
-  ├─centos_linux--lab2v2-root 253:0    0  6.2G  0 lvm   /
-  └─centos_linux--lab2v2-swap 253:1    0  820M  0 lvm   [SWAP]
-sdb                             8:16   0    8G  0 disk  
-├─sdb1                          8:17   0    1G  0 part  
-│ └─md0                         9:0    0 1024M  0 raid1 
-└─sdb2                          8:18   0    7G  0 part  
-  └─md1                         9:1    0    7G  0 raid1 
-sr0                            11:0    1 1024M  0 rom   
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsblk -f
-NAME                          FSTYPE            LABEL UUID                                   MOUNTPOINT
-sda                                                                                          
-├─sda1                        xfs                     d3608dde-b173-49f2-a7b2-c689c750a460   /boot
-└─sda2                        LVM2_member             BIiEZr-ht57-yI20-2rUv-trJC-OXP5-7ld1kd 
-  ├─centos_linux--lab2v2-root xfs                     ed194343-8d45-43e4-80ce-7b583f619222   /
-  └─centos_linux--lab2v2-swap swap                    2a65774a-c45a-4890-9850-b40d5f3cafb7   [SWAP]
-sdb                                                                                          
-├─sdb1                        linux_raid_member       94af69b4-00f4-e746-c3fc-66544dcba5a6   
-│ └─md0                       xfs                     d7269a41-581e-4667-a915-615c80ed7864   
-└─sdb2                        linux_raid_member       431a3e88-bc57-d262-c3fc-66544dcba5a6   
-  └─md1                                                                                      
-sr0                                                                                          
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsblk -f[K[2Pkmkfs.xfs /dev/md0 [K[K1
-meta-data=/dev/md1               isize=512    agcount=4, agsize=458684 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=1        finobt=0, sparse=0
-data     =                       bsize=4096   blocks=1834736, imaxpct=25
-         =                       sunit=0      swidth=0 blks
-naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
-log      =internal log           bsize=4096   blocks=2560, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mkfs.xfs /dev/md1[9Plsblk -f
-NAME                          FSTYPE            LABEL UUID                                   MOUNTPOINT
-sda                                                                                          
-├─sda1                        xfs                     d3608dde-b173-49f2-a7b2-c689c750a460   /boot
-└─sda2                        LVM2_member             BIiEZr-ht57-yI20-2rUv-trJC-OXP5-7ld1kd 
-  ├─centos_linux--lab2v2-root xfs                     ed194343-8d45-43e4-80ce-7b583f619222   /
-  └─centos_linux--lab2v2-swap swap                    2a65774a-c45a-4890-9850-b40d5f3cafb7   [SWAP]
-sdb                                                                                          
-├─sdb1                        linux_raid_member       94af69b4-00f4-e746-c3fc-66544dcba5a6   
-│ └─md0                       xfs                     d7269a41-581e-4667-a915-615c80ed7864   
-└─sdb2                        linux_raid_member       431a3e88-bc57-d262-c3fc-66544dcba5a6   
-  └─md1                       xfs                     0efd39a5-cbe6-4cd9-85e7-5b73556fe916   
-sr0                                                                                          
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mkdir /mnt/booot/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mount /dev/md0 /mnt/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# rsync --progress -av /boot/ /mnt/boot[Ko[K[K[K[K[K/[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kls -l /mnt/
-total 0
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls -l /mnt/[9@mount /dev/md0[C[C[C[C[C[C[9Pls -l[C[C[C[C[C[C[Kls -l /mnt/[9@mount /dev/md0[C[C[C[C[C[Cblabla[9Pkdir /mnt/booot/[K[K[K[K[K[Kblabla
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mkdir /mnt/blabla[6Pls -l /mnt/
-total 0
-drwxr-xr-x. 2 root root 6 May 25 13:27 [0m[01;34mblabla[0m
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls -l /mnt/mkdir /mnt/blabla[6Pls -l /mnt/mount /dev/md0 /mnt/blabla[15Pls -l /mnt/mkdir /mnt/blabla[6Pls -l /mnt/mkdir /mnt/blabla[6Pls -l /mnt/mount /dev/md0 /mnt/blabla[9Pkdir /mnt/booot/ount /dev/md0 /mnt/blabla
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mount /dev/md0 /mnt/blabla[15Pls -l /mnt/mkdir /mnt/blabla[6Pls -l /mnt/mkdir /mnt/blabla[6Pls -l /mnt/[9@mount /dev/md0[C[C[C[C[C[C[3Pkdir /mnt/booot/[9Plsblk -fmkdir /mnt/booot/ount /dev/md0 /mnt/[9Pls -l[C[C[C[C[C[Cmkdir /mnt/blabla[6Pls -l /mnt/mount /dev/md0 /mnt/blabla[Krsync --progress -av /boot/ /mnt/blabla/[C[C[C[C* /mnt/blabla/
-sending incremental file list
-System.map-3.10.0-957.el7.x86_64
-         32,768   0%    0.00kB/s    0:00:00        3,543,471 100%  133.92MB/s    0:00:00 (xfr#1, to-chk=322/323)
-config-3.10.0-957.el7.x86_64
-         32,768  21%    1.20MB/s    0:00:00          151,918 100%    5.37MB/s    0:00:00 (xfr#2, to-chk=321/323)
-initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img
-         32,768   0%    1.08MB/s    0:00:51       57,159,242 100%  117.23MB/s    0:00:00 (xfr#3, to-chk=320/323)
-initramfs-3.10.0-957.el7.x86_64.img
-         32,768   0%   68.67kB/s    0:05:10       21,371,916 100%   31.95MB/s    0:00:00 (xfr#4, to-chk=319/323)
-initramfs-3.10.0-957.el7.x86_64.img.old
-         32,768   0%   49.92kB/s    0:07:15       21,768,378 100%   23.20MB/s    0:00:00 (xfr#5, to-chk=318/323)
-symvers-3.10.0-957.el7.x86_64.gz
-         32,768  10%   35.60kB/s    0:00:07          314,036 100%  340.37kB/s    0:00:00 (xfr#6, to-chk=317/323)
-vmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03
-         32,768   0%   35.24kB/s    0:03:07          131,072   1%  106.93kB/s    0:01:00        6,639,904 100%    5.00MB/s    0:00:01 (xfr#7, to-chk=316/323)
-vmlinuz-3.10.0-957.el7.x86_64
-         32,768   0%  444.44kB/s    0:00:14        6,639,904 100%   46.22MB/s    0:00:00 (xfr#8, to-chk=315/323)
-efi/
-efi/EFI/
-efi/EFI/centos/
-grub/
-grub/splash.xpm.gz
-          1,350 100%    9.62kB/s    0:00:00            1,350 100%    9.62kB/s    0:00:00 (xfr#9, to-chk=309/323)
-grub2/
-grub2/device.map
-             64 100%    0.45kB/s    0:00:00               64 100%    0.45kB/s    0:00:00 (xfr#10, to-chk=308/323)
-grub2/grub.cfg
-          4,367 100%   30.68kB/s    0:00:00            4,367 100%   30.68kB/s    0:00:00 (xfr#11, to-chk=307/323)
-grub2/grubenv
-          1,024 100%    7.19kB/s    0:00:00            1,024 100%    7.19kB/s    0:00:00 (xfr#12, to-chk=306/323)
-grub2/fonts/
-grub2/fonts/unicode.pf2
-         32,768   1%  226.95kB/s    0:00:11        2,560,080 100%   14.71MB/s    0:00:00 (xfr#13, to-chk=302/323)
-grub2/i386-pc/
-grub2/i386-pc/acpi.mod
-          9,936 100%   58.10kB/s    0:00:00            9,936 100%   58.10kB/s    0:00:00 (xfr#14, to-chk=301/323)
-grub2/i386-pc/adler32.mod
-          1,316 100%    7.70kB/s    0:00:00            1,316 100%    7.70kB/s    0:00:00 (xfr#15, to-chk=300/323)
-grub2/i386-pc/affs.mod
-          5,664 100%   32.92kB/s    0:00:00            5,664 100%   32.92kB/s    0:00:00 (xfr#16, to-chk=299/323)
-grub2/i386-pc/afs.mod
-          6,632 100%   38.55kB/s    0:00:00            6,632 100%   38.55kB/s    0:00:00 (xfr#17, to-chk=298/323)
-grub2/i386-pc/ahci.mod
-         15,764 100%   91.09kB/s    0:00:00           15,764 100%   91.09kB/s    0:00:00 (xfr#18, to-chk=297/323)
-grub2/i386-pc/all_video.mod
-            492 100%    2.84kB/s    0:00:00              492 100%    2.84kB/s    0:00:00 (xfr#19, to-chk=296/323)
-grub2/i386-pc/aout.mod
-          1,028 100%    5.91kB/s    0:00:00            1,028 100%    5.91kB/s    0:00:00 (xfr#20, to-chk=295/323)
-grub2/i386-pc/archelp.mod
-          2,932 100%   16.84kB/s    0:00:00            2,932 100%   16.84kB/s    0:00:00 (xfr#21, to-chk=294/323)
-grub2/i386-pc/at_keyboard.mod
-          4,212 100%   24.05kB/s    0:00:00            4,212 100%   24.05kB/s    0:00:00 (xfr#22, to-chk=293/323)
-grub2/i386-pc/ata.mod
-          5,588 100%   31.91kB/s    0:00:00            5,588 100%   31.91kB/s    0:00:00 (xfr#23, to-chk=292/323)
-grub2/i386-pc/backtrace.mod
-          1,628 100%    9.30kB/s    0:00:00            1,628 100%    9.30kB/s    0:00:00 (xfr#24, to-chk=291/323)
-grub2/i386-pc/bfs.mod
-          7,212 100%   40.95kB/s    0:00:00            7,212 100%   40.95kB/s    0:00:00 (xfr#25, to-chk=290/323)
-grub2/i386-pc/biosdisk.mod
-          4,556 100%   25.87kB/s    0:00:00            4,556 100%   25.87kB/s    0:00:00 (xfr#26, to-chk=289/323)
-grub2/i386-pc/bitmap.mod
-          2,240 100%   12.72kB/s    0:00:00            2,240 100%   12.72kB/s    0:00:00 (xfr#27, to-chk=288/323)
-grub2/i386-pc/bitmap_scale.mod
-          3,636 100%   20.52kB/s    0:00:00            3,636 100%   20.52kB/s    0:00:00 (xfr#28, to-chk=287/323)
-grub2/i386-pc/blocklist.mod
-          2,160 100%   12.19kB/s    0:00:00            2,160 100%   12.19kB/s    0:00:00 (xfr#29, to-chk=286/323)
-grub2/i386-pc/blscfg.mod
-          2,956 100%   16.59kB/s    0:00:00            2,956 100%   16.59kB/s    0:00:00 (xfr#30, to-chk=285/323)
-grub2/i386-pc/boot.img
-            512 100%    2.87kB/s    0:00:00              512 100%    2.87kB/s    0:00:00 (xfr#31, to-chk=284/323)
-grub2/i386-pc/boot.mod
-          2,444 100%   13.64kB/s    0:00:00            2,444 100%   13.64kB/s    0:00:00 (xfr#32, to-chk=283/323)
-grub2/i386-pc/bsd.mod
-         29,836 100%  166.50kB/s    0:00:00           29,836 100%  165.55kB/s    0:00:00 (xfr#33, to-chk=282/323)
-grub2/i386-pc/btrfs.mod
-         14,360 100%   78.78kB/s    0:00:00           14,360 100%   78.78kB/s    0:00:00 (xfr#34, to-chk=281/323)
-grub2/i386-pc/bufio.mod
-          2,136 100%   11.52kB/s    0:00:00            2,136 100%   11.52kB/s    0:00:00 (xfr#35, to-chk=280/323)
-grub2/i386-pc/cat.mod
-          2,888 100%   15.50kB/s    0:00:00            2,888 100%   15.50kB/s    0:00:00 (xfr#36, to-chk=279/323)
-grub2/i386-pc/cbfs.mod
-          3,764 100%   20.20kB/s    0:00:00            3,764 100%   20.20kB/s    0:00:00 (xfr#37, to-chk=278/323)
-grub2/i386-pc/cbls.mod
-          3,588 100%   19.15kB/s    0:00:00            3,588 100%   19.15kB/s    0:00:00 (xfr#38, to-chk=277/323)
-grub2/i386-pc/cbmemc.mod
-          2,388 100%   12.67kB/s    0:00:00            2,388 100%   12.67kB/s    0:00:00 (xfr#39, to-chk=276/323)
-grub2/i386-pc/cbtable.mod
-            984 100%    5.22kB/s    0:00:00              984 100%    5.22kB/s    0:00:00 (xfr#40, to-chk=275/323)
-grub2/i386-pc/cbtime.mod
-          2,556 100%   13.49kB/s    0:00:00            2,556 100%   13.49kB/s    0:00:00 (xfr#41, to-chk=274/323)
-grub2/i386-pc/chain.mod
-          3,504 100%   18.40kB/s    0:00:00            3,504 100%   18.40kB/s    0:00:00 (xfr#42, to-chk=273/323)
-grub2/i386-pc/cmdline_cat_test.mod
-          3,020 100%   15.77kB/s    0:00:00            3,020 100%   15.77kB/s    0:00:00 (xfr#43, to-chk=272/323)
-grub2/i386-pc/cmosdump.mod
-          1,216 100%    6.32kB/s    0:00:00            1,216 100%    6.32kB/s    0:00:00 (xfr#44, to-chk=271/323)
-grub2/i386-pc/cmostest.mod
-          1,832 100%    9.47kB/s    0:00:00            1,832 100%    9.47kB/s    0:00:00 (xfr#45, to-chk=270/323)
-grub2/i386-pc/cmp.mod
-          1,980 100%   10.18kB/s    0:00:00            1,980 100%   10.18kB/s    0:00:00 (xfr#46, to-chk=269/323)
-grub2/i386-pc/command.lst
-          3,793 100%   19.39kB/s    0:00:00            3,793 100%   19.39kB/s    0:00:00 (xfr#47, to-chk=268/323)
-grub2/i386-pc/configfile.mod
-          2,268 100%   11.60kB/s    0:00:00            2,268 100%   11.60kB/s    0:00:00 (xfr#48, to-chk=267/323)
-grub2/i386-pc/core.img
-         26,703 100%  135.11kB/s    0:00:00           26,703 100%  135.11kB/s    0:00:00 (xfr#49, to-chk=266/323)
-grub2/i386-pc/cpio.mod
-          2,644 100%   13.31kB/s    0:00:00            2,644 100%   13.31kB/s    0:00:00 (xfr#50, to-chk=265/323)
-grub2/i386-pc/cpio_be.mod
-          2,736 100%   13.77kB/s    0:00:00            2,736 100%   13.77kB/s    0:00:00 (xfr#51, to-chk=264/323)
-grub2/i386-pc/cpuid.mod
-          1,724 100%    8.68kB/s    0:00:00            1,724 100%    8.68kB/s    0:00:00 (xfr#52, to-chk=263/323)
-grub2/i386-pc/crc64.mod
-          1,612 100%    8.07kB/s    0:00:00            1,612 100%    8.07kB/s    0:00:00 (xfr#53, to-chk=262/323)
-grub2/i386-pc/crypto.lst
-            936 100%    4.69kB/s    0:00:00              936 100%    4.69kB/s    0:00:00 (xfr#54, to-chk=261/323)
-grub2/i386-pc/crypto.mod
-          4,904 100%   24.43kB/s    0:00:00            4,904 100%   24.43kB/s    0:00:00 (xfr#55, to-chk=260/323)
-grub2/i386-pc/cryptodisk.mod
-         10,004 100%   49.84kB/s    0:00:00           10,004 100%   49.84kB/s    0:00:00 (xfr#56, to-chk=259/323)
-grub2/i386-pc/cs5536.mod
-          3,880 100%   19.14kB/s    0:00:00            3,880 100%   19.14kB/s    0:00:00 (xfr#57, to-chk=258/323)
-grub2/i386-pc/date.mod
-          2,140 100%   10.55kB/s    0:00:00            2,140 100%   10.55kB/s    0:00:00 (xfr#58, to-chk=257/323)
-grub2/i386-pc/datehook.mod
-          1,792 100%    8.84kB/s    0:00:00            1,792 100%    8.84kB/s    0:00:00 (xfr#59, to-chk=256/323)
-grub2/i386-pc/datetime.mod
-          1,260 100%    6.18kB/s    0:00:00            1,260 100%    6.18kB/s    0:00:00 (xfr#60, to-chk=255/323)
-grub2/i386-pc/disk.mod
-          2,376 100%   11.66kB/s    0:00:00            2,376 100%   11.66kB/s    0:00:00 (xfr#61, to-chk=254/323)
-grub2/i386-pc/diskfilter.mod
-          9,836 100%   48.27kB/s    0:00:00            9,836 100%   48.27kB/s    0:00:00 (xfr#62, to-chk=253/323)
-grub2/i386-pc/div_test.mod
-          3,848 100%   18.79kB/s    0:00:00            3,848 100%   18.79kB/s    0:00:00 (xfr#63, to-chk=252/323)
-grub2/i386-pc/dm_nv.mod
-          1,856 100%    9.06kB/s    0:00:00            1,856 100%    9.06kB/s    0:00:00 (xfr#64, to-chk=251/323)
-grub2/i386-pc/drivemap.mod
-          5,360 100%   26.04kB/s    0:00:00            5,360 100%   26.04kB/s    0:00:00 (xfr#65, to-chk=250/323)
-grub2/i386-pc/echo.mod
-          1,964 100%    9.54kB/s    0:00:00            1,964 100%    9.54kB/s    0:00:00 (xfr#66, to-chk=249/323)
-grub2/i386-pc/efiemu.mod
-         23,972 100%  115.89kB/s    0:00:00           23,972 100%  115.89kB/s    0:00:00 (xfr#67, to-chk=248/323)
-grub2/i386-pc/ehci.mod
-         15,952 100%   76.74kB/s    0:00:00           15,952 100%   76.74kB/s    0:00:00 (xfr#68, to-chk=247/323)
-grub2/i386-pc/elf.mod
-          5,192 100%   24.85kB/s    0:00:00            5,192 100%   24.85kB/s    0:00:00 (xfr#69, to-chk=246/323)
-grub2/i386-pc/eval.mod
-          1,448 100%    6.93kB/s    0:00:00            1,448 100%    6.93kB/s    0:00:00 (xfr#70, to-chk=245/323)
-grub2/i386-pc/exfat.mod
-          5,468 100%   26.05kB/s    0:00:00            5,468 100%   26.05kB/s    0:00:00 (xfr#71, to-chk=244/323)
-grub2/i386-pc/exfctest.mod
-          1,468 100%    6.99kB/s    0:00:00            1,468 100%    6.99kB/s    0:00:00 (xfr#72, to-chk=243/323)
-grub2/i386-pc/ext2.mod
-          5,580 100%   26.45kB/s    0:00:00            5,580 100%   26.45kB/s    0:00:00 (xfr#73, to-chk=242/323)
-grub2/i386-pc/extcmd.mod
-          4,544 100%   21.33kB/s    0:00:00            4,544 100%   21.33kB/s    0:00:00 (xfr#74, to-chk=241/323)
-grub2/i386-pc/fat.mod
-          5,604 100%   26.18kB/s    0:00:00            5,604 100%   26.18kB/s    0:00:00 (xfr#75, to-chk=240/323)
-grub2/i386-pc/file.mod
-         15,980 100%   73.96kB/s    0:00:00           15,980 100%   73.61kB/s    0:00:00 (xfr#76, to-chk=239/323)
-grub2/i386-pc/font.mod
-         12,516 100%   57.65kB/s    0:00:00           12,516 100%   57.65kB/s    0:00:00 (xfr#77, to-chk=238/323)
-grub2/i386-pc/freedos.mod
-          2,656 100%   12.23kB/s    0:00:00            2,656 100%   12.23kB/s    0:00:00 (xfr#78, to-chk=237/323)
-grub2/i386-pc/fs.lst
-            214 100%    0.98kB/s    0:00:00              214 100%    0.98kB/s    0:00:00 (xfr#79, to-chk=236/323)
-grub2/i386-pc/fshelp.mod
-          2,564 100%   11.76kB/s    0:00:00            2,564 100%   11.70kB/s    0:00:00 (xfr#80, to-chk=235/323)
-grub2/i386-pc/functional_test.mod
-         32,768  36%  149.53kB/s    0:00:00           89,732 100%  409.48kB/s    0:00:00 (xfr#81, to-chk=234/323)
-grub2/i386-pc/gcry_arcfour.mod
-          1,660 100%    7.54kB/s    0:00:00            1,660 100%    7.54kB/s    0:00:00 (xfr#82, to-chk=233/323)
-grub2/i386-pc/gcry_blowfish.mod
-          8,372 100%   37.68kB/s    0:00:00            8,372 100%   37.68kB/s    0:00:00 (xfr#83, to-chk=232/323)
-grub2/i386-pc/gcry_camellia.mod
-         32,768  95%  147.47kB/s    0:00:00           34,492 100%  155.22kB/s    0:00:00 (xfr#84, to-chk=231/323)
-grub2/i386-pc/gcry_cast5.mod
-         16,644 100%   74.56kB/s    0:00:00           16,644 100%   74.56kB/s    0:00:00 (xfr#85, to-chk=230/323)
-grub2/i386-pc/gcry_crc.mod
-          2,916 100%   13.06kB/s    0:00:00            2,916 100%   13.06kB/s    0:00:00 (xfr#86, to-chk=229/323)
-grub2/i386-pc/gcry_des.mod
-         19,344 100%   86.26kB/s    0:00:00           19,344 100%   86.26kB/s    0:00:00 (xfr#87, to-chk=228/323)
-grub2/i386-pc/gcry_dsa.mod
-          2,268 100%   10.07kB/s    0:00:00            2,268 100%   10.07kB/s    0:00:00 (xfr#88, to-chk=227/323)
-grub2/i386-pc/gcry_idea.mod
-          2,956 100%   13.12kB/s    0:00:00            2,956 100%   13.12kB/s    0:00:00 (xfr#89, to-chk=226/323)
-grub2/i386-pc/gcry_md4.mod
-          3,144 100%   13.89kB/s    0:00:00            3,144 100%   13.89kB/s    0:00:00 (xfr#90, to-chk=225/323)
-grub2/i386-pc/gcry_md5.mod
-          3,768 100%   16.65kB/s    0:00:00            3,768 100%   16.65kB/s    0:00:00 (xfr#91, to-chk=224/323)
-grub2/i386-pc/gcry_rfc2268.mod
-          2,500 100%   11.05kB/s    0:00:00            2,500 100%   11.05kB/s    0:00:00 (xfr#92, to-chk=223/323)
-grub2/i386-pc/gcry_rijndael.mod
-         19,140 100%   84.20kB/s    0:00:00           19,140 100%   84.20kB/s    0:00:00 (xfr#93, to-chk=222/323)
-grub2/i386-pc/gcry_rmd160.mod
-          8,072 100%   35.51kB/s    0:00:00            8,072 100%   35.51kB/s    0:00:00 (xfr#94, to-chk=221/323)
-grub2/i386-pc/gcry_rsa.mod
-          2,072 100%    9.07kB/s    0:00:00            2,072 100%    9.07kB/s    0:00:00 (xfr#95, to-chk=220/323)
-grub2/i386-pc/gcry_seed.mod
-         15,356 100%   67.25kB/s    0:00:00           15,356 100%   67.25kB/s    0:00:00 (xfr#96, to-chk=219/323)
-grub2/i386-pc/gcry_serpent.mod
-         16,528 100%   71.74kB/s    0:00:00           16,528 100%   71.74kB/s    0:00:00 (xfr#97, to-chk=218/323)
-grub2/i386-pc/gcry_sha1.mod
-          8,324 100%   35.97kB/s    0:00:00            8,324 100%   35.97kB/s    0:00:00 (xfr#98, to-chk=217/323)
-grub2/i386-pc/gcry_sha256.mod
-          4,284 100%   18.43kB/s    0:00:00            4,284 100%   18.43kB/s    0:00:00 (xfr#99, to-chk=216/323)
-grub2/i386-pc/gcry_sha512.mod
-          8,728 100%   37.38kB/s    0:00:00            8,728 100%   37.38kB/s    0:00:00 (xfr#100, to-chk=215/323)
-grub2/i386-pc/gcry_tiger.mod
-         12,580 100%   53.65kB/s    0:00:00           12,580 100%   53.65kB/s    0:00:00 (xfr#101, to-chk=214/323)
-grub2/i386-pc/gcry_twofish.mod
-         32,768  87%  137.93kB/s    0:00:00           37,344 100%  157.19kB/s    0:00:00 (xfr#102, to-chk=213/323)
-grub2/i386-pc/gcry_whirlpool.mod
-         24,596 100%  103.53kB/s    0:00:00           24,596 100%  103.53kB/s    0:00:00 (xfr#103, to-chk=212/323)
-grub2/i386-pc/gdb.mod
-         25,248 100%  105.37kB/s    0:00:00           25,248 100%  105.37kB/s    0:00:00 (xfr#104, to-chk=211/323)
-grub2/i386-pc/geli.mod
-          5,780 100%   24.12kB/s    0:00:00            5,780 100%   24.12kB/s    0:00:00 (xfr#105, to-chk=210/323)
-grub2/i386-pc/gettext.mod
-          4,724 100%   19.63kB/s    0:00:00            4,724 100%   19.63kB/s    0:00:00 (xfr#106, to-chk=209/323)
-grub2/i386-pc/gfxmenu.mod
-         32,768  83%  136.17kB/s    0:00:00           39,196 100%  162.88kB/s    0:00:00 (xfr#107, to-chk=208/323)
-grub2/i386-pc/gfxterm.mod
-          9,996 100%   41.36kB/s    0:00:00            9,996 100%   41.36kB/s    0:00:00 (xfr#108, to-chk=207/323)
-grub2/i386-pc/gfxterm_background.mod
-          2,864 100%   11.80kB/s    0:00:00            2,864 100%   11.80kB/s    0:00:00 (xfr#109, to-chk=206/323)
-grub2/i386-pc/gfxterm_menu.mod
-          5,000 100%   20.60kB/s    0:00:00            5,000 100%   20.60kB/s    0:00:00 (xfr#110, to-chk=205/323)
-grub2/i386-pc/gptsync.mod
-          3,716 100%   15.25kB/s    0:00:00            3,716 100%   15.25kB/s    0:00:00 (xfr#111, to-chk=204/323)
-grub2/i386-pc/gzio.mod
-          8,252 100%   33.86kB/s    0:00:00            8,252 100%   33.86kB/s    0:00:00 (xfr#112, to-chk=203/323)
-grub2/i386-pc/halt.mod
-          4,288 100%   17.38kB/s    0:00:00            4,288 100%   17.38kB/s    0:00:00 (xfr#113, to-chk=202/323)
-grub2/i386-pc/hashsum.mod
-          5,216 100%   21.05kB/s    0:00:00            5,216 100%   21.05kB/s    0:00:00 (xfr#114, to-chk=201/323)
-grub2/i386-pc/hdparm.mod
-          7,248 100%   29.13kB/s    0:00:00            7,248 100%   29.13kB/s    0:00:00 (xfr#115, to-chk=200/323)
-grub2/i386-pc/hello.mod
-          1,208 100%    4.85kB/s    0:00:00            1,208 100%    4.85kB/s    0:00:00 (xfr#116, to-chk=199/323)
-grub2/i386-pc/help.mod
-          2,568 100%   10.28kB/s    0:00:00            2,568 100%   10.28kB/s    0:00:00 (xfr#117, to-chk=198/323)
-grub2/i386-pc/hexdump.mod
-          3,144 100%   12.53kB/s    0:00:00            3,144 100%   12.53kB/s    0:00:00 (xfr#118, to-chk=197/323)
-grub2/i386-pc/hfs.mod
-          7,176 100%   28.60kB/s    0:00:00            7,176 100%   28.60kB/s    0:00:00 (xfr#119, to-chk=196/323)
-grub2/i386-pc/hfsplus.mod
-          7,556 100%   30.12kB/s    0:00:00            7,556 100%   30.12kB/s    0:00:00 (xfr#120, to-chk=195/323)
-grub2/i386-pc/hfspluscomp.mod
-          2,976 100%   11.81kB/s    0:00:00            2,976 100%   11.81kB/s    0:00:00 (xfr#121, to-chk=194/323)
-grub2/i386-pc/http.mod
-          5,820 100%   23.10kB/s    0:00:00            5,820 100%   23.10kB/s    0:00:00 (xfr#122, to-chk=193/323)
-grub2/i386-pc/iorw.mod
-          2,896 100%   11.45kB/s    0:00:00            2,896 100%   11.45kB/s    0:00:00 (xfr#123, to-chk=192/323)
-grub2/i386-pc/iso9660.mod
-          8,568 100%   33.88kB/s    0:00:00            8,568 100%   33.88kB/s    0:00:00 (xfr#124, to-chk=191/323)
-grub2/i386-pc/jfs.mod
-          6,124 100%   24.02kB/s    0:00:00            6,124 100%   24.02kB/s    0:00:00 (xfr#125, to-chk=190/323)
-grub2/i386-pc/jpeg.mod
-          6,236 100%   24.46kB/s    0:00:00            6,236 100%   24.46kB/s    0:00:00 (xfr#126, to-chk=189/323)
-grub2/i386-pc/keylayouts.mod
-          4,984 100%   19.47kB/s    0:00:00            4,984 100%   19.47kB/s    0:00:00 (xfr#127, to-chk=188/323)
-grub2/i386-pc/keystatus.mod
-          1,952 100%    7.62kB/s    0:00:00            1,952 100%    7.62kB/s    0:00:00 (xfr#128, to-chk=187/323)
-grub2/i386-pc/ldm.mod
-          6,540 100%   25.55kB/s    0:00:00            6,540 100%   25.55kB/s    0:00:00 (xfr#129, to-chk=186/323)
-grub2/i386-pc/legacy_password_test.mod
-         14,468 100%   56.29kB/s    0:00:00           14,468 100%   56.29kB/s    0:00:00 (xfr#130, to-chk=185/323)
-grub2/i386-pc/legacycfg.mod
-         29,788 100%  115.44kB/s    0:00:00           29,788 100%  115.44kB/s    0:00:00 (xfr#131, to-chk=184/323)
-grub2/i386-pc/linux.mod
-         13,436 100%   51.86kB/s    0:00:00           13,436 100%   51.86kB/s    0:00:00 (xfr#132, to-chk=183/323)
-grub2/i386-pc/linux16.mod
-          8,324 100%   32.13kB/s    0:00:00            8,324 100%   32.13kB/s    0:00:00 (xfr#133, to-chk=182/323)
-grub2/i386-pc/loadenv.mod
-          5,860 100%   22.62kB/s    0:00:00            5,860 100%   22.62kB/s    0:00:00 (xfr#134, to-chk=181/323)
-grub2/i386-pc/loopback.mod
-          2,948 100%   11.33kB/s    0:00:00            2,948 100%   11.33kB/s    0:00:00 (xfr#135, to-chk=180/323)
-grub2/i386-pc/ls.mod
-          4,052 100%   15.52kB/s    0:00:00            4,052 100%   15.52kB/s    0:00:00 (xfr#136, to-chk=179/323)
-grub2/i386-pc/lsacpi.mod
-          4,784 100%   18.25kB/s    0:00:00            4,784 100%   18.25kB/s    0:00:00 (xfr#137, to-chk=178/323)
-grub2/i386-pc/lsapm.mod
-          2,280 100%    8.66kB/s    0:00:00            2,280 100%    8.66kB/s    0:00:00 (xfr#138, to-chk=177/323)
-grub2/i386-pc/lsmmap.mod
-          1,844 100%    6.98kB/s    0:00:00            1,844 100%    6.98kB/s    0:00:00 (xfr#139, to-chk=176/323)
-grub2/i386-pc/lspci.mod
-          4,824 100%   17.71kB/s    0:00:00            4,824 100%   17.71kB/s    0:00:00 (xfr#140, to-chk=175/323)
-grub2/i386-pc/luks.mod
-          6,628 100%   24.24kB/s    0:00:00            6,628 100%   24.24kB/s    0:00:00 (xfr#141, to-chk=174/323)
-grub2/i386-pc/lvm.mod
-          6,696 100%   24.49kB/s    0:00:00            6,696 100%   24.49kB/s    0:00:00 (xfr#142, to-chk=173/323)
-grub2/i386-pc/lzopio.mod
-          8,700 100%   31.70kB/s    0:00:00            8,700 100%   31.70kB/s    0:00:00 (xfr#143, to-chk=172/323)
-grub2/i386-pc/macbless.mod
-          3,296 100%   12.01kB/s    0:00:00            3,296 100%   12.01kB/s    0:00:00 (xfr#144, to-chk=171/323)
-grub2/i386-pc/macho.mod
-          7,528 100%   27.43kB/s    0:00:00            7,528 100%   27.43kB/s    0:00:00 (xfr#145, to-chk=170/323)
-grub2/i386-pc/mda_text.mod
-          2,028 100%    7.36kB/s    0:00:00            2,028 100%    7.36kB/s    0:00:00 (xfr#146, to-chk=169/323)
-grub2/i386-pc/mdraid09.mod
-          1,948 100%    7.07kB/s    0:00:00            1,948 100%    7.07kB/s    0:00:00 (xfr#147, to-chk=168/323)
-grub2/i386-pc/mdraid09_be.mod
-          2,020 100%    7.31kB/s    0:00:00            2,020 100%    7.31kB/s    0:00:00 (xfr#148, to-chk=167/323)
-grub2/i386-pc/mdraid1x.mod
-          1,980 100%    7.16kB/s    0:00:00            1,980 100%    7.16kB/s    0:00:00 (xfr#149, to-chk=166/323)
-grub2/i386-pc/memdisk.mod
-          1,996 100%    7.22kB/s    0:00:00            1,996 100%    7.22kB/s    0:00:00 (xfr#150, to-chk=165/323)
-grub2/i386-pc/memrw.mod
-          2,912 100%   10.49kB/s    0:00:00            2,912 100%   10.49kB/s    0:00:00 (xfr#151, to-chk=164/323)
-grub2/i386-pc/minicmd.mod
-          3,504 100%   12.63kB/s    0:00:00            3,504 100%   12.63kB/s    0:00:00 (xfr#152, to-chk=163/323)
-grub2/i386-pc/minix.mod
-          3,488 100%   12.57kB/s    0:00:00            3,488 100%   12.57kB/s    0:00:00 (xfr#153, to-chk=162/323)
-grub2/i386-pc/minix2.mod
-          3,564 100%   12.75kB/s    0:00:00            3,564 100%   12.75kB/s    0:00:00 (xfr#154, to-chk=161/323)
-grub2/i386-pc/minix2_be.mod
-          3,720 100%   13.26kB/s    0:00:00            3,720 100%   13.26kB/s    0:00:00 (xfr#155, to-chk=160/323)
-grub2/i386-pc/minix3.mod
-          3,532 100%   12.59kB/s    0:00:00            3,532 100%   12.59kB/s    0:00:00 (xfr#156, to-chk=159/323)
-grub2/i386-pc/minix3_be.mod
-          3,684 100%   13.13kB/s    0:00:00            3,684 100%   13.13kB/s    0:00:00 (xfr#157, to-chk=158/323)
-grub2/i386-pc/minix_be.mod
-          3,636 100%   12.91kB/s    0:00:00            3,636 100%   12.91kB/s    0:00:00 (xfr#158, to-chk=157/323)
-grub2/i386-pc/mmap.mod
-          8,580 100%   30.47kB/s    0:00:00            8,580 100%   30.47kB/s    0:00:00 (xfr#159, to-chk=156/323)
-grub2/i386-pc/moddep.lst
-          5,188 100%   18.36kB/s    0:00:00            5,188 100%   18.36kB/s    0:00:00 (xfr#160, to-chk=155/323)
-grub2/i386-pc/modinfo.sh
-          2,251 100%    7.96kB/s    0:00:00            2,251 100%    7.96kB/s    0:00:00 (xfr#161, to-chk=154/323)
-grub2/i386-pc/morse.mod
-          2,364 100%    8.33kB/s    0:00:00            2,364 100%    8.33kB/s    0:00:00 (xfr#162, to-chk=153/323)
-grub2/i386-pc/mpi.mod
-         27,504 100%   96.62kB/s    0:00:00           27,504 100%   96.62kB/s    0:00:00 (xfr#163, to-chk=152/323)
-grub2/i386-pc/msdospart.mod
-          2,396 100%    8.39kB/s    0:00:00            2,396 100%    8.39kB/s    0:00:00 (xfr#164, to-chk=151/323)
-grub2/i386-pc/multiboot.mod
-         13,212 100%   46.08kB/s    0:00:00           13,212 100%   46.08kB/s    0:00:00 (xfr#165, to-chk=150/323)
-grub2/i386-pc/multiboot2.mod
-         13,680 100%   47.71kB/s    0:00:00           13,680 100%   47.71kB/s    0:00:00 (xfr#166, to-chk=149/323)
-grub2/i386-pc/nativedisk.mod
-          4,028 100%   14.00kB/s    0:00:00            4,028 100%   14.00kB/s    0:00:00 (xfr#167, to-chk=148/323)
-grub2/i386-pc/net.mod
-         32,768  55%  113.88kB/s    0:00:00           59,084 100%  205.34kB/s    0:00:00 (xfr#168, to-chk=147/323)
-grub2/i386-pc/newc.mod
-          2,904 100%   10.06kB/s    0:00:00            2,904 100%   10.06kB/s    0:00:00 (xfr#169, to-chk=146/323)
-grub2/i386-pc/nilfs2.mod
-          6,704 100%   23.13kB/s    0:00:00            6,704 100%   23.13kB/s    0:00:00 (xfr#170, to-chk=145/323)
-grub2/i386-pc/normal.mod
-         32,768  28%  113.07kB/s    0:00:00          115,100 100%  397.18kB/s    0:00:00 (xfr#171, to-chk=144/323)
-grub2/i386-pc/ntfs.mod
-          9,900 100%   34.04kB/s    0:00:00            9,900 100%   34.04kB/s    0:00:00 (xfr#172, to-chk=143/323)
-grub2/i386-pc/ntfscomp.mod
-          4,300 100%   14.79kB/s    0:00:00            4,300 100%   14.79kB/s    0:00:00 (xfr#173, to-chk=142/323)
-grub2/i386-pc/ntldr.mod
-          2,548 100%    8.73kB/s    0:00:00            2,548 100%    8.73kB/s    0:00:00 (xfr#174, to-chk=141/323)
-grub2/i386-pc/odc.mod
-          2,736 100%    9.38kB/s    0:00:00            2,736 100%    9.38kB/s    0:00:00 (xfr#175, to-chk=140/323)
-grub2/i386-pc/offsetio.mod
-          1,508 100%    5.15kB/s    0:00:00            1,508 100%    5.15kB/s    0:00:00 (xfr#176, to-chk=139/323)
-grub2/i386-pc/ohci.mod
-         10,580 100%   36.13kB/s    0:00:00           10,580 100%   36.13kB/s    0:00:00 (xfr#177, to-chk=138/323)
-grub2/i386-pc/part_acorn.mod
-          1,656 100%    5.63kB/s    0:00:00            1,656 100%    5.63kB/s    0:00:00 (xfr#178, to-chk=137/323)
-grub2/i386-pc/part_amiga.mod
-          1,852 100%    6.28kB/s    0:00:00            1,852 100%    6.28kB/s    0:00:00 (xfr#179, to-chk=136/323)
-grub2/i386-pc/part_apple.mod
-          2,104 100%    7.11kB/s    0:00:00            2,104 100%    7.11kB/s    0:00:00 (xfr#180, to-chk=135/323)
-grub2/i386-pc/part_bsd.mod
-          2,760 100%    9.29kB/s    0:00:00            2,760 100%    9.29kB/s    0:00:00 (xfr#181, to-chk=134/323)
-grub2/i386-pc/part_dfly.mod
-          1,732 100%    5.83kB/s    0:00:00            1,732 100%    5.83kB/s    0:00:00 (xfr#182, to-chk=133/323)
-grub2/i386-pc/part_dvh.mod
-          1,480 100%    4.95kB/s    0:00:00            1,480 100%    4.95kB/s    0:00:00 (xfr#183, to-chk=132/323)
-grub2/i386-pc/part_gpt.mod
-          2,364 100%    7.88kB/s    0:00:00            2,364 100%    7.88kB/s    0:00:00 (xfr#184, to-chk=131/323)
-grub2/i386-pc/part_msdos.mod
-          2,340 100%    7.77kB/s    0:00:00            2,340 100%    7.77kB/s    0:00:00 (xfr#185, to-chk=130/323)
-grub2/i386-pc/part_plan.mod
-          1,796 100%    5.97kB/s    0:00:00            1,796 100%    5.97kB/s    0:00:00 (xfr#186, to-chk=129/323)
-grub2/i386-pc/part_sun.mod
-          1,528 100%    5.06kB/s    0:00:00            1,528 100%    5.06kB/s    0:00:00 (xfr#187, to-chk=128/323)
-grub2/i386-pc/part_sunpc.mod
-          1,616 100%    5.35kB/s    0:00:00            1,616 100%    5.35kB/s    0:00:00 (xfr#188, to-chk=127/323)
-grub2/i386-pc/partmap.lst
-            111 100%    0.37kB/s    0:00:00              111 100%    0.37kB/s    0:00:00 (xfr#189, to-chk=126/323)
-grub2/i386-pc/parttool.lst
-             17 100%    0.06kB/s    0:00:00               17 100%    0.06kB/s    0:00:00 (xfr#190, to-chk=125/323)
-grub2/i386-pc/parttool.mod
-          4,628 100%   15.22kB/s    0:00:00            4,628 100%   15.22kB/s    0:00:00 (xfr#191, to-chk=124/323)
-grub2/i386-pc/password.mod
-          1,884 100%    6.17kB/s    0:00:00            1,884 100%    6.17kB/s    0:00:00 (xfr#192, to-chk=123/323)
-grub2/i386-pc/password_pbkdf2.mod
-          2,800 100%    9.18kB/s    0:00:00            2,800 100%    9.18kB/s    0:00:00 (xfr#193, to-chk=122/323)
-grub2/i386-pc/pata.mod
-          4,760 100%   15.60kB/s    0:00:00            4,760 100%   15.60kB/s    0:00:00 (xfr#194, to-chk=121/323)
-grub2/i386-pc/pbkdf2.mod
-          1,456 100%    4.76kB/s    0:00:00            1,456 100%    4.76kB/s    0:00:00 (xfr#195, to-chk=120/323)
-grub2/i386-pc/pbkdf2_test.mod
-          2,224 100%    7.26kB/s    0:00:00            2,224 100%    7.26kB/s    0:00:00 (xfr#196, to-chk=119/323)
-grub2/i386-pc/pci.mod
-          1,400 100%    4.57kB/s    0:00:00            1,400 100%    4.57kB/s    0:00:00 (xfr#197, to-chk=118/323)
-grub2/i386-pc/pcidump.mod
-          2,464 100%    8.02kB/s    0:00:00            2,464 100%    8.02kB/s    0:00:00 (xfr#198, to-chk=117/323)
-grub2/i386-pc/plan9.mod
-          6,212 100%   20.22kB/s    0:00:00            6,212 100%   20.22kB/s    0:00:00 (xfr#199, to-chk=116/323)
-grub2/i386-pc/play.mod
-          2,420 100%    7.83kB/s    0:00:00            2,420 100%    7.83kB/s    0:00:00 (xfr#200, to-chk=115/323)
-grub2/i386-pc/png.mod
-          7,348 100%   23.76kB/s    0:00:00            7,348 100%   23.76kB/s    0:00:00 (xfr#201, to-chk=114/323)
-grub2/i386-pc/priority_queue.mod
-          1,564 100%    5.04kB/s    0:00:00            1,564 100%    5.04kB/s    0:00:00 (xfr#202, to-chk=113/323)
-grub2/i386-pc/probe.mod
-          2,640 100%    8.51kB/s    0:00:00            2,640 100%    8.51kB/s    0:00:00 (xfr#203, to-chk=112/323)
-grub2/i386-pc/procfs.mod
-          2,112 100%    6.81kB/s    0:00:00            2,112 100%    6.81kB/s    0:00:00 (xfr#204, to-chk=111/323)
-grub2/i386-pc/progress.mod
-          2,056 100%    6.63kB/s    0:00:00            2,056 100%    6.63kB/s    0:00:00 (xfr#205, to-chk=110/323)
-grub2/i386-pc/pxe.mod
-          3,868 100%   12.43kB/s    0:00:00            3,868 100%   12.43kB/s    0:00:00 (xfr#206, to-chk=109/323)
-grub2/i386-pc/pxechain.mod
-          2,664 100%    8.56kB/s    0:00:00            2,664 100%    8.56kB/s    0:00:00 (xfr#207, to-chk=108/323)
-grub2/i386-pc/raid5rec.mod
-          1,404 100%    4.51kB/s    0:00:00            1,404 100%    4.51kB/s    0:00:00 (xfr#208, to-chk=107/323)
-grub2/i386-pc/raid6rec.mod
-          2,192 100%    7.02kB/s    0:00:00            2,192 100%    7.02kB/s    0:00:00 (xfr#209, to-chk=106/323)
-grub2/i386-pc/read.mod
-          1,448 100%    4.64kB/s    0:00:00            1,448 100%    4.64kB/s    0:00:00 (xfr#210, to-chk=105/323)
-grub2/i386-pc/reboot.mod
-          1,720 100%    5.51kB/s    0:00:00            1,720 100%    5.51kB/s    0:00:00 (xfr#211, to-chk=104/323)
-grub2/i386-pc/regexp.mod
-         32,768  64%  104.58kB/s    0:00:00           51,152 100%  163.25kB/s    0:00:00 (xfr#212, to-chk=103/323)
-grub2/i386-pc/reiserfs.mod
-          8,836 100%   27.93kB/s    0:00:00            8,836 100%   27.84kB/s    0:00:00 (xfr#213, to-chk=102/323)
-grub2/i386-pc/relocator.mod
-         14,880 100%   46.72kB/s    0:00:00           14,880 100%   46.72kB/s    0:00:00 (xfr#214, to-chk=101/323)
-grub2/i386-pc/romfs.mod
-          4,260 100%   13.33kB/s    0:00:00            4,260 100%   13.33kB/s    0:00:00 (xfr#215, to-chk=100/323)
-grub2/i386-pc/scsi.mod
-          4,712 100%   14.75kB/s    0:00:00            4,712 100%   14.75kB/s    0:00:00 (xfr#216, to-chk=99/323)
-grub2/i386-pc/search.mod
-          3,632 100%   11.33kB/s    0:00:00            3,632 100%   11.33kB/s    0:00:00 (xfr#217, to-chk=98/323)
-grub2/i386-pc/search_fs_file.mod
-          3,220 100%   10.05kB/s    0:00:00            3,220 100%   10.05kB/s    0:00:00 (xfr#218, to-chk=97/323)
-grub2/i386-pc/search_fs_uuid.mod
-          3,176 100%    9.91kB/s    0:00:00            3,176 100%    9.91kB/s    0:00:00 (xfr#219, to-chk=96/323)
-grub2/i386-pc/search_label.mod
-          3,124 100%    9.72kB/s    0:00:00            3,124 100%    9.72kB/s    0:00:00 (xfr#220, to-chk=95/323)
-grub2/i386-pc/sendkey.mod
-          7,100 100%   22.08kB/s    0:00:00            7,100 100%   22.08kB/s    0:00:00 (xfr#221, to-chk=94/323)
-grub2/i386-pc/serial.mod
-          7,716 100%   23.92kB/s    0:00:00            7,716 100%   23.92kB/s    0:00:00 (xfr#222, to-chk=93/323)
-grub2/i386-pc/setjmp.mod
-            708 100%    2.19kB/s    0:00:00              708 100%    2.19kB/s    0:00:00 (xfr#223, to-chk=92/323)
-grub2/i386-pc/setjmp_test.mod
-          1,704 100%    5.28kB/s    0:00:00            1,704 100%    5.28kB/s    0:00:00 (xfr#224, to-chk=91/323)
-grub2/i386-pc/setpci.mod
-          5,352 100%   16.54kB/s    0:00:00            5,352 100%   16.54kB/s    0:00:00 (xfr#225, to-chk=90/323)
-grub2/i386-pc/sfs.mod
-          5,160 100%   15.95kB/s    0:00:00            5,160 100%   15.95kB/s    0:00:00 (xfr#226, to-chk=89/323)
-grub2/i386-pc/signature_test.mod
-          6,412 100%   19.75kB/s    0:00:00            6,412 100%   19.75kB/s    0:00:00 (xfr#227, to-chk=88/323)
-grub2/i386-pc/sleep.mod
-          2,120 100%    6.51kB/s    0:00:00            2,120 100%    6.51kB/s    0:00:00 (xfr#228, to-chk=87/323)
-grub2/i386-pc/sleep_test.mod
-          2,324 100%    7.11kB/s    0:00:00            2,324 100%    7.11kB/s    0:00:00 (xfr#229, to-chk=86/323)
-grub2/i386-pc/spkmodem.mod
-          2,084 100%    6.38kB/s    0:00:00            2,084 100%    6.38kB/s    0:00:00 (xfr#230, to-chk=85/323)
-grub2/i386-pc/squash4.mod
-          6,792 100%   20.73kB/s    0:00:00            6,792 100%   20.73kB/s    0:00:00 (xfr#231, to-chk=84/323)
-grub2/i386-pc/syslinuxcfg.mod
-         17,408 100%   53.12kB/s    0:00:00           17,408 100%   53.12kB/s    0:00:00 (xfr#232, to-chk=83/323)
-grub2/i386-pc/tar.mod
-          3,308 100%   10.10kB/s    0:00:00            3,308 100%   10.10kB/s    0:00:00 (xfr#233, to-chk=82/323)
-grub2/i386-pc/terminal.lst
-            202 100%    0.61kB/s    0:00:00              202 100%    0.61kB/s    0:00:00 (xfr#234, to-chk=81/323)
-grub2/i386-pc/terminal.mod
-          4,340 100%   13.20kB/s    0:00:00            4,340 100%   13.20kB/s    0:00:00 (xfr#235, to-chk=80/323)
-grub2/i386-pc/terminfo.mod
-         11,908 100%   36.11kB/s    0:00:00           11,908 100%   36.11kB/s    0:00:00 (xfr#236, to-chk=79/323)
-grub2/i386-pc/test.mod
-          5,112 100%   15.50kB/s    0:00:00            5,112 100%   15.50kB/s    0:00:00 (xfr#237, to-chk=78/323)
-grub2/i386-pc/test_blockarg.mod
-          1,340 100%    4.06kB/s    0:00:00            1,340 100%    4.06kB/s    0:00:00 (xfr#238, to-chk=77/323)
-grub2/i386-pc/testload.mod
-          2,728 100%    8.25kB/s    0:00:00            2,728 100%    8.25kB/s    0:00:00 (xfr#239, to-chk=76/323)
-grub2/i386-pc/testspeed.mod
-          2,308 100%    6.94kB/s    0:00:00            2,308 100%    6.94kB/s    0:00:00 (xfr#240, to-chk=75/323)
-grub2/i386-pc/tftp.mod
-          5,864 100%   17.62kB/s    0:00:00            5,864 100%   17.62kB/s    0:00:00 (xfr#241, to-chk=74/323)
-grub2/i386-pc/tga.mod
-          4,416 100%   13.23kB/s    0:00:00            4,416 100%   13.23kB/s    0:00:00 (xfr#242, to-chk=73/323)
-grub2/i386-pc/time.mod
-          1,508 100%    4.50kB/s    0:00:00            1,508 100%    4.50kB/s    0:00:00 (xfr#243, to-chk=72/323)
-grub2/i386-pc/tr.mod
-          2,392 100%    7.12kB/s    0:00:00            2,392 100%    7.12kB/s    0:00:00 (xfr#244, to-chk=71/323)
-grub2/i386-pc/trig.mod
-          1,752 100%    5.18kB/s    0:00:00            1,752 100%    5.18kB/s    0:00:00 (xfr#245, to-chk=70/323)
-grub2/i386-pc/true.mod
-          1,204 100%    3.55kB/s    0:00:00            1,204 100%    3.55kB/s    0:00:00 (xfr#246, to-chk=69/323)
-grub2/i386-pc/truecrypt.mod
-          3,548 100%   10.47kB/s    0:00:00            3,548 100%   10.47kB/s    0:00:00 (xfr#247, to-chk=68/323)
-grub2/i386-pc/udf.mod
-          7,768 100%   22.92kB/s    0:00:00            7,768 100%   22.92kB/s    0:00:00 (xfr#248, to-chk=67/323)
-grub2/i386-pc/ufs1.mod
-          5,448 100%   16.03kB/s    0:00:00            5,448 100%   16.03kB/s    0:00:00 (xfr#249, to-chk=66/323)
-grub2/i386-pc/ufs1_be.mod
-          5,888 100%   17.32kB/s    0:00:00            5,888 100%   17.32kB/s    0:00:00 (xfr#250, to-chk=65/323)
-grub2/i386-pc/ufs2.mod
-          5,504 100%   16.19kB/s    0:00:00            5,504 100%   16.19kB/s    0:00:00 (xfr#251, to-chk=64/323)
-grub2/i386-pc/uhci.mod
-          6,660 100%   19.53kB/s    0:00:00            6,660 100%   19.53kB/s    0:00:00 (xfr#252, to-chk=63/323)
-grub2/i386-pc/usb.mod
-         10,508 100%   30.82kB/s    0:00:00           10,508 100%   30.82kB/s    0:00:00 (xfr#253, to-chk=62/323)
-grub2/i386-pc/usb_keyboard.mod
-          3,848 100%   11.22kB/s    0:00:00            3,848 100%   11.22kB/s    0:00:00 (xfr#254, to-chk=61/323)
-grub2/i386-pc/usbms.mod
-          7,096 100%   20.69kB/s    0:00:00            7,096 100%   20.69kB/s    0:00:00 (xfr#255, to-chk=60/323)
-grub2/i386-pc/usbserial_common.mod
-          2,064 100%    6.02kB/s    0:00:00            2,064 100%    6.02kB/s    0:00:00 (xfr#256, to-chk=59/323)
-grub2/i386-pc/usbserial_ftdi.mod
-          2,348 100%    6.82kB/s    0:00:00            2,348 100%    6.82kB/s    0:00:00 (xfr#257, to-chk=58/323)
-grub2/i386-pc/usbserial_pl2303.mod
-          2,692 100%    7.82kB/s    0:00:00            2,692 100%    7.82kB/s    0:00:00 (xfr#258, to-chk=57/323)
-grub2/i386-pc/usbserial_usbdebug.mod
-          1,536 100%    4.46kB/s    0:00:00            1,536 100%    4.46kB/s    0:00:00 (xfr#259, to-chk=56/323)
-grub2/i386-pc/usbtest.mod
-          3,608 100%   10.49kB/s    0:00:00            3,608 100%   10.49kB/s    0:00:00 (xfr#260, to-chk=55/323)
-grub2/i386-pc/vbe.mod
-          9,812 100%   28.43kB/s    0:00:00            9,812 100%   28.43kB/s    0:00:00 (xfr#261, to-chk=54/323)
-grub2/i386-pc/verify.mod
-         11,860 100%   34.27kB/s    0:00:00           11,860 100%   34.27kB/s    0:00:00 (xfr#262, to-chk=53/323)
-grub2/i386-pc/vga.mod
-          5,036 100%   14.51kB/s    0:00:00            5,036 100%   14.51kB/s    0:00:00 (xfr#263, to-chk=52/323)
-grub2/i386-pc/vga_text.mod
-          2,140 100%    6.16kB/s    0:00:00            2,140 100%    6.16kB/s    0:00:00 (xfr#264, to-chk=51/323)
-grub2/i386-pc/video.lst
-             33 100%    0.09kB/s    0:00:00               33 100%    0.09kB/s    0:00:00 (xfr#265, to-chk=50/323)
-grub2/i386-pc/video.mod
-          6,148 100%   17.61kB/s    0:00:00            6,148 100%   17.61kB/s    0:00:00 (xfr#266, to-chk=49/323)
-grub2/i386-pc/video_bochs.mod
-          5,700 100%   16.04kB/s    0:00:00            5,700 100%   16.04kB/s    0:00:00 (xfr#267, to-chk=48/323)
-grub2/i386-pc/video_cirrus.mod
-          5,980 100%   16.78kB/s    0:00:00            5,980 100%   16.78kB/s    0:00:00 (xfr#268, to-chk=47/323)
-grub2/i386-pc/video_colors.mod
-          5,672 100%   15.92kB/s    0:00:00            5,672 100%   15.92kB/s    0:00:00 (xfr#269, to-chk=46/323)
-grub2/i386-pc/video_fb.mod
-         21,808 100%   61.02kB/s    0:00:00           21,808 100%   61.02kB/s    0:00:00 (xfr#270, to-chk=45/323)
-grub2/i386-pc/videoinfo.mod
-          3,980 100%   11.14kB/s    0:00:00            3,980 100%   11.14kB/s    0:00:00 (xfr#271, to-chk=44/323)
-grub2/i386-pc/videotest.mod
-          4,224 100%   11.82kB/s    0:00:00            4,224 100%   11.79kB/s    0:00:00 (xfr#272, to-chk=43/323)
-grub2/i386-pc/videotest_checksum.mod
-          2,384 100%    6.65kB/s    0:00:00            2,384 100%    6.65kB/s    0:00:00 (xfr#273, to-chk=42/323)
-grub2/i386-pc/xfs.mod
-          7,348 100%   20.50kB/s    0:00:00            7,348 100%   20.50kB/s    0:00:00 (xfr#274, to-chk=41/323)
-grub2/i386-pc/xnu.mod
-         27,088 100%   75.37kB/s    0:00:00           27,088 100%   75.37kB/s    0:00:00 (xfr#275, to-chk=40/323)
-grub2/i386-pc/xnu_uuid.mod
-          2,136 100%    5.93kB/s    0:00:00            2,136 100%    5.93kB/s    0:00:00 (xfr#276, to-chk=39/323)
-grub2/i386-pc/xnu_uuid_test.mod
-          2,016 100%    5.59kB/s    0:00:00            2,016 100%    5.59kB/s    0:00:00 (xfr#277, to-chk=38/323)
-grub2/i386-pc/xzio.mod
-         15,676 100%   43.37kB/s    0:00:00           15,676 100%   43.37kB/s    0:00:00 (xfr#278, to-chk=37/323)
-grub2/i386-pc/zfs.mod
-         32,768  83%   87.91kB/s    0:00:00           39,332 100%  105.52kB/s    0:00:00 (xfr#279, to-chk=36/323)
-grub2/i386-pc/zfscrypt.mod
-          5,520 100%   14.77kB/s    0:00:00            5,520 100%   14.77kB/s    0:00:00 (xfr#280, to-chk=35/323)
-grub2/i386-pc/zfsinfo.mod
-          6,596 100%   17.60kB/s    0:00:00            6,596 100%   17.60kB/s    0:00:00 (xfr#281, to-chk=34/323)
-grub2/locale/
-grub2/locale/ast.mo
-         18,327 100%   48.37kB/s    0:00:00           18,327 100%   48.37kB/s    0:00:00 (xfr#282, to-chk=33/323)
-grub2/locale/ca.mo
-         32,768  30%   86.25kB/s    0:00:00          106,164 100%  279.45kB/s    0:00:00 (xfr#283, to-chk=32/323)
-grub2/locale/da.mo
-         32,768  33%   86.02kB/s    0:00:00           96,468 100%  253.24kB/s    0:00:00 (xfr#284, to-chk=31/323)
-grub2/locale/de.mo
-         32,768  31%   85.79kB/s    0:00:00          105,438 100%  274.58kB/s    0:00:00 (xfr#285, to-chk=30/323)
-grub2/locale/de@hebrew.mo
-         32,768  20%   84.88kB/s    0:00:01          156,861 100%  404.18kB/s    0:00:00 (xfr#286, to-chk=29/323)
-grub2/locale/de_CH.mo
-         32,768  31%   84.43kB/s    0:00:00          105,444 100%  270.98kB/s    0:00:00 (xfr#287, to-chk=28/323)
-grub2/locale/en@arabic.mo
-         32,768  21%   83.99kB/s    0:00:01          155,361 100%  397.17kB/s    0:00:00 (xfr#288, to-chk=27/323)
-grub2/locale/en@cyrillic.mo
-         32,768  22%   83.55kB/s    0:00:01          146,764 100%  373.24kB/s    0:00:00 (xfr#289, to-chk=26/323)
-grub2/locale/en@greek.mo
-         32,768  22%   82.47kB/s    0:00:01          146,761 100%  368.44kB/s    0:00:00 (xfr#290, to-chk=25/323)
-grub2/locale/en@hebrew.mo
-         32,768  19%   82.05kB/s    0:00:01          168,180 100%  418.98kB/s    0:00:00 (xfr#291, to-chk=24/323)
-grub2/locale/en@piglatin.mo
-         32,768  24%   81.22kB/s    0:00:01          135,170 100%  333.34kB/s    0:00:00 (xfr#292, to-chk=23/323)
-grub2/locale/en@quot.mo
-         32,768  27%   80.60kB/s    0:00:01          119,356 100%  292.13kB/s    0:00:00 (xfr#293, to-chk=22/323)
-grub2/locale/eo.mo
-         32,768  74%   80.20kB/s    0:00:00           44,138 100%  107.76kB/s    0:00:00 (xfr#294, to-chk=21/323)
-grub2/locale/es.mo
-         32,768  29%   80.00kB/s    0:00:00          110,349 100%  268.73kB/s    0:00:00 (xfr#295, to-chk=20/323)
-grub2/locale/fi.mo
-         32,768  30%   79.80kB/s    0:00:00          107,478 100%  261.09kB/s    0:00:00 (xfr#296, to-chk=19/323)
-grub2/locale/fr.mo
-         32,768  25%   79.40kB/s    0:00:01          126,738 100%  307.12kB/s    0:00:00 (xfr#297, to-chk=18/323)
-grub2/locale/gl.mo
-         32,768  30%   79.21kB/s    0:00:00          109,029 100%  262.90kB/s    0:00:00 (xfr#298, to-chk=17/323)
-grub2/locale/hu.mo
-         32,768  95%   77.86kB/s    0:00:00           34,205 100%   81.27kB/s    0:00:00 (xfr#299, to-chk=16/323)
-grub2/locale/id.mo
-         17,816 100%   42.23kB/s    0:00:00           17,816 100%   42.23kB/s    0:00:00 (xfr#300, to-chk=15/323)
-grub2/locale/it.mo
-         32,768  31%   77.48kB/s    0:00:00          105,131 100%  247.99kB/s    0:00:00 (xfr#301, to-chk=14/323)
-grub2/locale/ja.mo
-         23,262 100%   54.87kB/s    0:00:00           23,262 100%   54.87kB/s    0:00:00 (xfr#302, to-chk=13/323)
-grub2/locale/lt.mo
-         32,768  80%   77.29kB/s    0:00:00           40,470 100%   95.46kB/s    0:00:00 (xfr#303, to-chk=12/323)
-grub2/locale/nl.mo
-         32,768  30%   77.11kB/s    0:00:00          105,883 100%  248.56kB/s    0:00:00 (xfr#304, to-chk=11/323)
-grub2/locale/pa.mo
-         32,768  50%   76.74kB/s    0:00:00           65,366 100%  153.08kB/s    0:00:00 (xfr#305, to-chk=10/323)
-grub2/locale/pl.mo
-         32,768  30%   76.74kB/s    0:00:00          107,635 100%  251.46kB/s    0:00:00 (xfr#306, to-chk=9/323)
-grub2/locale/pt_BR.mo
-         32,768  49%   76.37kB/s    0:00:00           66,071 100%  153.99kB/s    0:00:00 (xfr#307, to-chk=8/323)
-grub2/locale/ru.mo
-         32,768  23%   76.37kB/s    0:00:01          138,136 100%  321.19kB/s    0:00:00 (xfr#308, to-chk=7/323)
-grub2/locale/sl.mo
-         32,768  33%   76.01kB/s    0:00:00           99,210 100%  229.58kB/s    0:00:00 (xfr#309, to-chk=6/323)
-grub2/locale/sv.mo
-         32,768  90%   75.83kB/s    0:00:00           36,235 100%   83.85kB/s    0:00:00 (xfr#310, to-chk=5/323)
-grub2/locale/tr.mo
-         32,768  63%   75.65kB/s    0:00:00           51,842 100%  119.69kB/s    0:00:00 (xfr#311, to-chk=4/323)
-grub2/locale/uk.mo
-         32,768  20%   75.29kB/s    0:00:01          160,269 100%  367.40kB/s    0:00:00 (xfr#312, to-chk=3/323)
-grub2/locale/vi.mo
-         32,768  28%   73.90kB/s    0:00:01          116,613 100%  262.40kB/s    0:00:00 (xfr#313, to-chk=2/323)
-grub2/locale/zh_CN.mo
-         30,123 100%   67.63kB/s    0:00:00           30,123 100%   67.63kB/s    0:00:00 (xfr#314, to-chk=1/323)
-grub2/locale/zh_TW.mo
-         30,882 100%   69.33kB/s    0:00:00           30,882 100%   69.33kB/s    0:00:00 (xfr#315, to-chk=0/323)
-
-sent 125,285,665 bytes  received 6,049 bytes  50,116,685.60 bytes/sec
-total size is 125,234,593  speedup is 1.00
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls -l /mnt/blabla/
-total 114852
-drwxr-xr-x. 2 root root        6 May 25 13:27 [0m[01;34mblabla[0m
--rw-r--r--. 1 root root   151918 Nov  9  2018 config-3.10.0-957.el7.x86_64
-drwxr-xr-x. 3 root root       17 May 25 12:11 [01;34mefi[0m
-drwxr-xr-x. 2 root root       27 May 25 12:12 [01;34mgrub[0m
-drwx------. 5 root root       97 May 25 12:23 [01;34mgrub2[0m
--rw-------. 1 root root 57159242 May 25 12:19 initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img
--rw-------. 1 root root 21371916 May 25 13:19 initramfs-3.10.0-957.el7.x86_64.img
--rw-------. 1 root root 21768378 May 25 12:23 initramfs-3.10.0-957.el7.x86_64.img.old
--rw-r--r--. 1 root root   314036 Nov  9  2018 [01;31msymvers-3.10.0-957.el7.x86_64.gz[0m
--rw-------. 1 root root  3543471 Nov  9  2018 System.map-3.10.0-957.el7.x86_64
--rwxr-xr-x. 1 root root  6639904 May 25 12:19 [01;32mvmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03[0m
--rwxr-xr-x. 1 root root  6639904 Nov  9  2018 [01;32mvmlinuz-3.10.0-957.el7.x86_64[0m
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# umn[Ki[Kount /mnt/bk[Klabla/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mount /dev/md0 /boot/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls -l/boo[K[K[K[K /boot/
-total 114852
-drwxr-xr-x. 2 root root        6 May 25 13:27 [0m[01;34mblabla[0m
--rw-r--r--. 1 root root   151918 Nov  9  2018 config-3.10.0-957.el7.x86_64
-drwxr-xr-x. 3 root root       17 May 25 12:11 [01;34mefi[0m
-drwxr-xr-x. 2 root root       27 May 25 12:12 [01;34mgrub[0m
-drwx------. 5 root root       97 May 25 12:23 [01;34mgrub2[0m
--rw-------. 1 root root 57159242 May 25 12:19 initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img
--rw-------. 1 root root 21371916 May 25 13:19 initramfs-3.10.0-957.el7.x86_64.img
--rw-------. 1 root root 21768378 May 25 12:23 initramfs-3.10.0-957.el7.x86_64.img.old
--rw-r--r--. 1 root root   314036 Nov  9  2018 [01;31msymvers-3.10.0-957.el7.x86_64.gz[0m
--rw-------. 1 root root  3543471 Nov  9  2018 System.map-3.10.0-957.el7.x86_64
--rwxr-xr-x. 1 root root  6639904 May 25 12:19 [01;32mvmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03[0m
--rwxr-xr-x. 1 root root  6639904 Nov  9  2018 [01;32mvmlinuz-3.10.0-957.el7.x86_64[0m
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsblk -f
-NAME                          FSTYPE            LABEL UUID                                   MOUNTPOINT
-sda                                                                                          
-├─sda1                        xfs                     d3608dde-b173-49f2-a7b2-c689c750a460   /boot
-└─sda2                        LVM2_member             BIiEZr-ht57-yI20-2rUv-trJC-OXP5-7ld1kd 
-  ├─centos_linux--lab2v2-root xfs                     ed194343-8d45-43e4-80ce-7b583f619222   /
-  └─centos_linux--lab2v2-swap swap                    2a65774a-c45a-4890-9850-b40d5f3cafb7   [SWAP]
-sdb                                                                                          
-├─sdb1                        linux_raid_member       94af69b4-00f4-e746-c3fc-66544dcba5a6   
-│ └─md0                       xfs                     d7269a41-581e-4667-a915-615c80ed7864   /boot
-└─sdb2                        linux_raid_member       431a3e88-bc57-d262-c3fc-66544dcba5a6   
-  └─md1                       xfs                     0efd39a5-cbe6-4cd9-85e7-5b73556fe916   
-sr0                                                                                          
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# lsblk -f -l /boot/[9@mount /dev/md0[C[C[C[C[C[C[C[2Pumount /mnt/blabla/mount /dev/md0 /boot/[9Pls -l[C[C[C[C[C[C[C[4Pblk -f[Kmdadm -a /dev/md0 /dev/sda1
-mdadm: Cannot open /dev/sda1: Device or resource busy
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# cat /proc/[K[K[K[K[K[K[K[K[K[Kumount /n[Kboot/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# umount /boot/mdadm -a /dev/md0 /dev/sda1lsblk -f[K -l /boot/[9@mount /dev/md0[C[C[C[C[C[C[C[2Pumount /mnt/blabla/mount /dev/md0 /boot/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mount /dev/md0 /boot/[8Pumount[C[C[C[C[C[C[Cmdadm -a /dev/md0 /dev/sda1
-mdadm: Cannot open /dev/sda1: Device or resource busy
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# cat /etc/[K[K[K[Kproc/mdstat 
-Personalities : [linear] [raid1] 
-md1 : active raid1 sdb2[1]
-      7338944 blocks [2/1] [_U]
-      
-md0 : active raid1 sdb1[1]
-      1048512 blocks [2/1] [_U]
-      
-unused devices: <none>
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# pvcreate /dev/md
-md0  md1  
-[root@linux-lab2v2 mikelog]# pvcreate /dev/md
-md0  md1  
-[root@linux-lab2v2 mikelog]# pvcreate /dev/md1 
-WARNING: xfs signature detected on /dev/md1 at offset 0. Wipe it? [y/n]: y
-  Wiping xfs signature on /dev/md1.
-  Physical volume "/dev/md1" successfully created.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# vgextend 
-.bash_logout            .bash_profile           .bashrc                 move-to-mdadm-raid.log  move-to-raid.log
-[root@linux-lab2v2 mikelog]# vgextend [K[K[K[K[K[K[Kscan 
-  Reading volume groups from cache.
-  Found volume group "centos_linux-lab2v2" using metadata type lvm2
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# vgextend centos_linux-lab2v2 /dev/md1 
-  Volume group "centos_linux-lab2v2" successfully extended
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# pvmove /dev/sda2 /dev/md1 [K[K1 
-  /dev/sda2: Moved: 0.06%
-  /dev/sda2: Moved: 11.45%
-  /dev/sda2: Moved: 56.34%
-  /dev/sda2: Moved: 100.00%
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# vgreduce centos_linux-lab2v2 /dev/sda2 
-  Removed "/dev/sda2" from volume group "centos_linux-lab2v2"
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm -a /dev/md1 /dev/sda2 
-mdadm: hot added /dev/sda2
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm -a /dev/md1 /dev/sda2 [Kcat et[K[K[K /proc/mb[Kda[Kstat 
-Personalities : [linear] [raid1] 
-md1 : active raid1 sda2[2] sdb2[1]
-      7338944 blocks [2/1] [_U]
-      [====>................]  recovery = 23.6% (1734400/7338944) finish=0.9min speed=102023K/sec
-      
-md0 : active raid1 sdb1[1]
-      1048512 blocks [2/1] [_U]
-      
-unused devices: <none>
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --examine --scan >> /etc/mdadm/mdadm.conf
-bash: /etc/mdadm/mdadm.conf: No such file or directory
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm --examine --scan >> /etc/mdadm/mdadm.conf[1Pmdadm.conf[1Pdadm.conf[1Pmdadm.conf[1Pmdadm.conf[1Pmdadm.conf[1Pdadm.conf
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# blkid 
-/dev/mapper/centos_linux--lab2v2-root: UUID="ed194343-8d45-43e4-80ce-7b583f619222" TYPE="xfs" 
-/dev/sda2: UUID="431a3e88-bc57-d262-c3fc-66544dcba5a6" TYPE="linux_raid_member" 
-/dev/sda1: UUID="d3608dde-b173-49f2-a7b2-c689c750a460" TYPE="xfs" 
-/dev/mapper/centos_linux--lab2v2-swap: UUID="2a65774a-c45a-4890-9850-b40d5f3cafb7" TYPE="swap" 
-/dev/sdb1: UUID="94af69b4-00f4-e746-c3fc-66544dcba5a6" TYPE="linux_raid_member" 
-/dev/sdb2: UUID="431a3e88-bc57-d262-c3fc-66544dcba5a6" TYPE="linux_raid_member" 
-/dev/md0: UUID="d7269a41-581e-4667-a915-615c80ed7864" TYPE="xfs" 
-/dev/md1: UUID="l4tJZU-6YRw-nnSJ-AMCK-Nyew-CWiH-05Z4EH" TYPE="LVM2_member" 
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# vim /etc/fstab 
-[?1049h[?1h=[2;1H▽[6n[1;1H  [1;1H[1;46r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[46;1H"/etc/fstab" 11L, 493C[>c[2;1H[34m#
-# /etc/fstab
-# Created by anaconda on Sat May 25 12:11:06 2019
-#
-# Accessible filesystems, by reference, are maintained under '/dev/disk'
-# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
-#[m
-/dev/mapper/centos_linux--lab2v2-root /[23C[32mxfs[m     [32mdefaults[m[8C[31m0 0[m
-[36mUUID[m[33m=[m[31md3608dde-b173-49f2-a7b2-c689c750a460[m /boot[19C[32mxfs[m     [32mdefaults[m[8C[31m0 0[m
-/dev/mapper/centos_linux--lab2v2-swap [33mswap[m[20C[32mswap[m    [32mdefaults[m[8C[31m0 0[m
-[1m[34m~                                                                                                                          [13;1H~                                                                                                                          [14;1H~                                                                                                                          [15;1H~                                                                                                                          [16;1H~                                                                                                                          [17;1H~                                                                                                                          [18;1H~                                                                                                                          [19;1H~                                                                                                                          [20;1H~                                                                                                                          [21;1H~                                                                                                                          [22;1H~                                                                                                                          [23;1H~                                                                                                                          [24;1H~                                                                                                                          [25;1H~                                                                                                                          [26;1H~                                                                                                                          [27;1H~                                                                                                                          [28;1H~                                                                                                                          [29;1H~                                                                                                                          [30;1H~                                                                                                                          [31;1H~                                                                                                                          [32;1H~                                                                                                                          [33;1H~                                                                                                                          [34;1H~                                                                                                                          [35;1H~                                                                                                                          [36;1H~                                                                                                                          [37;1H~                                                                                                                          [38;1H~                                                                                                                          [39;1H~                                                                                                                          [40;1H~                                                                                                                          [41;1H~                                                                                                                          [42;1H~                                                                                                                          [43;1H~                                                                                                                          [44;1H~                                                                                                                          [45;1H~                                                                                                                          [m[46;106H1,0-1[9CAll[1;1H[?12l[?25h[?25l[46;106H2,1  [2;1H[?12l[?25h[?25l[46;106H3[3;1H[?12l[?25h[?25l[46;106H4[4;1H[?12l[?25h[?25l[46;106H5[5;1H[?12l[?25h[?25l[46;106H6[6;1H[?12l[?25h[?25l[46;106H7[7;1H[?12l[?25h[?25l[46;106H8[8;1H[?12l[?25h[?25l[46;106H9[9;1H[?12l[?25h[?25l[46;106H10,1[10;1H[?12l[?25h[?25l[46;107H1[11;1H[?12l[?25h[?25l[46;109H2[11;2H[?12l[?25h[?25l[46;107H0[10;2H[?12l[?25h[?25l[46;109H3[10;3H[?12l[?25h[?25l[46;109H4[10;4H[?12l[?25h[?25l[46;109H5[10;5H[?12l[?25h[?25l[46;109H6[10;6H[?12l[?25h[?25l[46;1H[1m-- INSERT --[m[46;14H[K[46;106H10,6[10CAll[10;6H[?12l[?25h[?25l[31m3608dde-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;93H[K[10;6H[?12l[?25h[?25l[31m608dde-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;92H[K[10;6H[?12l[?25h[?25l[31m08dde-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;91H[K[10;6H[?12l[?25h[?25l[31m8dde-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;90H[K[10;6H[?12l[?25h[?25l[31mdde-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;89H[K[10;6H[?12l[?25h[?25l[1C[31me-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;88H[K[10;6H[?12l[?25h[?25l[31me-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;87H[K[10;6H[?12l[?25h[?25l[31m-b173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;86H[K[10;6H[?12l[?25h[?25l[31mb173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;85H[K[10;6H[?12l[?25h[?25l[31m173-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;84H[K[10;6H[?12l[?25h[?25l[31m73-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;83H[K[10;6H[?12l[?25h[?25l[31m3-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;82H[K[10;6H[?12l[?25h[?25l[31m-49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;81H[K[10;6H[?12l[?25h[?25l[31m49f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;80H[K[10;6H[?12l[?25h[?25l[31m9f2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;79H[K[10;6H[?12l[?25h[?25l[31mf2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;78H[K[10;6H[?12l[?25h[?25l[31m2-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;77H[K[10;6H[?12l[?25h[?25l[31m-a7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;76H[K[10;6H[?12l[?25h[?25l[31ma7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;75H[K[10;6H[?12l[?25h[?25l[31m7b2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;74H[K[10;6H[?12l[?25h[?25l[31mb2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;73H[K[10;6H[?12l[?25h[?25l[31m2-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;72H[K[10;6H[?12l[?25h[?25l[31m-c689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;71H[K[10;6H[?12l[?25h[?25l[31mc689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;70H[K[10;6H[?12l[?25h[?25l[31m689c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;69H[K[10;6H[?12l[?25h[?25l[31m89c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;68H[K[10;6H[?12l[?25h[?25l[31m9c750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;67H[K[10;6H[?12l[?25h[?25l[31mc750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;66H[K[10;6H[?12l[?25h[?25l[31m750a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;65H[K[10;6H[?12l[?25h[?25l[31m50a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;64H[K[10;6H[?12l[?25h[?25l[31m0a460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;63H[K[10;6H[?12l[?25h[?25l[31ma460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;62H[K[10;6H[?12l[?25h[?25l[31m460[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;61H[K[10;6H[?12l[?25h[?25l[31m60[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;60H[K[10;6H[?12l[?25h[?25l[31m0[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;59H[K[10;6H[?12l[?25h[?25l[1m[37m[41m=[m /boot [18C[32mxfs[m     [32mdefaults[m [7C[31m0 0[m[10;58H[K[10;6H[?12l[?25h[?25l[33m=[m[31md7269a41-581e-4667-a915-615c80ed7864[m /boot[7C   [9C[32mxfs[m     [32mdefaults[m[8C[31m0 0[m[46;109H42[10;42H[?12l[?25h[46;1H[K[10;41H[?25l[46;106H10,41[9CAll[10;41H[?12l[?25h[?25l[46;106H[K[46;1H:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l"/etc/fstab" 11L, 493C written
-[?1l>[?12l[?25h[?1049l]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls -l /dev/mapper/
-total 0
-lrwxrwxrwx. 1 root root       7 May 25 13:33 [0m[01;36mcentos_linux--lab2v2-root[0m -> [40;33;01m../dm-0[0m
-lrwxrwxrwx. 1 root root       7 May 25 13:33 [01;36mcentos_linux--lab2v2-swap[0m -> [40;33;01m../dm-1[0m
-crw-------. 1 root root 10, 236 May 25 12:55 [40;33;01mcontrol[0m
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# umount /boot/ -f
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls /boot/
-config-3.10.0-957.el7.x86_64                             initramfs-3.10.0-957.el7.x86_64.img.old
-[0m[01;34mefi[0m                                                      [01;31msymvers-3.10.0-957.el7.x86_64.gz[0m
-[01;34mgrub[0m                                                     System.map-3.10.0-957.el7.x86_64
-[01;34mgrub2[0m                                                    [01;32mvmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03[0m
-initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img  [01;32mvmlinuz-3.10.0-957.el7.x86_64[0m
-initramfs-3.10.0-957.el7.x86_64.img
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls /boot/umount /boot/ -f
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# umount /boot/ -f[7Pls /boot/
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls /boot/umount /boot/ -f[7Pls /boot/umount /boot/ -fls -l /dev/mapper/[3Pvim /etc/fstab [9Pblkid[Cmdadm --examine --scan >> /etc/mdadm.conf/mdadm.conf[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Pcat /proc/mdstat [11@mdadm -a /dev/md1 /dev/sda2[C[11@vgreduce centos_linux-lab2v2[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13Ppvmove /dev/sda2 /dev/md1[C[12@vgextend centos_linux-lab2v[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cscan [K[11@pvcreate /dev/md1[C[1Pcat /proc/mdstat[Cmdadm -a /dev/md0 /dev/sda1[6Pount /dev/md0 /boot/[8Pumount[C[C[C[C[C[C[C[8@mount /dev/md0[C[C[C[C[C[C[C
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mount /dev/md0 /boot/[12Pls[C[C[C[C[C[C[C
-[0m[01;34mblabla[0m                                                   initramfs-3.10.0-957.el7.x86_64.img
-config-3.10.0-957.el7.x86_64                             initramfs-3.10.0-957.el7.x86_64.img.old
-[01;34mefi[0m                                                      [01;31msymvers-3.10.0-957.el7.x86_64.gz[0m
-[01;34mgrub[0m                                                     System.map-3.10.0-957.el7.x86_64
-[01;34mgrub2[0m                                                    [01;32mvmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03[0m
-initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img  [01;32mvmlinuz-3.10.0-957.el7.x86_64[0m
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# ls /boot/[12@mount /dev/md0[C[C[C[C[C[C[C[12Pls[C[C[C[C[C[C[Cumount /boot/ -f[7Pls /boot/umount /boot/ -fls -l /dev/mapper/[3Pvim /etc/fstab [9Pblkid[Cmdadm --examine --scan >> /etc/mdadm.conf/mdadm.conf[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Pcat /proc/mdstat [11@mdadm -a /dev/md1 /dev/sda2[C[11@vgreduce centos_linux-lab2v2[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13Ppvmove /dev/sda2 /dev/md1[C[12@vgextend centos_linux-lab2v[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cscan [K[11@pvcreate /dev/md1[C[11Pvgscan[C[11@pvcreate /dev/md1[C[1Pcat /proc/mdstat[Cmdadm -a /dev/md0 /dev/sda1[6Pount /dev/md0 /boot/dadm -a /dev/md0 /dev/sda1
-mdadm: hot added /dev/sda1
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# mdadm -a /dev/md0 /dev/sda1[18Pls /boot/[12@mount /dev/md0[C[C[C[C[C[C[C[12Pls[C[C[C[C[C[C[Cumount /boot/ -f[7Pls /boot/umount /boot/ -fls -l /dev/mapper/[3Pvim /etc/fstab [9Pblkid[Cmdadm --examine --scan >> /etc/mdadm.conf/mdadm.conf[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Pcat /proc/mdstat [11@mdadm -a /dev/md1 /dev/sda2[C[11@vgreduce centos_linux-lab2v2[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[11Pmdadm -a /dev/md1[C[C[C[C[C[C[C[C[C[C[C[11Pcat /proc/mdstat[C
-Personalities : [linear] [raid1] 
-md1 : active raid1 sda2[0] sdb2[1]
-      7338944 blocks [2/2] [UU]
-      
-md0 : active raid1 sda1[2] sdb1[1]
-      1048512 blocks [2/1] [_U]
-      [===========>.........]  recovery = 58.8% (617856/1048512) finish=0.0min speed=102976K/sec
-      
-unused devices: <none>
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# cat /proc/mdstat 
-Personalities : [linear] [raid1] 
-md1 : active raid1 sda2[0] sdb2[1]
-      7338944 blocks [2/2] [UU]
-      
-md0 : active raid1 sda1[0] sdb1[1]
-      1048512 blocks [2/2] [UU]
-      
-unused devices: <none>
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# update-grub
-bash: update-grub: command not found
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# grub[K[K[K[Kgrub-install /dev/sdb
-bash: grub-install: command not found
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# grub-install /dev/sdab[10Pupdate-grubcat /proc/mdstat [6Pupdate-grubgrub-install /dev/sdb[C[1@2[C[1@-[1P
-grub2-bios-setup           grub2-macbless             grub2-mkrelpath            grub2-script-check
-grub2-editenv              grub2-menulst2cfg          grub2-mkrescue             grub2-set-default
-grub2-file                 grub2-mkconfig             grub2-mkstandalone         grub2-setpassword
-grub2-fstest               grub2-mkfont               grub2-ofpathname           grub2-sparc64-setup
-grub2-get-kernel-settings  grub2-mkimage              grub2-probe                grub2-syslinux2cfg
-grub2-glue-efi             grub2-mklayout             grub2-reboot               
-grub2-install              grub2-mknetdir             grub2-render-label         
-grub2-kbdcomp              grub2-mkpasswd-pbkdf2      grub2-rpm-sort             
-[root@linux-lab2v2 mikelog]# grub2-install /dev/sdb[C[C[C[C[C[C[Ctall /dev/sdb[1P[1P[C[1P /dev/sdb[1P /dev/sdb
-Installing for i386-pc platform.
-Installation finished. No error reported.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# grub2-install /dev/sdb[Ka
-Installing for i386-pc platform.
-Installation finished. No error reported.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# vim /etc/defu[Kault/grub 
-[?1049h[?1h=[2;1H▽[6n[1;1H  [1;1H[1;46r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[46;1H"/etc/default/grub" 7L, 305C[>c[1;1HGRUB_TIMEOUT=5
-GRUB_DISTRIBUTOR="$(sed 's, release .*$,,g' /etc/system-release)"
-GRUB_DEFAULT=saved
-GRUB_DISABLE_SUBMENU=true
-GRUB_TERMINAL_OUTPUT="console"
-GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet"
-GRUB_DISABLE_RECOVERY="true"
-[1m[34m~                                                                                                                          [9;1H~                                                                                                                          [10;1H~                                                                                                                          [11;1H~                                                                                                                          [12;1H~                                                                                                                          [13;1H~                                                                                                                          [14;1H~                                                                                                                          [15;1H~                                                                                                                          [16;1H~                                                                                                                          [17;1H~                                                                                                                          [18;1H~                                                                                                                          [19;1H~                                                                                                                          [20;1H~                                                                                                                          [21;1H~                                                                                                                          [22;1H~                                                                                                                          [23;1H~                                                                                                                          [24;1H~                                                                                                                          [25;1H~                                                                                                                          [26;1H~                                                                                                                          [27;1H~                                                                                                                          [28;1H~                                                                                                                          [29;1H~                                                                                                                          [30;1H~                                                                                                                          [31;1H~                                                                                                                          [32;1H~                                                                                                                          [33;1H~                                                                                                                          [34;1H~                                                                                                                          [35;1H~                                                                                                                          [36;1H~                                                                                                                          [37;1H~                                                                                                                          [38;1H~                                                                                                                          [39;1H~                                                                                                                          [40;1H~                                                                                                                          [41;1H~                                                                                                                          [42;1H~                                                                                                                          [43;1H~                                                                                                                          [44;1H~                                                                                                                          [45;1H~                                                                                                                          [m[46;106H1,1[11CAll[1;1H[?12l[?25h[?25l[46;106H2[2;1H[?12l[?25h[?25l[46;106H3[3;1H[?12l[?25h[?25l[46;106H4[4;1H[?12l[?25h[?25l[46;106H5[5;1H[?12l[?25h[?25l[46;108H2[5;2H[?12l[?25h[?25l[46;108H3[5;3H[?12l[?25h[?25l[46;108H4[5;4H[?12l[?25h[?25l[46;108H5[5;5H[?12l[?25h[?25l[46;108H6[5;6H[?12l[?25h[?25l[46;108H7[5;7H[?12l[?25h[?25l[46;108H8[5;8H[?12l[?25h[?25l[46;108H9[5;9H[?12l[?25h[?25l[46;108H10[5;10H[?12l[?25h[?25l[46;109H1[5;11H[?12l[?25h[?25l[46;109H2[5;12H[?12l[?25h[?25l[46;109H3[5;13H[?12l[?25h[?25l[46;109H4[5;14H[?12l[?25h[?25l[46;109H5[5;15H[?12l[?25h[?25l[46;109H6[5;16H[?12l[?25h[?25l[46;109H7[5;17H[?12l[?25h[?25l[46;109H8[5;18H[?12l[?25h[?25l[46;109H9[5;19H[?12l[?25h[?25l[46;108H20[5;20H[?12l[?25h[?25l[46;109H1[5;21H[?12l[?25h[?25l[46;109H2[5;22H[?12l[?25h[?25l[46;109H3[5;23H[?12l[?25h[?25l[46;109H4[5;24H[?12l[?25h[?25l[46;109H5[5;25H[?12l[?25h[?25l[46;109H6[5;26H[?12l[?25h[?25l[46;109H7[5;27H[?12l[?25h[?25l[46;109H8[5;28H[?12l[?25h[?25l[46;109H9[5;29H[?12l[?25h[?25l[46;108H30[5;30H[?12l[?25h[?25l[46;106H6[6;30H[?12l[?25h[?25l[46;109H1[6;31H[?12l[?25h[?25l[46;109H2[6;32H[?12l[?25h[?25l[46;109H3[6;33H[?12l[?25h[?25l[46;109H4[6;34H[?12l[?25h[?25l[46;109H5[6;35H[?12l[?25h[?25l[46;109H6[6;36H[?12l[?25h[?25l[46;109H7[6;37H[?12l[?25h[?25l[46;109H8[6;38H[?12l[?25h[?25l[46;109H9[6;39H[?12l[?25h[?25l[46;108H40[6;40H[?12l[?25h[?25l[46;109H1[6;41H[?12l[?25h[?25l[46;109H2[6;42H[?12l[?25h[?25l[46;109H3[6;43H[?12l[?25h[?25l[46;109H4[6;44H[?12l[?25h[?25l[46;109H5[6;45H[?12l[?25h[?25l[46;109H6[6;46H[?12l[?25h[?25l[46;109H7[6;47H[?12l[?25h[?25l[46;109H8[6;48H[?12l[?25h[?25l[46;109H9[6;49H[?12l[?25h[?25l[46;108H50[6;50H[?12l[?25h[?25l[46;109H1[6;51H[?12l[?25h[?25l[46;109H2[6;52H[?12l[?25h[?25l[46;109H3[6;53H[?12l[?25h[?25l[46;109H4[6;54H[?12l[?25h[?25l[46;109H5[6;55H[?12l[?25h[?25l[46;109H6[6;56H[?12l[?25h[?25l[46;109H7[6;57H[?12l[?25h[?25l[46;109H8[6;58H[?12l[?25h[?25l[46;109H9[6;59H[?12l[?25h[?25l[46;108H60[6;60H[?12l[?25h[?25l[46;109H1[6;61H[?12l[?25h[?25l[46;109H2[6;62H[?12l[?25h[?25l[46;109H3[6;63H[?12l[?25h[?25l[46;109H4[6;64H[?12l[?25h[?25l[46;109H5[6;65H[?12l[?25h[?25l[46;109H6[6;66H[?12l[?25h[?25l[46;109H7[6;67H[?12l[?25h[?25l[46;109H8[6;68H[?12l[?25h[?25l[46;109H9[6;69H[?12l[?25h[?25l[46;108H70[6;70H[?12l[?25h[?25l[46;109H1[6;71H[?12l[?25h[?25l[46;109H2[6;72H[?12l[?25h[?25l[46;109H3[6;73H[?12l[?25h[?25l[46;109H4[6;74H[?12l[?25h[?25l[46;109H5[6;75H[?12l[?25h[?25l[46;109H6[6;76H[?12l[?25h[?25l[46;109H7[6;77H[?12l[?25h[?25l[46;109H8[6;78H[?12l[?25h[?25l[46;109H9[6;79H[?12l[?25h[?25l[46;108H80[6;80H[?12l[?25h[?25l[46;109H1[6;81H[?12l[?25h[?25l[46;109H2[6;82H[?12l[?25h[?25l[46;109H3[6;83H[?12l[?25h[?25l[46;109H4[6;84H[?12l[?25h[?25l[46;109H5[6;85H[?12l[?25h[?25l[46;109H6[6;86H[?12l[?25h[?25l[46;109H7[6;87H[?12l[?25h[?25l[46;109H8[6;88H[?12l[?25h[?25l[46;109H9[6;89H[?12l[?25h[?25l[46;108H90[6;90H[?12l[?25h[?25l[46;109H1[6;91H[?12l[?25h[?25l[46;109H2[6;92H[?12l[?25h[?25l[46;109H3[6;93H[?12l[?25h[?25l[46;109H4[6;94H[?12l[?25h[?25l[46;109H5[6;95H[?12l[?25h[?25l[46;109H6[6;96H[?12l[?25h[?25l[46;109H7[6;97H[?12l[?25h[?25l[46;109H8[6;98H[?12l[?25h[?25l[46;109H9[6;99H[?12l[?25h[?25l[46;108H100[6;100H[?12l[?25h[?25l[46;110H1[6;101H[?12l[?25h[?25l[46;110H2[6;102H[?12l[?25h[?25l[46;110H3[6;103H[?12l[?25h[?25l[46;110H4[6;104H[?12l[?25h[?25l[46;110H5[6;105H[?12l[?25h[?25l[46;110H6[6;106H[?12l[?25h[?25l[46;110H7[6;107H[?12l[?25h[?25l[46;110H8[6;108H[?12l[?25h[?25l[46;110H9[6;109H[?12l[?25h[?25l[46;110H8[6;108H[?12l[?25h[?25l[46;1H[1m-- INSERT --[m[46;13H[K[46;106H6,108[9CAll[6;108H[?12l[?25h[?25lrrhgb quiet"[46;110H9[6;109H[?12l[?25h[?25ldrhgb quiet"[46;109H10[6;110H[?12l[?25h[?25l.rhgb quiet"[46;110H1[6;111H[?12l[?25h[?25larhgb quiet"[46;110H2[6;112H[?12l[?25h[?25lurhgb quiet"[46;110H3[6;113H[?12l[?25h[?25l[7;45r[7;1H[L[1;46r[6;113Htrhgb quiett[7;1H"[46;106H[K[46;106H6,114[9CAll[6;114H[?12l[?25h[?25lorhgb quiee[7;1Ht"[46;110H5[6;115H[?12l[?25h[?25l=rhgb quii[7;1Het"[46;110H6[6;116H[?12l[?25h[?25l1rhgb quu[7;1Hiet"[46;110H7[6;117H[?12l[?25h[?25l rhgb qq[7;1Huiet"[46;110H8[6;118H[?12l[?25h[?25lrhgb quu[7;1Hiet"[7;5H[K[46;110H7[6;117H[?12l[?25h[?25lrhgb quii[7;1Het"[7;4H[K[46;110H6[6;116H[?12l[?25h[?25lrhgb quiee[7;1Ht"[7;3H[K[46;110H5[6;115H[?12l[?25h[?25lrhgb quiett[7;1H"[7;2H[K[46;110H4[6;114H[?12l[?25h[?25l[6;45r[45;1H
-[1;46r[6;1HGRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rd.aurhgb quiet"[45;1H[1m[34m~                                                                                                                          [m[46;106H[K[46;106H6,113[9CAll[6;113H[?12l[?25h[?25lrhgb quiet"[6;123H[K[46;110H2[6;112H[?12l[?25h[?25lrhgb quiet"[6;122H[K[46;110H1[6;111H[?12l[?25h[?25lrhgb quiet"[6;121H[K[46;110H0[6;110H[?12l[?25h[?25lrhgb quiet"[6;120H[K[46;109H09[6;109H[?12l[?25h[?25lhgb quiet"[6;119H[K[46;110H8[6;108H[?12l[?25h[?25l[46;110H7[6;107H[?12l[?25h[?25l[46;110H6[6;106H[?12l[?25h[?25l[46;110H5[6;105H[?12l[?25h[?25l[46;110H4[6;104H[?12l[?25h[?25l[46;110H3[6;103H[?12l[?25h[?25l[46;110H2[6;102H[?12l[?25h[?25l[46;110H1[6;101H[?12l[?25h[?25l[46;110H0[6;100H[?12l[?25h[?25l[46;108H99 [6;99H[?12l[?25h[?25l[46;109H8[6;98H[?12l[?25h[?25l[46;109H7[6;97H[?12l[?25h[?25l[46;109H6[6;96H[?12l[?25h[?25l[46;109H5[6;95H[?12l[?25h[?25l[46;109H4[6;94H[?12l[?25h[?25l[46;109H3[6;93H[?12l[?25h[?25l[46;109H2[6;92H[?12l[?25h[?25l[46;109H1[6;91H[?12l[?25h[?25l[46;109H0[6;90H[?12l[?25h[?25l[46;108H89[6;89H[?12l[?25h[?25l[46;109H8[6;88H[?12l[?25h[?25l[46;109H7[6;87H[?12l[?25h[?25l[46;109H6[6;86H[?12l[?25h[?25l[46;109H5[6;85H[?12l[?25h[?25l[46;109H4[6;84H[?12l[?25h[?25l[46;109H3[6;83H[?12l[?25h[?25l[46;109H2[6;82H[?12l[?25h[?25l[46;109H1[6;81H[?12l[?25h[?25l[46;109H0[6;80H[?12l[?25h[?25l[46;108H79[6;79H[?12l[?25h[?25l[46;109H8[6;78H[?12l[?25h[?25l[46;109H7[6;77H[?12l[?25h[?25l[46;109H6[6;76H[?12l[?25h[?25l[46;109H5[6;75H[?12l[?25h[?25l[46;109H4[6;74H[?12l[?25h[?25l[46;109H3[6;73H[?12l[?25h[?25l[46;109H2[6;72H[?12l[?25h[?25l[46;109H1[6;71H[?12l[?25h[?25l[46;109H0[6;70H[?12l[?25h[?25l[46;108H69[6;69H[?12l[?25h[?25l[46;109H8[6;68H[?12l[?25h[?25l[46;109H7[6;67H[?12l[?25h[?25l[46;109H6[6;66H[?12l[?25h[?25l[46;109H5[6;65H[?12l[?25h[?25l[46;109H4[6;64H[?12l[?25h[?25l[46;109H3[6;63H[?12l[?25h[?25l[46;109H2[6;62H[?12l[?25h[?25l[46;109H1[6;61H[?12l[?25h[?25l[46;109H0[6;60H[?12l[?25h[?25l[46;108H59[6;59H[?12l[?25h[?25l[46;109H8[6;58H[?12l[?25h[?25l[46;109H7[6;57H[?12l[?25h[?25l[46;109H6[6;56H[?12l[?25h[?25l[46;109H5[6;55H[?12l[?25h[?25l[46;109H4[6;54H[?12l[?25h[?25l[46;109H3[6;53H[?12l[?25h[?25l[46;109H2[6;52H[?12l[?25h[?25l[46;109H1[6;51H[?12l[?25h[?25l[46;109H0[6;50H[?12l[?25h[?25l[46;108H49[6;49H[?12l[?25h[?25l[46;109H8[6;48H[?12l[?25h[?25l[46;109H7[6;47H[?12l[?25h[?25l[46;109H6[6;46H[?12l[?25h[?25l[46;109H5[6;45H[?12l[?25h[?25l[46;109H4[6;44H[?12l[?25h[?25l[46;109H3[6;43H[?12l[?25h[?25l[46;109H2[6;42H[?12l[?25h[?25l[46;109H1[6;41H[?12l[?25h[?25l[46;109H0[6;40H[?12l[?25h[?25l[46;108H39[6;39H[?12l[?25h[?25l[46;109H8[6;38H[?12l[?25h[?25l[46;109H7[6;37H[?12l[?25h[?25l  rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet"[46;109H8[6;38H[?12l[?25h[?25lr rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet"[46;109H9[6;39H[?12l[?25h[?25ld rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet"[46;108H40[6;40H[?12l[?25h[?25l. rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet"[46;109H1[6;41H[?12l[?25h[?25la rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet"[46;109H2[6;42H[?12l[?25h[?25l[7;45r[7;1H[L[1;46r[6;42Hu rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiett[7;1H"[46;106H[K[46;106H6,43[10CAll[6;43H[?12l[?25h[?25lo rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiee[7;1Ht"[46;109H4[6;44H[?12l[?25h[?25lt rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quii[7;1Het"[46;109H5[6;45H[?12l[?25h[?25l rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiee[7;1Ht"[7;3H[K[46;109H4[6;44H[?12l[?25h[?25l rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiett[7;1H"[7;2H[K[46;109H3[6;43H[?12l[?25h[?25lt rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiee[7;1Ht"[46;109H4[6;44H[?12l[?25h[?25lo rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quii[7;1Het"[46;109H5[6;45H[?12l[?25h[?25l- rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quu[7;1Hiet"[46;109H6[6;46H[?12l[?25h[?25l1 rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb qq[7;1Huiet"[46;109H7[6;47H[?12l[?25h[?25l rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quu[7;1Hiet"[7;5H[K[46;109H6[6;46H[?12l[?25h[?25l rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quii[7;1Het"[7;4H[K[46;109H5[6;45H[?12l[?25h[?25l= rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quu[7;1Hiet"[46;109H6[6;46H[?12l[?25h[?25l1 rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb qq[7;1Huiet"[46;109H7[6;47H[?12l[?25h[46;1H[K[6;46H[?25l[46;106H6,46[10CAll[6;46H[?12l[?25h[?25l[46;106H[K[46;1H:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h[?25l"/etc/default/grub" 7L, 315C written
-[?1l>[?12l[?25h[?1049l]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sdb
-Generating grub configuration file ...
-  WARNING: Not using lvmetad because duplicate PVs were found.
-  WARNING: Use multipath or vgimportclone to resolve duplicate PVs?
-  WARNING: After duplicates are resolved, run "pvscan --cache" to enable lvmetad.
-  WARNING: Not using lvmetad because duplicate PVs were found.
-  WARNING: Use multipath or vgimportclone to resolve duplicate PVs?
-  WARNING: After duplicates are resolved, run "pvscan --cache" to enable lvmetad.
-Found linux image: /boot/vmlinuz-3.10.0-957.el7.x86_64
-Found initrd image: /boot/initramfs-3.10.0-957.el7.x86_64.img
-Found linux image: /boot/vmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03
-Found initrd image: /boot/initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img
-  WARNING: Not using lvmetad because duplicate PVs were found.
-  WARNING: Use multipath or vgimportclone to resolve duplicate PVs?
-  WARNING: After duplicates are resolved, run "pvscan --cache" to enable lvmetad.
-  WARNING: Not using lvmetad because duplicate PVs were found.
-  WARNING: Use multipath or vgimportclone to resolve duplicate PVs?
-  WARNING: After duplicates are resolved, run "pvscan --cache" to enable lvmetad.
-done
-Installing for i386-pc platform.
-Installation finished. No error reported.
-]0;root@linux-lab2v2:/home/mikelog[root@linux-lab2v2 mikelog]# cat /boot/grub2/grub.cfg 
-#
-# DO NOT EDIT THIS FILE
-#
-# It is automatically generated by grub2-mkconfig using templates
-# from /etc/grub.d and settings from /etc/default/grub
-#
-
-### BEGIN /etc/grub.d/00_header ###
-set pager=1
-
-if [ -s $prefix/grubenv ]; then
-  load_env
-fi
-if [ "${next_entry}" ] ; then
-   set default="${next_entry}"
-   set next_entry=
-   save_env next_entry
-   set boot_once=true
-else
-   set default="${saved_entry}"
-fi
-
-if [ x"${feature_menuentry_id}" = xy ]; then
-  menuentry_id_option="--id"
-else
-  menuentry_id_option=""
-fi
-
-export menuentry_id_option
-
-if [ "${prev_saved_entry}" ]; then
-  set saved_entry="${prev_saved_entry}"
-  save_env saved_entry
-  set prev_saved_entry=
-  save_env prev_saved_entry
-  set boot_once=true
-fi
-
-function savedefault {
-  if [ -z "${boot_once}" ]; then
-    saved_entry="${chosen}"
-    save_env saved_entry
-  fi
-}
-
-function load_video {
-  if [ x$feature_all_video_module = xy ]; then
-    insmod all_video
-  else
-    insmod efi_gop
-    insmod efi_uga
-    insmod ieee1275_fb
-    insmod vbe
-    insmod vga
-    insmod video_bochs
-    insmod video_cirrus
-  fi
-}
-
-terminal_output console
-if [ x$feature_timeout_style = xy ] ; then
-  set timeout_style=menu
-  set timeout=5
-# Fallback normal timeout code in case the timeout_style feature is
-# unavailable.
-else
-  set timeout=5
-fi
-### END /etc/grub.d/00_header ###
-
-### BEGIN /etc/grub.d/00_tuned ###
-set tuned_params=""
-set tuned_initrd=""
-### END /etc/grub.d/00_tuned ###
-
-### BEGIN /etc/grub.d/01_users ###
-if [ -f ${prefix}/user.cfg ]; then
-  source ${prefix}/user.cfg
-  if [ -n "${GRUB2_PASSWORD}" ]; then
-    set superusers="root"
-    export superusers
-    password_pbkdf2 root ${GRUB2_PASSWORD}
-  fi
-fi
-### END /etc/grub.d/01_users ###
-
-### BEGIN /etc/grub.d/10_linux ###
-menuentry 'CentOS Linux (3.10.0-957.el7.x86_64) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-957.el7.x86_64-advanced-ed194343-8d45-43e4-80ce-7b583f619222' {
-	load_video
-	set gfxpayload=keep
-	insmod gzio
-	insmod part_msdos
-	insmod part_msdos
-	insmod diskfilter
-	insmod mdraid09
-	insmod xfs
-	set root='mduuid/94af69b400f4e746c3fc66544dcba5a6'
-	if [ x$feature_platform_search_hint = xy ]; then
-	  search --no-floppy --fs-uuid --set=root --hint='mduuid/94af69b400f4e746c3fc66544dcba5a6'  d7269a41-581e-4667-a915-615c80ed7864
-	else
-	  search --no-floppy --fs-uuid --set=root d7269a41-581e-4667-a915-615c80ed7864
-	fi
-	linux16 /vmlinuz-3.10.0-957.el7.x86_64 root=/dev/mapper/centos_linux--lab2v2-root ro crashkernel=auto rd.auto=1 rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet 
-	initrd16 /initramfs-3.10.0-957.el7.x86_64.img
-}
-menuentry 'CentOS Linux (0-rescue-03bd83309377487586dd7f9885fc2c03) 7 (Core)' --class centos --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-0-rescue-03bd83309377487586dd7f9885fc2c03-advanced-ed194343-8d45-43e4-80ce-7b583f619222' {
-	load_video
-	insmod gzio
-	insmod part_msdos
-	insmod part_msdos
-	insmod diskfilter
-	insmod mdraid09
-	insmod xfs
-	set root='mduuid/94af69b400f4e746c3fc66544dcba5a6'
-	if [ x$feature_platform_search_hint = xy ]; then
-	  search --no-floppy --fs-uuid --set=root --hint='mduuid/94af69b400f4e746c3fc66544dcba5a6'  d7269a41-581e-4667-a915-615c80ed7864
-	else
-	  search --no-floppy --fs-uuid --set=root d7269a41-581e-4667-a915-615c80ed7864
-	fi
-	linux16 /vmlinuz-0-rescue-03bd83309377487586dd7f9885fc2c03 root=/dev/mapper/centos_linux--lab2v2-root ro crashkernel=auto rd.auto=1 rd.lvm.lv=centos_linux-lab2v2/root rd.lvm.lv=centos_linux-lab2v2/swap rhgb quiet 
-	initrd16 /initramfs-0-rescue-03bd83309377487586dd7f9885fc2c03.img
-}
-if [ "x$default" = 'CentOS Linux (3.10.0-957.el7.x86_64) 7 (Core)' ]; then default='Advanced options for CentOS Linux>CentOS Linux (3.10.0-957.el7.x86_64) 7 (Core)'; fi;
-### END /etc/grub.d/10_linux ###
-
-### BEGIN /etc/grub.d/20_linux_xen ###
-### END /etc/grub.d/20_linux_xen ###
-
-### BEGIN /etc/grub.d/20_ppc_terminfo ###
-### END /etc/grub.d/20_ppc_terminfo ###
-
-### BEGIN /etc/grub.d/30_os-prober ###
-### END /etc/grub.d/30_os-prober ###
-
-### BEGIN /etc/grub.d/40_custom ###
-# This file provides an easy way to add custom menu entries.  Simply type the
-# menu entries you want to add after this comment.  Be careful not to
