@@ -1,0 +1,400 @@
+    1  lsblk 
+    2  vim /etc/fstab 
+    3  vi /etc/fstab 
+    4  vi /etc/default/grub 
+    5  dracut  /boot/initramfs-$(uname -r).img $(uname -r) --force
+    6  grub2-mkconfig -o /boot/grub2/grub.cfg && grub2-install /dev/sda
+    7  vi /etc/selinux/config 
+    8  exit
+    9  script lab3.log 
+   10  lsblk 
+   11  vgremove VolGroup00
+   12  pvremove /dev/sda3
+   13  lsblk 
+   14  fdisk /dev/sda
+   15  lsblk 
+   16  partprobe
+   17  lsblk 
+   18  vgextend vg01 /dev/sda3
+   19  pvmove /dev/sdb1 /dev/sda3
+   20  lsblk 
+   21  vgreduce vg01 /dev/sdb1
+   22  pvs
+   23  pvremove /dev/sdb1
+   24  lsblk
+   25  yum install lsof fuser -y
+   26  fuser /var/
+   27  lsof /var/
+   28  lsof /var/*
+   29  vgcreate vg_var /dev/sd{d,e}
+   30  vgs
+   31  pvs
+   32  vgremove vg_var
+   33  vgcrete /dev/sdd /dev/sde
+   34  vgcreate /dev/sdd /dev/sde
+   35  pvremove /dev/sdd /sde
+   36  vgcreate /dev/sdd /dev/sde
+   37  vgs
+   38  pvs
+   39  pvremove /dev/sde
+   40  vgcreate /dev/sdd /dev/sde
+   41  vgs
+   42  vgcreate vg_var /dev/sdd /dev/sde
+   43  vgs
+   44  vgremove vg_var
+   45  pvremove /dev/sdd /dev/sde
+   46  pvcreate /dev/sdd /dev/sde
+   47  pvs
+   48  vgcreate vg_var /dev/sdd /dev/sde
+   49  vgs
+   50  vgdisplay 
+   51  lvcreate -L 1.8G -n lv_var vg_var
+   52  mkfs.ext4 /dev/vg_var/lv_var
+   53   mount /dev/vg_var/lv_var /mnt
+   54   cp -aR /var/* /mnt/
+   55  lv -l /mnt/
+   56  ls -l /mnt/
+   57   mkdir /tmp/oldvar && mv /var/* /tmp/oldvar
+   58  lsof /var/
+   59  lsof /var/tmp/
+   60  lsof /var/tmp/systemd-private-3cf5692a5b6049798b85fbe1b0afc217-chronyd.service-aFMYdu/
+   61  lsof /var/tmp/systemd-private-3cf5692a5b6049798b85fbe1b0afc217-chronyd.service-aFMYdu/tmp/
+   62  yum install fuser -y
+   63   echo "`blkid | grep var: | awk '{print $2}'` /var ext4 defaults 0 0" >> /etc/fstab
+   64  cat /etc/fstab 
+   65  /sbin/reboot 
+   66  lsblk 
+   67  pvs
+   68  lvconvert -m1 /dev/vg_var/lv_var /dev/sde
+   69  lsblk 
+   70  ls -l /var/
+   71  yum install fuser -y
+   72  lsblk
+   73  vgcreate vg_home /dev/sdc
+   74  lvcreate -L 6G -n lv_home vg_home 
+   75  mkfs.ext4 /dev/vg_home/lv_home 
+   76  lsblk 
+   77  ls -l /mnt/
+   78  mount /dev/vg_home/lv_home /mnt/
+   79  cp -aR /home/* /mnt/ 
+   80  rm -rf /home/*
+   81   umount /mnt
+   82  mount /dev/vg_home/lv_home /home/
+   83  ls -l /home/
+   84  echo "`blkid | grep Home
+   85  echo "`blkid | grep Home`"
+   86  echo "`blkid | grep home`"
+   87  echo "`blkid | grep home | awk '{print $2}'` /home ext4 defaults 0 0" >> /etc/fstab 
+   88  cat /etc/fstab 
+   89   touch /home/file{1..20}
+   90  ls -l /home/
+   91  # lvcreate -L 100MB -s -n home_snap /dev/vg_home/lv_home 
+   92  lsblk 
+   93   rm -f /home/file{11..20}
+   94  umount /home/
+   95   lvconvert --merge /dev/vg_home/lv_home 
+   96  mount -a
+   97   touch /home/file{1..20}
+   98  ls -l /home/
+   99  lvcreate -L 100MB -s -n home_snap /dev/vg_home/lv_home 
+  100   rm -f /home/file{11..20}
+  101  ls -l /home/
+  102  umount /home 
+  103   lvconvert --merge /dev/vg_home/home_snap 
+  104  mount /home
+  105  ls -l /home/
+  106  lsblk
+  107  fdisk /dev/sda 
+  108  partprobe 
+  109  lsblk
+  110  yum search btrfs
+  111  yum install -y btrfs-progs
+  112  btrfs device add /dev/sda5
+  113  btrfs device add /dev/sda5 -f
+  114  mkdir /mnt/single
+  115  mkdir /mnt/raid
+  116  lsbls
+  117  lsblk
+  118  fdisk /dev/sda 
+  119  fdisk -l /dev/sda 
+  120  fdisk /dev/sda 
+  121  cfdisk 
+  122  fdisk /dev/sda 
+  123  partprobe 
+  124  btrfs device add /dev/sda8 -f /mnt/single/
+  125  mkfs.btrfs /dev/sda8 
+  126  mkfs.btrfs /dev/sda5 /dev/sda6 
+  127  btrfs filesystem show
+  128  echo "UUID=875d9213-3d49-4ffe-96eb-27ab2faee9d3 /mnt/raid btrfs device=/dev/sda5,device=dev/sda6 0 0" > /etc/fstab 
+  129  ls -l /mnt/
+  130  cat /etc/fstab 
+  131  vi /etc/fstab 
+  132  mount -a
+  133  vi /etc/fstab 
+  134  mount /dev/sda5 /mnt/raid/
+  135  umount /mnt/*
+  136  lsblk 
+  137  mount -a
+  138  vi /etc/fstab 
+  139  mount -a
+  140  btrfs filesystem show
+  141  ls -l /mnt/raid/
+  142  vi /etc/fstab 
+  143  vi /etc/fstab 
+  144  vi /etc/fstab 
+  145  mount -a
+  146  vi /etc/fstab 
+  147  vi /etc/fstab 
+  148  mount -a
+  149  lsblk 
+  150  btrfs filesystem df /mnt/raid/
+  151  echo "btrfs raid mode" >> /mnt/raid/file.txt
+  152  btrfs filesystem show
+  153  vi /etc/fstab 
+  154  mount -a
+  155  btrfs filesystem df /mnt/
+  156  btrfs filesystem df /mnt/single/
+  157  echo "btrfs single  mode" >> /mnt/single/file.txt
+  158  cat /mnt/single/file.txt 
+  159  vim /etc/fstab 
+  160  vi /etc/fstab 
+  161  umount /mnt/raid/
+  162  mount -a
+  163  ls -l /mnt/raid/
+  164  mount | tail -n5
+  165  vi /etc/fstab 
+  166  mount -a
+  167  mount | tail -n5
+  168  btrfs filesystem resize -5G /mnt/raid/
+  169  df -h
+  170  btrfs filesystem resize id+5G /mnt/raid/
+  171  df -h
+  172  btrfs filesystem show
+  173  btrfs filesystem resize id:1 -5G /mnt/raid/
+  174  btrfs filesystem resize devid:1 -5G /mnt/raid/
+  175  btrfs filesystem resize 1:-5G /mnt/raid/
+  176  btrfs filesystem resize 2:-3G /mnt/raid/
+  177  btrfs filesystem show
+  178  df -h
+  179  btrfs filesystem resize 1:+2G /mnt/raid/
+  180  df -h
+  181  btrfs filesystem show
+  182  btrfs filesystem resize +3G /mnt/raid/
+  183  cat /mnt/raid/file.txt 
+  184  df -h
+  185  btrfs filesystem show
+  186  btrfs balance start /mnt/raid/
+  187  umount /mnt/single/
+  188  vim /etc/fstab 
+  189  vi /etc/fstab 
+  190  mount -a
+  191  vi /etc/fstab 
+  192  mount -a
+  193  vi /etc/fstab 
+  194  mkfs.btrfs -m single -d single /dev/sda8 -f
+  195  mount -a
+  196  btrfs filesystem show
+  197  vi /etc/fstab 
+  198  mount -a
+  199  btrfs filesystem show
+  200  btrfs filesystem df /mnt/raid/
+  201  lsblk
+  202  btrfs device add /dev/sdb /dev/sda7 /mnt/raid/
+  203  btrfs device add /dev/sdb /dev/sda7 /mnt/raid/ -f
+  204  mount | tail -n5
+  205  btrfs filesystem show
+  206  btrfs filesystem 2:+3G /mnt/raid/
+  207  btrfs filesystem resize 2:+3G /mnt/raid/
+  208  btrfs filesystem show
+  209  btrfs balance start /mnt/raid/
+  210  btrfs filesystem show
+  211  btrfs balance start -dconvert=raid5 -mconvert=raid5 /mnt/raid/
+  212  btrfs filesystem show
+  213  btrfs filesystem df /mnt/raid/
+  214  cat /mnt/raid/file.txt 
+  215  btrfs balance start -dconvert=raid10 -mconvert=raid1 /mnt/raid/
+  216  cat /mnt/raid/file.txt 
+  217  btrfs filesystem df /mnt/raid/
+  218  df -h
+  219  vi /etc/selinux/config 
+  220  cd /mnt/raid/
+  221  btrfs subvolume list -p .
+  222  cd ..
+  223  cd ..
+  224  ls -l /opt/
+  225  echo "Opt catalog" >> /opt/opt_file.txt
+  226  cp -aR /opt/* /mnt/raid/
+  227  rm -rf /opt/*
+  228  ls -l /opt/
+  229  umount /mnt/*
+  230  vim /etc/fstab 
+  231  vi /etc/fstab 
+  232  mount -a
+  233  ls -l opt/
+  234  btrfs sub
+  235  lsblk
+  236  mkdir /opt/backup
+  237  btrfs subvolume snapshot /opt/ /opt/backup/
+  238  btrfs filesystem show
+  239  btrfs filesystem df /opt/
+  240  cd /opt/
+  241  btrfs subvolume list -p .
+  242  ls -l
+  243  rm file.txt 
+  244  ls -l ./backup/
+  245  ls -l ./backup/opt/
+  246  ls -l ./backup/opt/backup/
+  247  btrfs sub del /opt/backup/
+  248  btrfs sub del backup/
+  249  btrfs subvolume list -p .
+  250  btrfs sub del backup/opt/
+  251  ls -l
+  252  ls -l ./backup/
+  253  vim ./file.txt
+  254  vi ./file.txt
+  255  btrfs subvolume snapshot /opt/ /opt/backup/
+  256  rm file.txt 
+  257  ls -l
+  258  btrfs sub del /opt/
+  259  btrfs sub del /opt
+  260  btrfs sub del opt
+  261  btrfs subvolume list /
+  262  btrfs subvolume list /opt/
+  263  btrfs subvolume list /opt/backup/opt/
+  264  btrfs subvolume show /opt/
+  265  btrfs snapshot list
+  266  btrfs snapshot list /op
+  267  btrfs snapshot list /opt/
+  268  btrfs snapshot list /opt/backup/
+  269  btrfs sub del /opt/
+  270  btrfs sub del /opt/backup/
+  271  btrfs sub del /opt/backup/opt/
+  272  ls -l
+  273  vim ./file.txt
+  274  vi  ./file.txt
+  275  lsblk 
+  276  btrfs subvolume snapshot /opt/ /dev/sdb 
+  277  mkdir /mnt/snap
+  278  mkfs.btrfs /dev/sdb 
+  279  mkfs.btrfs /dev/sdb -f
+  280  mnt | grep sdb
+  281  mount | grep sdb
+  282  btrfs filesystem show
+  283  lsblk 
+  284  btrfs subvolume snapshot /opt/ /mnt/single/
+  285  vi /etc/fstab 
+  286  umount /mnt/single/
+  287  btrfs subvolume snapshot /opt/ /mnt/single/
+  288  btrfs subvolume snapshot /opt/ /dev/sda8 
+  289  mount | tail -n5
+  290  mount | grep mnt
+  291  umount /mnt
+  292  /*
+  293  umount /mnt/*
+  294  mount /dev/sda8  /mnt/
+  295  btrfs subvolume snapshot /opt/ /mnt/
+  296  ls -l
+  297  ls -l backup/
+  298  cd ..
+  299  btrfs subvolume snapshot /opt/ /opt/backup/
+  300  rm /opt/file.txt 
+  301  mv /opt/backup/ /opt/
+  302  mv /opt/backup/opt/ /opt/
+  303  ls -l /
+  304  ls -l /opt/
+  305  ls -l /opt/opt
+  306  ls -l /opt/backup/
+  307  mv opt/opt/file.txt  /opt/
+  308  btrfs subvolume snapshot /opt/ /opt/
+  309  ls -l /opt/
+  310  rm -rf /opt/opt
+  311  rm -rf /opt/opt/
+  312  mc
+  313  rm -rf /opt/backup/
+  314  ls -l /opt/
+  315  ls -l /opt/opt
+  316  rm /opt/opt
+  317  rm -r /opt/opt/
+  318  ls -l /opt/opt
+  319  umount /opt/
+  320  mount -a
+  321  ls -l /opt/
+  322  rm -r /opt/opt/
+  323  chattr -i /opt/opt
+  324  rm -r /opt/opt/
+  325  yum install mc -y
+  326  mc
+  327  chmod ugo+w /opt/ -R
+  328  rm -r /opt/opt/
+  329  lsattr /opt/opt
+  330  lsattr /opt/
+  331  rm -rf /opt/opt/
+  332  cd opt/
+  333  btrfs subvolume list
+  334  btrfs subvolume list -p
+  335  btrfs subvolume list -p ./
+  336  btrfs subvolume remove opt
+  337  btrfs subvolume remove ./opt
+  338  btrfs subvolume delete ./opt
+  339  ls -l
+  340  btrfs subvolume snapshot /opt/ /opt/opt_backup
+  341  ls -l /opt/opt_backup/
+  342  ls -l /opt/
+  343  rm -f /opt/file.txt 
+  344  mv /opt/opt_backup/ /opt/
+  345  mv /opt/opt_backup/ /opt
+  346  cd /opt/
+  347  btrfs subvolume list -p ./
+  348  btrfs subvolume set-default 269 /opt
+  349  umount /opt/
+  350  cd ..
+  351  umount /opt/
+  352  mount -a
+  353  ls -l /opt/
+  354  btrfs subvolume set-default 0 /opt
+  355  umount /opt/
+  356  mount -a
+  357  св юю
+  358  cd ..
+  359  btrfs subvolume list -p /opt/
+  360  exit
+  361  script lab3.log 
+  362  exit
+  363  ls -l
+  364  ls -l /mnt/
+  365  /sbin/reboot 
+  366  ls -l /mnt/
+  367  mc /mnt/
+  368  ls -l /mnt/
+  369  ls -la /mnt/ 
+  370  cd /mnt/ 
+  371  ll
+  372  ls -la
+  373  mc
+  374  mc
+  375  cd /media/
+  376  ls -l
+  377  ls -l /mnt/
+  378  mount /dev/cdrom /media/
+  379  ls -l /media/
+  380  sh /media/VBoxLinuxAdditions.run 
+  381  /sbin/rcvboxadd setup
+  382  yum install kernel-devel kernel-headers make gcc -y
+  383  sh /media/VBoxLinuxAdditions.run 
+  384  /sbin/rcvboxadd setup
+  385  yum update
+  386  /sbin/rcvboxadd setup
+  387  uname -a
+  388  /sbin/rcvboxadd quicksetup all
+  389  modprobe vboxguest
+  390  /sbin/rcvboxadd setup
+  391  find / -name vboxguest*
+  392  ls -l /opt/VBoxGuestAdditions-6.0.8/src/vboxguest-6.0.8/vboxguest
+  393  yum groupinstall "Development tools"
+  394  /sbin/reboot 
+  395  ls -l /mnt/
+  396  mc
+  397  ls -l
+  398  cat lab3.log 
+  399  history 
+  400  history >> history_commands.log
