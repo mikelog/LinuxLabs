@@ -1,0 +1,17 @@
+---
+- name: Check && install python
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+    #- debug:
+     #   var: ansible_facts
+    - name: Install python for Ansible on DEbian
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      when: (ansible_facts['distribution'] == "Debian") or 
+            (ansible_facts['distribution'] == "Ubuntu")
+    - name: Install python for Ansible on CentOS
+      raw: test -e /usr/bin/python || (yum -y update && yum install -y python-minimal)
+      when: (ansible_facts['distribution'] == "RedHat") or 
+            (ansible_facts['distribution'] == "CentOS")

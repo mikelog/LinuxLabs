@@ -1,0 +1,5 @@
+- name: Configure app
+  hosts: appserver
+  become: true
+  roles:
+   - app
