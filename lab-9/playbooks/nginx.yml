@@ -1,0 +1,4 @@
+- name: Configure hosts for wget nginx zsh
+  hosts: nginx_server
+  roles:
+   - nginx_install

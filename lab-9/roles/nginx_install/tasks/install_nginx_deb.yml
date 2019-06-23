@@ -1,0 +1,8 @@
+---
+- name: Install NGINX
+  become: true
+  apt:
+    name: ['nginx']
+    install_recommends: yes
+  notify:
+    - restart_nginx
