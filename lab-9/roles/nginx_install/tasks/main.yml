@@ -1,0 +1,14 @@
+---
+#gathering_facts: true
+- name: Install&&Config Nginx on RedHat|Cent
+  include: install_nginx_rhel.yml
+  when: (ansible_facts['distribution'] == "RedHat") or 
+        (ansible_facts['distribution'] == "CentOS")
+
+- name: Install&&Config Nginx on Debian|Ubuntu
+  include: install_nginx_deb.yml
+  when: (ansible_facts['distribution'] == "Debian") or 
+            (ansible_facts['distribution'] == "Ubuntu")
+
+- name: Change default cfg
+  include: configure_nginx.yml

@@ -1,0 +1,4 @@
+---
+- import_playbook: base.yml
+- import_playbook: nginx.yml
+

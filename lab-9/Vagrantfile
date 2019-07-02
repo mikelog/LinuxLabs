@@ -4,6 +4,7 @@ Vagrant.configure("2") do |config|
     v.memory = 512
   end
 
+<<<<<<< HEAD
   config.vm.define "dbserver" do |db|
     db.vm.box = "ubuntu/xenial64"
     db.vm.hostname = "dbserver"
@@ -38,6 +39,22 @@ Vagrant.configure("2") do |config|
             "location / { proxy_pass http://127.0.0.1:9292; }"
           ]
           }
+=======
+  config.vm.define "nginx_server" do |nginx|
+    nginx.vm.box = "centos/7" # need to be commented when Debian like distro used
+    #nginx.vm.box = "ubuntu/xenial64" # need to be uncoment when Debian like distro used
+    nginx.vm.hostname = "appserver"
+    nginx.vm.network :private_network, ip: "10.10.10.20"
+
+    nginx.vm.provision "ansible" do |ansible|
+      ansible.playbook = "playbooks/site.yml"
+      ansible.groups = {
+      "nginx" => ["nginx_server"],
+      "nginx:vars" => { "def_nginx_port" => "8080",
+        "nginx_user" => "nginx" # need to be commented when Debian like distro used
+       # "nginx_user" => "www-data" # need to be uncoment when Debian like distro used
+       }
+>>>>>>> 8dd8024d54cf1e9a2bbd0bfa0f9ee1355d8e1194
       }    
     end
   end
