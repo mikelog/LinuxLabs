@@ -2,3 +2,4 @@
 *.vdi
 *.log
 *.vscode
+atlassian*.bin
