@@ -34,13 +34,13 @@ else
  exit
 fi
 
-echo "app.install.service\$Boolean=true
+echo "app.install.service$Boolean=true
 existingInstallationDir=/opt/JIRA Software
-httpPort\$Long=8070
-launch.application\$Boolean=false
+httpPort$Long=8070
+launch.application$Boolean=false
 portChoice=custom
-rmiPort\$Long=8005
-sys.adminRights\$Boolean=true
+rmiPort$Long=8005
+sys.adminRights$Boolean=true
 sys.confirmedUpdateInstallationString=false
 sys.installationDir=/opt/atlassian/jira
 sys.languageId=en" > response.varfile

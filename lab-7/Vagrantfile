@@ -19,11 +19,6 @@ Vagrant.configure("2") do |config|
   config.vm.define "jiraserver" do |jiraserver|
     jiraserver.vm.hostname = "jira-server"
     jiraserver.vm.network :private_network, ip: "10.10.10.20"
-    jiraserver.vm.provision "shell", inline: <<-SHELL
-	      mkdir -p ~root/.ssh
-              cp ~vagrant/.ssh/auth* ~root/.ssh
-	      yum install -y smartmontools hdparm gdisk
-  	  SHELL
     jiraserver.vm.provision "shell", path: "jira_deploy.sh"
   end
 
