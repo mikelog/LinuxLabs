@@ -10,7 +10,7 @@ elif [[ $isHolyDay -eq "1" ]] || [[ $dayOfWeek -gt "5" ]];then
  echo "$(date +%Y-%m-%d) $(groups "$PAM_USER")" >> ~/pam_exec.log
  echo "$(date +%Y-%m-%d) isHolyDay=$isHolyDay dayOfWeek=$dayOfWeek isAdmin=$isAdmin" >> ~/pam_exec.log
  exit 1
-elif [[ $isHolyDay -eq "0" ]] && [[ $dayOfWeek -lt "6" ]];then
+elif [[ $isHolyDay -eq "0" ]] || [[ $dayOfWeek -lt "6" ]];then
  echo "$(date +%Y-%m-%d) $(groups "$PAM_USER")" >> ~/pam_exec.log
  echo "$(date +%Y-%m-%d) isHolyDay=$isHolyDay dayOfWeek=$dayOfWeek isAdmin=$isAdmin" >> ~/pam_exec.log
  exit 0

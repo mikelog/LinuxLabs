@@ -23,19 +23,18 @@ if [ -s $pam_check_path ];then
     #create admin group
      addgroup admin
      #add vagrant to admin group
-     usermod -G admin vagrant
+     usermod -a -G admin vagrant
      #add tesuser out of group admin
      useradd $newUser
      #setuo def password with changing in the next logon
      echo 0000 | passwd  $newUser --stdin
      passwd -e $newUser
      #allow to ssh login via password
-     #sshByPasswd=$(grep PasswordAuthentication /etc/ssh/sshd_config)
      sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-     #sed -i 's/UsePAM no/UsePAM yes/g'/etc/ssh/sshd_config
+     sed -i 's/UsePAM no/UsePAM yes/g'/etc/ssh/sshd_config
      systemctl restart sshd
      #configure pam_check account by script
-     #sed -i "2i account     required       pam_exec.so    /etc/pam_check.sh" /etc/pam.d/sshd
+     sed -i "2i account     required       pam_exec.so    /etc/pam_check.sh" /etc/pam.d/sshd
      sed -i "2i account     required       pam_exec.so    /etc/pam_check.sh" /etc/pam.d/login
      #install docker
      yum install docker -y
