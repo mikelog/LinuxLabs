@@ -1,0 +1,4 @@
+---
+- name: Clean NGINX html folder
+  become: true
+  shell: rm -rf /usr/share/nginx/*.*
