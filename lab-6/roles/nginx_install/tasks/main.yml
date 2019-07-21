@@ -5,10 +5,11 @@
   when: (ansible_facts['distribution'] == "RedHat") or 
         (ansible_facts['distribution'] == "CentOS")
 
-- name: Install&&Config Nginx on Debian|Ubuntu
-  include: install_nginx_deb.yml
-  when: (ansible_facts['distribution'] == "Debian") or 
-            (ansible_facts['distribution'] == "Ubuntu")
-
 - name: Change default cfg
   include: configure_nginx.yml
+
+- name: Clean html
+  include: clean_html.yml
+
+- name: Create repo in nginx_html
+  include: create_repo.yml

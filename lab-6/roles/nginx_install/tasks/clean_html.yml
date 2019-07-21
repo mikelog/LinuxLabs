@@ -1,4 +1,17 @@
 ---
 - name: Clean NGINX html folder
   become: true
-  shell: rm -rf /usr/share/nginx/*.*
+  find:
+    paths: "/usr/share/nginx/html/"
+    recurse: true
+    file_type: any
+  register: files_to_delete
+
+- name: Ansible remove file glob
+  become: true
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
+  notify:
+    - restart_nginx
