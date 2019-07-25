@@ -7,10 +7,11 @@
 
 - name: Deploy packege
   become: true
-  src: files/pcapsipdump-0.2-1.x86_64.rpm
-  dest: /usr/share/nginx/html
-  owner: {{ nginx_user }}
-  group: {{ nginx_user }}
+  copy:
+    src: files/pcapsipdump-0.2-1.x86_64.rpm
+    dest: /usr/share/nginx/html
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
   
 - name: Create repo
   become: true
