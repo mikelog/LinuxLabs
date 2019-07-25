@@ -3,17 +3,23 @@
 1. rd.break
 
     1.1. При загрузке, когда бут меню CentOS, жмем e, стрелкой вниз листаем до *linux* или *linux16* или *linuxefi*, зависит от вашей инсталляции. Меняем параметр *ro* на *rw*, в конце строки добавляем rd.break enforcing=0 и жмем ctrl+x
+    
     ![boot меню, модификация](./imgs/rd.break/1.png)
+    
     1.2. Когда прогрузились в emergency mod делаем:
       - chroot /sysroot
       - passwd root
       - touch /.autorelabel
       - exit
       - reboot
+      
     ![сброс пароля root](./imgs/rd.break/2.png)
+    
 2. Подмена /sbin/init
     2.1.  При загрузке, когда бут меню CentOS, жмем e, стрелкой вниз листаем до *linux* или *linux16* или *linuxefi*, зависит от вашей инсталляции. Меняем параметр *ro* на *rw*, в конце строки добавляем init=/sysroot/bin/sh. Можно конечно просто добавить init=/bin/sh, а потом перемаунт из RO в RW делать, но зачем, если сразу можно быстро и без лишних теледвижений после бута попасть куда надо и сделать что надо? Жмем ctrl+x
+    
     ![boot меню, модификация](./imgs/init=/1.png)
+    
     После загрузки в emergency mod, набираем:
      - chroot /sysroot
      - passwd
