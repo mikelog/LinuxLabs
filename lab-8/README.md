@@ -3,34 +3,46 @@
 1. rd.break
 
     1.1. При загрузке, когда бут меню CentOS, жмем e, стрелкой вниз листаем до *linux* или *linux16* или *linuxefi*, зависит от вашей инсталляции. Меняем параметр *ro* на *rw*, в конце строки добавляем rd.break enforcing=0 и жмем ctrl+x
+    
     ![boot меню, модификация](./imgs/rd.break/1.png)
+    
     1.2. Когда прогрузились в emergency mod делаем:
       - chroot /sysroot
       - passwd root
       - touch /.autorelabel
       - exit
       - reboot
+      
     ![сброс пароля root](./imgs/rd.break/2.png)
+    
 2. Подмена /sbin/init
     2.1.  При загрузке, когда бут меню CentOS, жмем e, стрелкой вниз листаем до *linux* или *linux16* или *linuxefi*, зависит от вашей инсталляции. Меняем параметр *ro* на *rw*, в конце строки добавляем init=/sysroot/bin/sh. Можно конечно просто добавить init=/bin/sh, а потом перемаунт из RO в RW делать, но зачем, если сразу можно быстро и без лишних теледвижений после бута попасть куда надо и сделать что надо? Жмем ctrl+x
+    
     ![boot меню, модификация](./imgs/init=/1.png)
+    
     После загрузки в emergency mod, набираем:
      - chroot /sysroot
      - passwd
     Вводим пароль root два раза и затем:
      - exit
      - reboot
+     
      ![сброс пароля root](./imgs/init=/2.png)
+     
 3. init=1
     3.1.  При загрузке, когда бут меню CentOS, жмем e, стрелкой вниз листаем до *linux* или *linux16* или *linuxefi*, зависит от вашей инсталляции. Меняем параметр *ro* на *rw*, в конце строки добавляем init=1. Жмем ctrl+x Система будет в emergency mod, но в режиме записи.
+    
     ![boot меню, модификация](./imgs/init=1/1.png)
+    
     После загрузки в emergency mod, набираем:
      - chroot /sysroot
      - passwd
     Вводим пароль root два раза и затем:
      - exit
      - reboot
+     
      ![сброс пароля root](./imgs/init=1/2.png)
+     
 RD.BREAK недоступен для CentOS 5 и 6, но вот init=1 удобнее и быстрее вписать и работает в CentOS 7
 
 ## Система с boot в LVM
@@ -124,6 +136,7 @@ sda
     ```
 ## Добавление модуля в dracut
 Результат выполения работы:
+
 ![Пингвинчик в буте](./imgs/dracut/1.png)
 
 
