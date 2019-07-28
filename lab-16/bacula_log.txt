@@ -1,0 +1,384 @@
+*list jobs
+Automatically selected Catalog: MyCatalog
+Using Catalog "MyCatalog"
++-------+------------------+---------------------+------+-------+----------+------------+-----------+
+| JobId | Name             | StartTime           | Type | Level | JobFiles | JobBytes   | JobStatus |
++-------+------------------+---------------------+------+-------+----------+------------+-----------+
+|     1 | BackupLocalFiles | 2019-07-27 19:39:32 | B    | F     |        0 |          0 | f         |
+|     2 | BackupClientHost | 2019-07-27 23:04:23 | B    | F     |        0 |          0 | f         |
+|     3 | BackupLocalFiles | 2019-07-27 23:05:02 | B    | F     |        0 |          0 | f         |
+|     4 | BackupClientHost | 2019-07-27 23:05:09 | B    | F     |        0 |          0 | f         |
+|     5 | BackupCatalog    | 2019-07-27 23:10:02 | B    | F     |        0 |          0 | f         |
+|     6 | BackupClientHost | 2019-07-28 00:21:57 | B    | F     |        0 |          0 | A         |
+|     7 | BackupClientHost | 2019-07-28 00:39:17 | B    | F     |    2,386 | 10,028,278 | T         |
+|     8 | BackupClientHost | 2019-07-28 00:40:02 | B    | I     |        0 |          0 | T         |
+|     9 | BackupClientHost | 2019-07-28 01:05:18 | B    | I     |        0 |          0 | T         |
+|    10 | BackupClientHost | 2019-07-28 01:15:02 | B    | I     |        0 |          0 | T         |
+|    11 | BackupClientHost | 2019-07-28 01:25:02 | B    | I     |        0 |          0 | T         |
+|    12 | BackupClientHost | 2019-07-28 01:30:02 | B    | D     |        0 |          0 | T         |
+|    13 | BackupClientHost | 2019-07-28 01:35:02 | B    | I     |        0 |          0 | T         |
+|    14 | BackupClientHost | 2019-07-28 01:45:02 | B    | I     |        0 |          0 | T         |
+|    15 | BackupClientHost | 2019-07-28 01:55:02 | B    | I     |        0 |          0 | T         |
+|    16 | BackupClientHost | 2019-07-28 02:05:02 | B    | I     |        0 |          0 | T         |
+|    17 | BackupClientHost | 2019-07-28 02:15:02 | B    | I     |        0 |          0 | T         |
+|    18 | BackupClientHost | 2019-07-28 02:25:02 | B    | I     |        0 |          0 | T         |
+|    19 | BackupClientHost | 2019-07-28 02:30:02 | B    | D     |        0 |          0 | T         |
+|    20 | BackupClientHost | 2019-07-28 02:35:02 | B    | I     |        0 |          0 | T         |
+|    21 | BackupClientHost | 2019-07-28 02:45:02 | B    | I     |        0 |          0 | T         |
+|    22 | BackupClientHost | 2019-07-28 02:55:03 | B    | I     |        0 |          0 | T         |
+|    23 | BackupClientHost | 2019-07-28 03:05:03 | B    | I     |        0 |          0 | T         |
+|    24 | BackupClientHost | 2019-07-28 03:15:03 | B    | I     |        0 |          0 | T         |
+|    25 | BackupClientHost | 2019-07-28 03:25:03 | B    | I     |        0 |          0 | T         |
+|    26 | BackupClientHost | 2019-07-28 03:30:03 | B    | D     |        0 |          0 | T         |
+|    27 | BackupClientHost | 2019-07-28 03:35:03 | B    | I     |        0 |          0 | T         |
+|    28 | BackupClientHost | 2019-07-28 03:45:03 | B    | I     |        0 |          0 | T         |
+|    29 | BackupClientHost | 2019-07-28 03:55:02 | B    | I     |        0 |          0 | T         |
+|    30 | BackupClientHost | 2019-07-28 04:05:02 | B    | I     |        0 |          0 | T         |
+|    31 | BackupClientHost | 2019-07-28 04:15:02 | B    | I     |        0 |          0 | T         |
+|    32 | BackupClientHost | 2019-07-28 04:25:02 | B    | I     |        0 |          0 | T         |
+|    33 | BackupClientHost | 2019-07-28 04:30:02 | B    | D     |        0 |          0 | T         |
+|    34 | BackupClientHost | 2019-07-28 04:35:02 | B    | I     |        0 |          0 | T         |
+|    35 | BackupClientHost | 2019-07-28 04:45:02 | B    | I     |        0 |          0 | T         |
+|    36 | BackupClientHost | 2019-07-28 04:55:02 | B    | I     |        0 |          0 | T         |
+|    37 | BackupClientHost | 2019-07-28 05:05:02 | B    | I     |        0 |          0 | T         |
+|    38 | BackupClientHost | 2019-07-28 05:15:02 | B    | I     |        0 |          0 | T         |
+|    39 | BackupClientHost | 2019-07-28 05:25:02 | B    | I     |        0 |          0 | T         |
+|    40 | BackupClientHost | 2019-07-28 05:30:02 | B    | D     |        0 |          0 | T         |
+|    41 | BackupClientHost | 2019-07-28 05:35:02 | B    | I     |        0 |          0 | T         |
+|    42 | BackupClientHost | 2019-07-28 05:45:02 | B    | I     |        0 |          0 | T         |
+|    43 | BackupClientHost | 2019-07-28 05:55:02 | B    | I     |        0 |          0 | T         |
+|    44 | BackupClientHost | 2019-07-28 06:05:02 | B    | I     |        0 |          0 | T         |
+|    45 | BackupClientHost | 2019-07-28 06:15:02 | B    | I     |        0 |          0 | T         |
+|    46 | BackupClientHost | 2019-07-28 06:25:02 | B    | I     |        0 |          0 | T         |
+|    47 | BackupClientHost | 2019-07-28 06:30:02 | B    | D     |        0 |          0 | T         |
+|    48 | BackupClientHost | 2019-07-28 06:35:02 | B    | I     |        0 |          0 | T         |
+|    49 | BackupClientHost | 2019-07-28 06:45:02 | B    | I     |        0 |          0 | T         |
+|    50 | BackupClientHost | 2019-07-28 06:55:02 | B    | I     |        0 |          0 | T         |
+|    51 | BackupClientHost | 2019-07-28 07:05:02 | B    | I     |        0 |          0 | T         |
+|    52 | BackupClientHost | 2019-07-28 07:15:02 | B    | I     |        0 |          0 | T         |
+|    53 | BackupClientHost | 2019-07-28 07:25:02 | B    | I     |        0 |          0 | T         |
+|    54 | BackupClientHost | 2019-07-28 07:30:02 | B    | D     |        0 |          0 | T         |
+|    55 | BackupClientHost | 2019-07-28 07:35:02 | B    | I     |        0 |          0 | T         |
+|    56 | BackupClientHost | 2019-07-28 07:45:02 | B    | I     |        0 |          0 | T         |
+|    57 | BackupClientHost | 2019-07-28 07:55:02 | B    | I     |        0 |          0 | T         |
+|    58 | BackupClientHost | 2019-07-28 08:05:02 | B    | I     |        0 |          0 | T         |
+|    59 | BackupClientHost | 2019-07-28 08:15:02 | B    | I     |        0 |          0 | T         |
+|    60 | BackupClientHost | 2019-07-28 08:25:02 | B    | I     |        0 |          0 | T         |
+|    61 | BackupClientHost | 2019-07-28 08:30:02 | B    | D     |        0 |          0 | T         |
+|    62 | BackupClientHost | 2019-07-28 08:35:02 | B    | I     |        0 |          0 | T         |
+|    63 | BackupClientHost | 2019-07-28 08:45:03 | B    | I     |        0 |          0 | T         |
+|    64 | BackupClientHost | 2019-07-28 08:55:03 | B    | I     |        0 |          0 | T         |
+|    65 | BackupClientHost | 2019-07-28 09:05:03 | B    | I     |        0 |          0 | T         |
+|    66 | BackupClientHost | 2019-07-28 09:15:03 | B    | I     |        0 |          0 | T         |
+|    67 | BackupClientHost | 2019-07-28 09:25:03 | B    | I     |        0 |          0 | T         |
+|    68 | BackupClientHost | 2019-07-28 09:30:03 | B    | D     |        0 |          0 | T         |
+|    69 | BackupClientHost | 2019-07-28 09:35:03 | B    | I     |        0 |          0 | T         |
+|    70 | BackupClientHost | 2019-07-28 09:45:03 | B    | I     |        0 |          0 | T         |
+|    71 | BackupClientHost | 2019-07-28 09:55:03 | B    | I     |        0 |          0 | T         |
+|    72 | BackupClientHost | 2019-07-28 10:05:02 | B    | I     |        0 |          0 | T         |
+|    73 | BackupClientHost | 2019-07-28 10:15:02 | B    | I     |        0 |          0 | T         |
+|    74 | BackupClientHost | 2019-07-28 10:25:02 | B    | I     |        0 |          0 | T         |
+|    75 | BackupClientHost | 2019-07-28 10:30:02 | B    | D     |        0 |          0 | T         |
+|    76 | BackupClientHost | 2019-07-28 10:35:02 | B    | I     |        0 |          0 | T         |
+|    77 | BackupClientHost | 2019-07-28 10:45:02 | B    | I     |        0 |          0 | T         |
++-------+------------------+---------------------+------+-------+----------+------------+-----------+
+
+
+ /etc/skel/.bash_logout |
+| /etc/skel/.bash_profile |
+| /etc/skel/.bashrc |
+| /etc/sysconfig/ip6tables-config |
+| /etc/sysconfig/iptables-config |
+| /etc/sysconfig/cbq/avpkt |
+| /etc/sysconfig/cbq/cbq-0000.example |
+| /etc/sysconfig/network-scripts/ifdown-Team |
+| /etc/sysconfig/network-scripts/ifdown-TeamPort |
+| /etc/sysconfig/network-scripts/ifup-Team |
+| /etc/sysconfig/network-scripts/ifup-TeamPort |
+| /etc/sysconfig/network-scripts/ifcfg-lo |
+| /etc/sysconfig/network-scripts/ifdown |
+| /etc/sysconfig/network-scripts/ifdown-bnep |
+| /etc/sysconfig/network-scripts/ifdown-eth |
+| /etc/sysconfig/network-scripts/ifdown-ippp |
+| /etc/sysconfig/network-scripts/ifdown-ipv6 |
+| /etc/sysconfig/network-scripts/ifdown-isdn |
+| /etc/sysconfig/network-scripts/ifdown-post |
+| /etc/sysconfig/network-scripts/ifdown-ppp |
+| /etc/sysconfig/network-scripts/ifdown-routes |
+| /etc/sysconfig/network-scripts/ifdown-sit |
+| /etc/sysconfig/network-scripts/ifdown-tunnel |
+| /etc/sysconfig/network-scripts/ifup |
+| /etc/sysconfig/network-scripts/ifup-aliases |
+| /etc/sysconfig/network-scripts/ifup-bnep |
+| /etc/sysconfig/network-scripts/ifup-eth |
+| /etc/sysconfig/network-scripts/ifup-ippp |
+| /etc/sysconfig/network-scripts/ifup-ipv6 |
+| /etc/sysconfig/network-scripts/ifup-isdn |
+| /etc/sysconfig/network-scripts/ifup-plip |
+| /etc/sysconfig/network-scripts/ifup-plusb |
+| /etc/sysconfig/network-scripts/ifup-post |
+| /etc/sysconfig/network-scripts/ifup-ppp |
+| /etc/sysconfig/network-scripts/ifup-routes |
+| /etc/sysconfig/network-scripts/ifup-sit |
+| /etc/sysconfig/network-scripts/ifup-tunnel |
+| /etc/sysconfig/network-scripts/ifup-wireless |
+| /etc/sysconfig/network-scripts/init.ipv6-global |
+| /etc/sysconfig/network-scripts/network-functions |
+| /etc/sysconfig/network-scripts/network-functions-ipv6 |
+| /etc/sysconfig/network-scripts/ifcfg-eth0 |
+| /etc/sysconfig/network-scripts/ifcfg-eth1 |
+| /etc/sysconfig/selinux |
+| /etc/sysconfig/rpcbind |
+| /etc/sysconfig/rdisc |
+| /etc/sysconfig/init |
+| /etc/rc.d/init.d/netconsole |
+| /etc/sysconfig/netconsole |
+| /etc/sysconfig/readonly-root |
+| /etc/sysconfig/run-parts |
+| /etc/pam.d/crond |
+| /etc/sysconfig/crond |
+| /etc/default/grub |
+| /etc/sysconfig/grub |
+| /etc/sysconfig/ebtables-config |
+| /etc/sysconfig/rpc-rquotad |
+| /etc/sysconfig/nfs |
+| /etc/sysconfig/cpupower |
+| /etc/sysconfig/firewalld |
+| /etc/sysconfig/rsyncd |
+| /etc/sysconfig/irqbalance |
+| /etc/pam.d/sshd |
+| /etc/sysconfig/sshd |
+| /etc/sysconfig/chronyd |
+| /etc/sysconfig/qemu-ga |
+| /etc/sysconfig/rsyslog |
+| /etc/sysconfig/authconfig |
+| /etc/sysconfig/man-db |
+| /etc/sysconfig/kernel |
+| /etc/rc.d/init.d/network |
+| /etc/sysconfig/network |
+| /etc/sysconfig/anaconda |
+| /etc/sysconfig/cloud-info |
+| /etc/sysconfig/bacula-fd |
+| /etc/xdg/systemd/user |
+| /etc/prelink.conf.d/nss-softokn-prelink.conf |
+| /etc/prelink.conf.d/fipscheck.conf |
+| /etc/prelink.conf.d/grub2.conf |
+| /etc/default/nss |
+| /etc/default/useradd |
+| /etc/shadow- |
+| /etc/ld.so.conf |
+| /etc/ld.so.conf.d/mariadb-x86_64.conf |
+| /etc/ld.so.conf.d/kernel-3.10.0-693.21.1.el7.x86_64.conf |
+| /etc/netconfig |
+| /etc/nsswitch.conf |
+| /etc/polkit-1/rules.d/50-default.rules |
+| /etc/polkit-1/rules.d/49-polkit-pkla-compat.rules |
+| /etc/rpc |
+| /etc/sysctl.conf |
+| /etc/ld.so.cache |
+| /etc/alternatives/libnssckbi.so.x86_64 |
+| /etc/alternatives/ld |
+| /etc/alternatives/mta |
+| /etc/alternatives/mta-mailq |
+| /etc/alternatives/mta-newaliases |
+| /etc/alternatives/mta-pam |
+| /etc/alternatives/mta-rmail |
+| /etc/alternatives/mta-sendmail |
+| /etc/alternatives/mta-mailqman |
+| /etc/alternatives/mta-newaliasesman |
+| /etc/alternatives/mta-sendmailman |
+| /etc/alternatives/mta-aliasesman |
+| /etc/rsyslog.d/listen.conf |
+| /etc/init.d |
+| /etc/rc.d/init.d/functions |
+| /etc/rc.d/rc6.d/K90network |
+| /etc/rc.d/rc1.d/K90network |
+| /etc/rc.d/rc0.d/K90network |
+| /etc/rc.d/rc6.d/K50netconsole |
+| /etc/rc.d/rc5.d/K50netconsole |
+| /etc/rc.d/rc4.d/K50netconsole |
+| /etc/rc.d/rc3.d/K50netconsole |
+| /etc/rc.d/rc2.d/K50netconsole |
+| /etc/rc.d/rc1.d/K50netconsole |
+| /etc/rc.d/rc0.d/K50netconsole |
+| /etc/rc.d/rc5.d/S10network |
+| /etc/rc.d/rc4.d/S10network |
+| /etc/rc.d/rc3.d/S10network |
+| /etc/rc.d/rc2.d/S10network |
+| /etc/rc0.d |
+| /etc/udev/udev.conf |
+| /etc/udev/hwdb.bin |
+| /etc/rc1.d |
+| /etc/machine-id |
+| /etc/rc2.d |
+| /etc/localtime |
+| /etc/rc3.d |
+| /etc/rc4.d |
+| /etc/nsswitch.conf.bak |
+| /etc/rc5.d |
+| /etc/NetworkManager/NetworkManager.conf |
+| /etc/NetworkManager/dispatcher.d/00-netreport |
+| /etc/NetworkManager/dispatcher.d/11-dhclient |
+| /etc/NetworkManager/dispatcher.d/20-chrony |
+| /etc/rc6.d |
+| /etc/adjtime |
+| /etc/GREP_COLORS |
+| /etc/security/console.apps/config-util |
+| /etc/pam.d/config-util |
+| /etc/pam.d/other |
+| /etc/pam.d/chfn |
+| /etc/pam.d/chsh |
+| /etc/pam.d/login |
+| /etc/pam.d/remote |
+| /etc/pam.d/runuser |
+| /etc/pam.d/runuser-l |
+| /etc/pam.d/su |
+| /etc/pam.d/su-l |
+| /etc/pam.d/systemd-user |
+| /etc/pam.d/polkit-1 |
+| /etc/pam.d/vlock |
+| /etc/pam.d/smtp.postfix |
+| /etc/pam.d/smtp |
+| /etc/pam.d/screen |
+| /etc/pam.d/sudo |
+| /etc/pam.d/sudo-i |
+| /etc/pam.d/system-auth-ac |
+| /etc/pam.d/system-auth |
+| /etc/pam.d/postlogin-ac |
+| /etc/pam.d/postlogin |
+| /etc/pam.d/password-auth-ac |
+| /etc/pam.d/password-auth |
+| /etc/pam.d/fingerprint-auth-ac |
+| /etc/pam.d/fingerprint-auth |
+| /etc/pam.d/smartcard-auth-ac |
+| /etc/pam.d/smartcard-auth |
+| /etc/security/console.apps/seaudit |
+| /etc/pam.d/seaudit |
+| /etc/libaudit.conf |
+| /etc/libnl/classid |
+| /etc/libnl/pktloc |
+| /etc/rwtab.d/logrotate |
+| /etc/cron.daily/logrotate |
+| /etc/cron.daily/man-db.cron |
+| /etc/request-key.conf |
+| /etc/request-key.d/id_resolver.conf |
+| /etc/networks |
+| /etc/virc |
+| /etc/inittab |
+| /etc/GeoIP.conf |
+| /etc/favicon.png |
+| /etc/GeoIP.conf.default |
+| /etc/ssl/certs |
+| /etc/gssproxy/gssproxy.conf |
+| /etc/gss/mech.d/gssproxy.conf |
+| /etc/krb5.conf |
+| /etc/ppp/ip-down |
+| /etc/ppp/ip-down.ipv6to4 |
+| /etc/ppp/ip-up |
+| /etc/ppp/ip-up.ipv6to4 |
+| /etc/ppp/ipv6-down |
+| /etc/ppp/ipv6-up |
+| /etc/DIR_COLORS |
+| /etc/DIR_COLORS.256color |
+| /etc/security/pwquality.conf |
+| /etc/security/access.conf |
+| /etc/security/chroot.conf |
+| /etc/security/console.handlers |
+| /etc/security/console.perms |
+| /etc/security/group.conf |
+| /etc/security/limits.conf |
+| /etc/security/limits.d/20-nproc.conf |
+| /etc/security/namespace.conf |
+| /etc/security/namespace.init |
+| /etc/security/opasswd |
+| /etc/security/pam_env.conf |
+| /etc/security/sepermit.conf |
+| /etc/security/time.conf |
+| /etc/cron.hourly/0anacron |
+| /etc/DIR_COLORS.lightbgcolor |
+| /etc/python/cert-verification.cfg |
+| /etc/rwtab |
+| /etc/crontab |
+| /etc/anacrontab |
+| /etc/cron.d/0hourly |
+| /etc/cron.deny |
+| /etc/grub2.cfg |
+| /etc/ethertypes |
+| /etc/gssproxy/99-nfs-client.conf |
+| /etc/gssproxy/24-nfs-server.conf |
+| /etc/plymouth/plymouthd.conf |
+| /etc/nfs.conf |
+| /etc/nfsmount.conf |
+| /etc/tuned/active_profile |
+| /etc/tuned/bootcmdline |
+| /etc/tuned/tuned-main.conf |
+| /etc/firewalld/firewalld.conf |
+| /etc/firewalld/lockdown-whitelist.xml |
+| /etc/firewalld/zones/public.xml |
+| /etc/firewalld/zones/public.xml.old |
+| /etc/audisp/audispd.conf |
+| /etc/audisp/plugins.d/af_unix.conf |
+| /etc/audisp/plugins.d/syslog.conf |
+| /etc/audit/audit-stop.rules |
+| /etc/audit/auditd.conf |
+| /etc/audit/rules.d/audit.rules |
+| /etc/audit/audit.rules |
+| /etc/postfix/access |
+| /etc/postfix/canonical |
+| /etc/postfix/generic |
+| /etc/postfix/header_checks |
+| /etc/postfix/main.cf |
+| /etc/postfix/master.cf |
+| /etc/postfix/relocated |
+| /etc/postfix/transport |
+| /etc/postfix/virtual |
+| /etc/rsyncd.conf |
+| /etc/chrony.conf |
+| /etc/chrony.keys |
+| /etc/qemu-ga/fsfreeze-hook |
+| /etc/rsyslog.conf |
+| /etc/screenrc |
+| /etc/man_db.conf |
+| /etc/sudo-ldap.conf |
+| /etc/sudo.conf |
+| /etc/sudoers |
+| /etc/sudoers.d/vagrant |
+| /etc/e2fsck.conf |
+| /etc/mke2fs.conf |
+| /etc/vconsole.conf |
+| /etc/locale.conf |
+| /etc/hostname |
+| /etc/.updated |
+| /etc/aliases.db |
+| /etc/bacula/bacula-fd.conf |
+| /etc/vimrc |
+| /etc/fonts/conf.d/20-unhint-small-dejavu-sans.conf |
+| /etc/fonts/conf.d/57-dejavu-sans.conf |
+| /etc/fonts/conf.d/10-hinting-slight.conf |
+| /etc/fonts/conf.d/10-scale-bitmap-fonts.conf |
+| /etc/fonts/conf.d/20-unhint-small-vera.conf |
+| /etc/fonts/conf.d/25-no-bitmap-fedora.conf |
+| /etc/fonts/conf.d/25-unhint-nonlatin.conf |
+| /etc/fonts/conf.d/30-metric-aliases.conf |
+| /etc/fonts/conf.d/30-urw-aliases.conf |
+| /etc/fonts/conf.d/40-nonlatin.conf |
+| /etc/fonts/conf.d/45-generic.conf |
+| /etc/fonts/conf.d/45-latin.conf |
+| /etc/fonts/conf.d/49-sansserif.conf |
+| /etc/fonts/conf.d/50-user.conf |
+| /etc/fonts/conf.d/51-local.conf |
+| /etc/fonts/conf.d/60-generic.conf |
+| /etc/fonts/conf.d/60-latin.conf |
+| /etc/fonts/conf.d/65-fonts-persian.conf |
+| /etc/fonts/conf.d/65-nonlatin.conf |
+| /etc/fonts/conf.d/69-unifont.conf |
+| /etc/fonts/conf.d/80-delicious.conf |
+| /etc/fonts/conf.d/90-synthetic.conf |
+| /etc/fonts/fonts.conf |
++----------+
++-------+------------------+---------------------+------+-------+----------+------------+-----------+
+| JobId | Name             | StartTime           | Type | Level | JobFiles | JobBytes   | JobStatus |
++-------+------------------+---------------------+------+-------+----------+------------+-----------+
+|     7 | BackupClientHost | 2019-07-28 00:39:17 | B    | F     |    2,386 | 10,028,278 | T         |
+
+
