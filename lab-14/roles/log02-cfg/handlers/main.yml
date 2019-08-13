@@ -1,0 +1,3 @@
+---
+# handlers file for log02-cfg
+- include: restart_jremote.yml

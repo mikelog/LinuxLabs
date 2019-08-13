@@ -1,0 +1,6 @@
+---
+- name: restart_jremote
+  become: yes
+  systemd:
+    name: systemd-journal-remote
+    state: restarted

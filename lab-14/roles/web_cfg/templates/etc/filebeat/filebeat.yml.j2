@@ -1,0 +1,30 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+      - {{ nginx_access_log_path }}
+  fields:
+    type: nginx_access
+  fields_under_root: true
+  scan_frequency: 5s
+
+- type: log
+  enabled: true
+  paths:
+      - {{ nginx_error_log_path }}
+  fields:
+    type: nginx_error
+  fields_under_root: true
+  scan_frequency: 5s
+
+- type: log
+  enabled: true
+  paths:
+      - {{ auditd_log_path }}
+  fields:
+    type: auditd_log
+  fields_under_root: true
+  scan_frequency: 5s
+  
+output.logstash:
+  hosts: ["{{ logstash_ip }}:{{ logstash_port }}"]

@@ -1,0 +1,7 @@
+---
+- name: Install AuditD
+  become: true
+  yum:
+    name: ['audit', 'audit-libs']
+    state: present
+  notify: restart_auditd

@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.provider :virtualbox do |v|
+    v.memory = 1024
+  end
+
+  config.vm.define "web" do |web|
+    web.vm.box = "centos/7"
+    web.vm.hostname = "web"
+    web.vm.network :private_network, ip: '10.10.10.10'
+    #web.vm.provision "shell", path: "./files/sshd_cfg.sh" 
+  end
+
+  config.vm.define "log01" do |log01|
+    log01.vm.box = "centos/7"
+    log01.vm.hostname = "log01"
+    log01.vm.network :private_network, ip: "10.10.10.20"
+    #log.vm.provision "shell", path: "./files/sshd_cfg.sh"
+  end
+  config.vm.define "log02" do |log02|
+    log02.vm.box = "centos/7"
+    log02.vm.hostname = "log02"
+    log02.vm.network :private_network, ip: "10.10.10.21"
+  end
+
+  config.vm.provision "shell" do |shell|
+    shell.path = "./files/sshd_cfg.sh"
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/logger.yml"
+    ansible.extra_vars = { "def_nginx_port" => "80","nginx_user" => "nginx",
+     "nginx_access_log_path" =>"/var/log/nginx/access.log",
+     "nginx_error_log_path" =>"/var/log/nginx/error.log",
+     "logstash_ip" => "10.10.10.20",
+     "logstash_port" => "5044" ,
+     "auditd_log_path" => "/var/log/audit/audit.log",
+      "journal_remote_ip" => "10.10.10.21",
+      "journal_remote_port" => "19532"
+     }
+    
+    ansible.groups = {
+      "loggers" => ["log01","log02"],
+      "loggers:vars" => {"def_nginx_port" => "80", "nginx_user" => "nginx",
+      "src_auth_file" => "./files/src_htpasswd.users",
+      "dst_auth_file" => "/etc/nginx/htpasswd.users"          
+      }
+    
+    }
+    ansible.verbose = true
+  end
+
+end

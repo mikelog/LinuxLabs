@@ -1,0 +1,19 @@
+---
+- import_playbook: base.yml
+- name: Configure web
+  hosts: web
+  roles:
+   - web_cfg
+
+- name: Configure log01-server
+  hosts: log01
+  roles:
+    - log01-cfg
+
+- name: Configure log02-server
+  hosts: log02
+  roles:
+    - log02-cfg
+
+
+

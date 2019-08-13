@@ -1,0 +1,21 @@
+---
+- name: add repo
+  become: true
+  copy:
+    force: yes
+    src: "./templates/etc/yum.repos.d/"
+    dest: "/etc/yum.repos.d/" 
+
+- name: Install  gpg keys
+  become: true
+  rpm_key:
+    state: present
+    key: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+
+- name: Install FileBeat for sending nginx.logs
+  become: true
+  yum:
+    name: [filebeat]
+    state: present
+  notify: filebeat_restart
+

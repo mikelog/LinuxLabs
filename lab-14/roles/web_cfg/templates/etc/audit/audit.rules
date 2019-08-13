@@ -1,0 +1,4 @@
+-D
+-b 1024
+-w /etc/nginx/nginx.conf -p wa
+-w /etc/nginx/conf.d/ -p wa

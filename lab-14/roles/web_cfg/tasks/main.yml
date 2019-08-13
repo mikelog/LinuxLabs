@@ -1,0 +1,17 @@
+---
+# tasks file for web_cfg
+- name: Install nginx
+  include: install_nginx.yml
+- name: Configure nginx
+  include: nginx_cfg.yml
+- name: Install FileBeat
+  include: install_filebeat.yml
+- name: Configure FileBeat
+  include: cfg_filebeat.yml
+- name: Install AuditD
+  include: install_auditd.yml
+- name: Install journal-upload
+  include: install_jupload.yml
+- name: Configure journal upload
+  include: cfg_jupload.yml
+  

@@ -1,0 +1,17 @@
+---
+- name: Configure FileBeat
+  become: true
+  template:
+    force: yes
+    src: etc/filebeat/filebeat.yml.j2
+    dest: /etc/filebeat/filebeat.yml
+  notify:
+    - filebeat_restart
+
+- name: Enable FileBeat
+  become: true
+  systemd:
+    name: filebeat
+    enabled: yes
+  notify:
+    - filebeat_restart

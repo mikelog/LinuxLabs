@@ -1,0 +1,16 @@
+---
+- name: Configure AuditD rules
+  template:
+    force: yes
+    src: ./etc/audit/audit.rules
+    dest: /etc/audit/audit.rules
+  notify:
+    - restart_auditd
+
+- name: Enable audit
+  become: true
+  systemd:
+    name: auditd
+    enabled: yes
+  notify:
+    - restart_auditd

@@ -1,0 +1,3 @@
+---
+- include: restart_nginx.yml
+- include: elk_restart.yml
