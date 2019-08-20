@@ -1,0 +1,28 @@
+---
+- name: Add creds
+  include_vars:
+    file: "{{ creds_file_path }}"
+
+#- name: Disable cronyd
+#  become: true
+#  systemd:
+#    name: chronyd
+#    enabled: no
+#    state: stopped
+
+
+- name: Configure hostname IPA Client
+  become: true
+  hostname:
+    name: "{{ ipa_client }}.{{ domain_name }}"
+
+- name: Configure /etc/hosts
+  become: true
+  template:
+    force: yes
+    src: ./etc/hosts.j2
+    dest: /etc/hosts
+
+- name: Configure IPA client
+  become: true
+  command: "ipa-client-install -U --mkhomedir --force-join --principal={{ odmin_name }} --enable-dns-updates --domain={{ domain_name }} --realm={{ realm }} --server={{ ipa_server }}.{{ domain_name }} --password={{ ipa_supercreds }}"

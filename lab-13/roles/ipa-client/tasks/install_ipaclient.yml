@@ -1,0 +1,7 @@
+---
+- name: Install IPA client package
+  become: true
+  yum:
+    name: ipa-client
+    state: present
+

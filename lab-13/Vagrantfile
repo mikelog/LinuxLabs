@@ -10,16 +10,16 @@ Vagrant.configure("2") do |config|
     v.memory = 1024
   end
 
-  config.vm.define "ipa-server" do |ips|
+  config.vm.define "ipaserver" do |ips|
     ips.vm.box = "centos/7"
-    ips.vm.hostname = "ipa-server"
+    ips.vm.hostname = "ipaserver"
     ips.vm.network :private_network, ip: '10.10.10.10'
     #web.vm.provision "shell", path: "./files/sshd_cfg.sh" 
   end
 
-  config.vm.define "ipa-client" do |ipc|
+  config.vm.define "ipaclient" do |ipc|
     ipc.vm.box = "centos/7"
-    ipc.vm.hostname = "ipa-client"
+    ipc.vm.hostname = "ipaclient"
     ipc.vm.network :private_network, ip: "10.10.10.20"
     #log.vm.provision "shell", path: "./files/sshd_cfg.sh"
   end
@@ -27,7 +27,21 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell" do |shell|
     shell.path = "./cfg/sshd_cfg.sh"
   end  
-
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook ="playbooks/freeipa.yml"
+    ansible.extra_vars = {
+      "ipa_server_ip" => "10.10.10.10",
+      "ipa_client_ip" => "10.10.10.20",
+      "ipa_server" =>"ipaserver",
+      "ipa_client" => "ipaclient01",
+      "domain_name" => "mydomain.local",
+      "realm" => "MYDOMAIN.LOCAL",
+      "odmin_name" => "admin",
+      "ipaclient_extraargs" =>"[ '--kinit-attempts=3', '--mkhomedir']",
+      "creds_file_path" => "./creds/credentials.yml"
+    }
+    ansible.verbose = "yes"
+  end
   #config.vm.provision "ansible" do |ansible|
   #  ansible.playbook = "playbooks/logger.yml"
   #  ansible.extra_vars = { "def_nginx_port" => "80","nginx_user" => "nginx",
