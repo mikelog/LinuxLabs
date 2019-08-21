@@ -1,1 +1,0 @@
-ipa-server-install --hostname=ipaserver.mydomain.local --domain=mydomain.local --realm=MYDOMAIN.LOCAL --ds-password=Qaz123Wsx --admin-password=Qaz123Wsx --mkhomedir --setup-dns --forwarder=8.8.8.8 --auto-reverse --unattended
