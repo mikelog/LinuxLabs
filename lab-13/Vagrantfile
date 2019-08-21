@@ -7,7 +7,7 @@
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |v|
-    v.memory = 1024
+    v.memory = 1512
   end
 
   config.vm.define "ipaserver" do |ips|
@@ -37,33 +37,8 @@ Vagrant.configure("2") do |config|
       "domain_name" => "mydomain.local",
       "realm" => "MYDOMAIN.LOCAL",
       "odmin_name" => "admin",
-      "ipaclient_extraargs" =>"[ '--kinit-attempts=3', '--mkhomedir']",
       "creds_file_path" => "./creds/credentials.yml"
     }
-    ansible.verbose = "yes"
+    #ansible.verbose = "yes"
   end
-  #config.vm.provision "ansible" do |ansible|
-  #  ansible.playbook = "playbooks/logger.yml"
-  #  ansible.extra_vars = { "def_nginx_port" => "80","nginx_user" => "nginx",
-  #   "nginx_access_log_path" =>"/var/log/nginx/access.log",
-  #   "nginx_error_log_path" =>"/var/log/nginx/error.log",
-  #   "logstash_ip" => "10.10.10.20",
-  #   "logstash_port" => "5044" ,
-  #   "auditd_log_path" => "/var/log/audit/audit.log",
-  #    "journal_remote_ip" => "10.10.10.21",
-  #    "journal_remote_port" => "19532"
-  #   }
-    
-  #  ansible.groups = {
-  #    "loggers" => ["log01","log02"],
-  #    "loggers:vars" => {"def_nginx_port" => "80", "nginx_user" => "nginx",
-  #    "src_auth_file" => "./files/src_htpasswd.users",
-  #    "dst_auth_file" => "/etc/nginx/htpasswd.users"          
-  #    }
-  # 
-  #  }
-  #  ansible.verbose = true
-  #end 
-  
-
 end

@@ -3,14 +3,6 @@
   include_vars:
     file: "{{ creds_file_path }}"
 
-#- name: Disable cronyd
-#  become: true
-#  systemd:
-#    name: chronyd
-#    enabled: no
-#    state: stopped
-
-
 - name: Configure hostname IPA Client
   become: true
   hostname:
