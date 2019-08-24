@@ -22,13 +22,21 @@ Vagrant.configure("2") do |config|
     centralRouter.vm.hostname = "centralRouter"
     centralRouter.vm.network :private_network, ip: "192.168.255.9", netmask: "255.255.255.252", adapter:  2,  virtualbox__intnet: "irnet"
   end
+
+  config.vm.define "centalServer" do |centalServer|
+    centalServer.vm.box = "centos/7"
+    centalServer.vm.hostname = "centralRouter"
+    centalServer.vm.network :private_network, ip: "192.168.254.9", netmask: "255.255.255.252", adapter:  2,  virtualbox__intnet: "irnet"
+  end
+
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbooks/ipfiltering.yml"
-    ansible.extra_vars = { 
-      "def_nginx_port" => "80",
-      "nginx_user" => "nginx"
-     }
-    end
+     ansible.playbook = "playbooks/ipfiltering.yml"
+     ansible.extra_vars = { 
+       "def_nginx_port" => "80",
+       "nginx_user" => "nginx"
+      }
+     ansible.verbose = true
+  end
   config.vm.provision "shell" do |shell|
     shell.path = "./files/sshd_cfg.sh"
   end 

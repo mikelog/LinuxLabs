@@ -1,4 +1,4 @@
-- hosts: centralRouter
+- hosts: ['centralRouter','inetRouter','inetRouter2'] 
   become: true
   tasks:
     - name: Enable ipv4 forwarding
