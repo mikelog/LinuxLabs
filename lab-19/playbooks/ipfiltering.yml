@@ -1,0 +1,19 @@
+---
+- import_playbook: base.yml
+- name: Configure web
+  hosts: centralRouter
+  roles:
+   - web_cfg
+
+- name: Configure ip-forwarding
+  hosts: ['centralRouter','inetRouter','inetRouter2'] 
+  import_playbook: enable_ip_fwd.yml
+#    - log01-cfg
+
+#- name: Configure log02-server
+#  hosts: log02
+#  roles:
+#    - log02-cfg
+
+
+

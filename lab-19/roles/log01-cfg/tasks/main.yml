@@ -1,0 +1,11 @@
+---
+# tasks file for web_cfg
+- name: Install nginx
+  include: install_nginx.yml
+- name: Configure nginx
+  include: nginx_cfg.yml
+- name: Install ELK
+  include: install_elk.yml
+- name: Configure ELK
+  include: cfg_elk.yml
+

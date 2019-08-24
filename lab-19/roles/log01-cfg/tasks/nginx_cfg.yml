@@ -1,0 +1,34 @@
+---
+- name: deploy nginx config
+  become: true
+  template:
+    force: yes
+    src: ./etc/nginx/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - restart_nginx
+
+- name: Configure service
+  become: true
+  systemd:
+    name: nginx
+    enabled: yes
+  notify:  
+    - restart_nginx
+
+- name: Copy nginx authFile
+  become: true
+  copy:
+    force: yes
+    src: "{{ src_auth_file }}"
+    dest: "{{ dst_auth_file }}"
+    owner: "{{ nginx_user }}"
+  notify:
+    - restart_nginx
+
+- name: Selinux for kibana
+  become: true
+  selinux:
+    policy: targeted
+    state: permissive
+  
