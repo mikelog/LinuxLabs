@@ -1,5 +1,2 @@
 ---
 - include: restart_nginx.yml
-- include: filebeat_restart.yml
-- include: restart_auditd.yml
-- include: restart_jupload.yml

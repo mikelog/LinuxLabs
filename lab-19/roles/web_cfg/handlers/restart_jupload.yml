@@ -1,6 +1,0 @@
----
-- name: restart_jupload
-  become: yes
-  systemd:
-    name: systemd-journal-upload
-    state: restarted
