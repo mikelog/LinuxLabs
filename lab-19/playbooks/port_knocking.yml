@@ -10,6 +10,7 @@
    #   command: iptables-restore < /tmp/iptables.rules
 
 - hosts: centralRouter
+  become: yes
   tasks:
     - name: Copy knocking script
       copy:
@@ -17,8 +18,8 @@
         src: ../files/knocking.sh
         dest: /usr/bin/knocking.sh
         mode: +x
+        
     - name: Install nmap
-      become: yes
       yum:
         name: nmap
         state: present
