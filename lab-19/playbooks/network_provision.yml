@@ -1,0 +1,59 @@
+- hosts: ['centralRouter','inetRouter','inetRouter2']
+  become: true
+  tasks:
+    - name: Enable ipv4 forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: 1
+        sysctl_set: yes
+        state: present
+        reload: yes
+    - name: Restart network
+      systemd:
+        state: restarted
+        name: network
+
+- hosts: inetRouter
+  become: true
+  tasks:
+    - name: addressing and routing
+      command: "{{item}}"
+      with_items:
+        - iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
+        - ip route add 192.168.10.0/24 via 192.168.255.3 dev eth1
+
+- hosts: inetRouter2
+  become: true
+  tasks:
+    - name: addressing and routing
+      command: "{{ item }}"
+      with_items:
+        - ip route del default
+        - ip route add default via 192.168.255.1 dev eth1
+        - ip route add 192.168.10.0/24 via 192.168.255.3 dev eth1
+        - iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+        - iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+        - iptables -t nat  -A PREROUTING -s 10.0.2.2 -d 10.0.2.15 -p tcp -m tcp --dport 80 -j DNAT --to-destination 192.168.10.2:80
+        - iptables -t nat  -A POSTROUTING -d 192.168.10.2 -p tcp -m tcp --dport 80 -j SNAT --to-source 192.168.255.2
+        - iptables -A  FORWARD -j ACCEPT
+
+- hosts: centralRouter
+  become: true
+  tasks:
+    - name: routing
+      command: "{{ item }}"
+      ignore_errors: yes
+      with_items:
+        - ip route del default
+        - ip route add default via 192.168.255.1 dev eth1
+
+- hosts: centralServer
+  become: true
+  tasks:
+    - name: Central-Server
+      command: "{{ item }}"
+      ignore_errors: yes
+      with_items:
+        - ip route del default
+        - ip route add default via 192.168.10.1 dev eth1
+

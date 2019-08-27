@@ -1,0 +1,25 @@
+- hosts: inetRouter
+  become: true
+  tasks:
+    - name: copy itbales.rules
+      copy:
+        force: yes
+        src: ../files/iptables.rules
+        dest: /tmp/iptables.rules
+   # - name: Restore iptables.rules
+   #   command: iptables-restore < /tmp/iptables.rules
+
+- hosts: centralRouter
+  tasks:
+    - name: Copy knocking script
+      copy:
+        force: yes
+        src: ../files/knocking.sh
+        dest: /usr/bin/knocking.sh
+        mode: +x
+    - name: Install nmap
+      become: yes
+      yum:
+        name: nmap
+        state: present
+    

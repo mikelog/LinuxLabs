@@ -1,6 +1,0 @@
----
-# tasks file for log02-cfg
-- name: Install journal remote
-  include: install_jremote.yml
-- name: Configure journal remote
-  include: cfg_jremote.yml

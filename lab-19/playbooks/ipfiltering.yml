@@ -6,13 +6,9 @@
    - web_cfg
 
 
-- import_playbook: enable_ip_fwd.yml
-#    - log01-cfg
+- import_playbook: network_provision.yml
+- import_playbook: port_knocking.yml
 
-#- name: Configure log02-server
-#  hosts: log02
-#  roles:
-#    - log02-cfg
 
 
 

@@ -1,32 +1,34 @@
 Vagrant.configure("2") do |config|
 
   config.vm.provider :virtualbox do |v|
-    v.memory = 512
+    v.memory = 1024
   end
 
   config.vm.define "inetRouter" do |inetRouter|
     inetRouter.vm.box = "centos/7"
     inetRouter.vm.hostname = "inetRouter"
-    inetRouter.vm.network :private_network, ip: '192.168.255.10', adapter:  2, netmask: "255.255.255.252", virtualbox__intnet: "irnet"
+    inetRouter.vm.network :private_network, ip: '192.168.255.1', adapter:  2, netmask: "255.255.255.248", virtualbox__intnet: "irnet"
   end
 
   config.vm.define "inetRouter2" do |inetRouter2|
     inetRouter2.vm.box = "centos/7"
     inetRouter2.vm.hostname = "inetRouter2"
-    inetRouter2.vm.network :private_network, ip: '192.168.0.18', adapter:  2, netmask: "255.255.255.240", virtualbox__intnet: "localnet"
+    inetRouter2.vm.network :private_network, ip: '192.168.255.2', adapter:  2, netmask: "255.255.255.248", virtualbox__intnet: "irnet"
+    inetRouter2.vm.network  "forwarded_port", guest: 80, host: 8080, host_ip: '127.0.0.1'
   end
 
 
   config.vm.define "centralRouter" do |centralRouter|
     centralRouter.vm.box = "centos/7"
     centralRouter.vm.hostname = "centralRouter"
-    centralRouter.vm.network :private_network, ip: "192.168.255.9", netmask: "255.255.255.252", adapter:  2,  virtualbox__intnet: "irnet"
+    centralRouter.vm.network :private_network, ip: "192.168.255.3", netmask: "255.255.255.248", adapter:  2,  virtualbox__intnet: "irnet"
+    centralRouter.vm.network :private_network, ip: "192.168.10.1", netmask: "255.255.255.0", adapter:  3,  virtualbox__intnet: "localnet"
   end
 
-  config.vm.define "centalServer" do |centalServer|
-    centalServer.vm.box = "centos/7"
-    centalServer.vm.hostname = "centralRouter"
-    centalServer.vm.network :private_network, ip: "192.168.254.9", netmask: "255.255.255.252", adapter:  2,  virtualbox__intnet: "irnet"
+  config.vm.define "centralServer" do |centralServer|
+    centralServer.vm.box = "centos/7"
+    centralServer.vm.hostname = "centalServer"
+    centralServer.vm.network :private_network, ip: "192.168.10.2", netmask: "255.255.255.0", adapter:  2,  virtualbox__intnet: "localnet"
   end
 
   config.vm.provision "ansible" do |ansible|

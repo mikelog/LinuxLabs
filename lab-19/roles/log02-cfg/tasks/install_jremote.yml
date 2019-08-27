@@ -1,8 +1,0 @@
----
-- name: Install systemd-journal-gateway
-  become: true
-  yum:
-    name: ['systemd-journal-gateway']
-    state: present
-  notify:
-    - restart_jremote
