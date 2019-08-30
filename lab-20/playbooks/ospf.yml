@@ -1,0 +1,5 @@
+- import_playbook: base.yml
+- name: Configure quagaa
+  hosts: ['inetRouter1', 'inetRouter2', 'inetRouter3']
+  roles:
+   - quagaa
