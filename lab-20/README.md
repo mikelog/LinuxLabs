@@ -29,7 +29,7 @@ OSPF
 
 Для проверки стенда:
 
-1. Скачать [Vagrantfile](./Vagrantfile)б [ansible.cfg](./ansible.cfg), каталоги [files](./files), [playbooks](./playbooks), [roles](./roles).
+1. Скачать [Vagrantfile](./Vagrantfile), [ansible.cfg](./ansible.cfg), каталоги [files](./files), [playbooks](./playbooks), [roles](./roles).
 Файл ansible.cfg и  каталоги files, playbook, roles со всем содержимым должны быть расположены рядом с Vagranfile
 2. Выполнить vagrant up  в том каталоге, куда скачали Vagrantfile в п.1.
 3. После сборки стенда, можно зайти на inetRouter3 и сделать tracepath до host-ов в сети между inetRouter1  и inetRouter3, машрут пойдет по  дешевому длинному пути.
