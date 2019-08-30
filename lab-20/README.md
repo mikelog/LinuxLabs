@@ -17,7 +17,7 @@ OSPF
 
 Была реализована следующая схема:
 
-    ![ospf](./imgs/ospf.png)
+   ![ospf](./imgs/ospf.png)
 
 Таблицы маршрутизации стали  такими:
 1. inetRouter1
