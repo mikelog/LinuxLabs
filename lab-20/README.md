@@ -16,8 +16,16 @@ OSPF
 
 
 Была реализована следующая схема:
+1. для синхронной машрутизации стоимость линка между Router1 и Router3 повышена до 200, линки:
+    
+    1.1. inetRouter1-2, inetRouter3-2, inetRouter1-3.
 
-   ![ospf](./imgs/ospf.png)
+2. для асинхронной маршрутизации, стоимость линка между Router1 и Router3 повышена до 200 только  от Router3 в сторону Router1, линки:
+
+    1.2. inetRouter11-21, inetRouter31-21, inetRouter11-31.
+
+
+    ![ospf](./imgs/ospf.png)
 
 Таблицы маршрутизации стали  такими:
 1. inetRouter1
@@ -51,5 +59,43 @@ OSPF
     1:  192.168.251.2                                         0.567ms
     2:  192.168.252.1                                         0.704ms reached
      Resume: pmtu 1500 hops 2 back 2
+    ```
+    Дамп трафика, откуда трафик отправили, туда и получили:
+
+    ```
+    [root@inetRouter1 vagrant]# tcpdump -ni eth2 icmp
+    tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+    listening on eth2, link-type EN10MB (Ethernet), capture size 262144 bytes
+    IP 192.168.251.1 > 192.168.252.1: ICMP echo request, id 8542, seq 1, length 64
+    IP 192.168.252.1 > 192.168.251.1: ICMP echo reply, id 8542, seq 1, length 64
+    IP 192.168.251.1 > 192.168.252.1: ICMP echo request, id 8542, seq 2, length 64
+    IP 192.168.252.1 > 192.168.251.1: ICMP echo reply, id 8542, seq 2, length 64
+    ```
+    Асинхронная машрутизация, трафик отпраляем с одного ETH, получаем на другой ETH, хотя по трейсу и не скажешь:
+
+    ```
+    [vagrant@inetRouter1 ~]$ tracepath -n 192.168.220.1
+    1?: [LOCALHOST]                                         pmtu 1500
+    1:  192.168.210.2                                         0.797ms 
+    1:  192.168.210.2                                         0.819ms 
+    2:  192.168.220.1                                         0.843ms reached
+    ```
+    И дамп трафика:
+
+    ```
+    [root@inetRouter1 vagrant]# tcpdump -ni eth2 icmp
+    listening on eth2
+    IP 192.168.251.1 > 192.168.252.1: ICMP echo request, id 8542, seq 1, length 64
+    IP 192.168.252.1 > 192.168.251.1: ICMP echo reply, id 8542, seq 1, length 64
+    IP 192.168.251.1 > 192.168.252.1: ICMP echo request, id 8542, seq 2, length 64
+    IP 192.168.252.1 > 192.168.251.1: ICMP echo reply, id 8542, seq 2, length 64
+    ```
+    
+    ```  
+    [root@inetRouter1 vagrant]# tcpdump -ni eth4 icmp
+    listening on eth4
+    IP 192.168.210.1 > 192.168.220.1: ICMP echo request, id 8544, seq 1, length 64
+    IP 192.168.210.1 > 192.168.220.1: ICMP echo request, id 8544, seq 2, length 64
+    IP 192.168.210.1 > 192.168.220.1: ICMP echo request, id 8544, seq 3, length 64
     ```
 

@@ -14,7 +14,17 @@ interface eth2
  description {{ desc_eth2 }}
  ip address {{ zebra_eth2_ip }}
  ipv6 nd suppress-ra
+ !
+interface eth3
+ description {{ desc_eth3 }}
+ ip address {{ zebra_eth3_ip }}
+ ipv6 nd suppress-ra
 !
+!
+interface eth4
+ description {{ desc_eth4 }}
+ ip address {{ zebra_eth4_ip }}
+ ipv6 nd suppress-ra
 !
 interface lo
 !

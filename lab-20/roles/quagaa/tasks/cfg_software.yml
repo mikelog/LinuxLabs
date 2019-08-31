@@ -17,8 +17,11 @@
     state: present
     reload: yes
   with_items:
+    - net.ipv4.conf.all.rp_filter 
     - net.ipv4.conf.eth1.rp_filter
     - net.ipv4.conf.eth2.rp_filter
+    - net.ipv4.conf.eth3.rp_filter
+    - net.ipv4.conf.eth4.rp_filter
 
 - name: Restart network
   become: true
