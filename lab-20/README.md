@@ -29,11 +29,53 @@ OSPF
 
 Таблицы маршрутизации стали  такими:
 1. inetRouter1
-   ![inetRouter1](./imgs/inetRouter1-1.png)
+   ```
+   default via 10.0.2.2 dev eth0 proto dhcp metric 100 
+    10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+    192.168.200.0/29 dev eth3 proto kernel scope link src 192.168.200.1 metric 103 
+    192.168.210.0/29 dev eth4 proto kernel scope link src 192.168.210.1 metric 104 
+    192.168.220.0/29 proto zebra metric 40 
+	nexthop via 192.168.251.2 dev eth2 weight 1 
+	nexthop via 192.168.210.2 dev eth4 weight 1 
+    192.168.250.0/29 dev eth1 proto kernel scope link src 192.168.250.1 metric 101 
+    192.168.251.0/29 dev eth2 proto kernel scope link src 192.168.251.1 metric 102 
+    192.168.252.0/29 proto zebra metric 40 
+	nexthop via 192.168.251.2 dev eth2 weight 1 
+	nexthop via 192.168.210.2 dev eth4 weight 1 
+    ```
 2. inetRouter2
-   ![inetRouter1](./imgs/inetRouter2-1.png)
+   ```
+   default via 10.0.2.2 dev eth0 proto dhcp metric 100 
+    10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+    192.168.200.0/29 proto zebra metric 40 
+	nexthop via 192.168.252.1 dev eth2 weight 1 
+	nexthop via 192.168.220.1 dev eth4 weight 1 
+    192.168.210.0/29 dev eth3 proto kernel scope link src 192.168.210.2 metric 103 
+    192.168.220.0/29 dev eth4 proto kernel scope link src 192.168.220.2 metric 104 
+    192.168.250.0/29 proto zebra metric 220 
+	nexthop via 192.168.251.1 dev eth1 weight 1 
+	nexthop via 192.168.210.1 dev eth3 weight 1 
+	nexthop via 192.168.252.1 dev eth2 weight 1 
+	nexthop via 192.168.220.1 dev eth4 weight 1 
+    192.168.251.0/29 dev eth1 proto kernel scope link src 192.168.251.2 metric 101 
+    192.168.252.0/29 dev eth2 proto kernel scope link src 192.168.252.2 metric 102
+   ```
 3. inetRouter3
-   ![inetRouter1](./imgs/inetRouter3-1.png)
+   ```
+   10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15 metric 100 
+    192.168.200.0/29 dev eth4 proto kernel scope link src 192.168.200.2 metric 104 
+    192.168.210.0/29 proto zebra metric 40 
+	nexthop via 192.168.252.2 dev eth1 weight 1 
+	nexthop via 192.168.220.2 dev eth3 weight 1 
+	nexthop via 192.168.200.1 dev eth4 weight 1 
+    192.168.220.0/29 dev eth3 proto kernel scope link src 192.168.220.1 metric 103 
+    192.168.250.0/29 dev eth2 proto kernel scope link src 192.168.250.2 metric 102 
+    192.168.251.0/29 proto zebra metric 40 
+	nexthop via 192.168.252.2 dev eth1 weight 1 
+	nexthop via 192.168.220.2 dev eth3 weight 1 
+	nexthop via 192.168.200.1 dev eth4 weight 1 
+    192.168.252.0/29 dev eth1 proto kernel scope link src 192.168.252.1 metric 101
+   ```
 
 Для проверки стенда:
 
