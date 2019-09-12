@@ -1,0 +1,4 @@
+---
+# tasks file for mysql_cluster
+- include: install_software.yml
+- include: cfg_software.yml

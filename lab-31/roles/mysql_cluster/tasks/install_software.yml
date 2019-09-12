@@ -1,0 +1,20 @@
+---
+- name: Install MySQL80 Community REPO
+  become: true
+  yum:
+    name:  http://repo.mysql.com/mysql80-community-release-el7.rpm
+    state: present
+
+- name: Install MySQL server, MySQLShell, MySQL Router
+  become: true
+  yum:
+    name: ['mysql-server', 'mysql-shell', 'mysql-router']
+    state: present
+  notify: mysql_reload
+
+- name: Cfg MySQL Service
+  become: true
+  systemd:
+    name: mysqld
+    enabled: true
+    state: started

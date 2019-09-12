@@ -1,0 +1,46 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.provider :virtualbox do |v|
+    v.memory = 1024
+  end
+
+  config.vm.define "mysql_01" do |mysql_01|
+    mysql_01.vm.box = "centos/7"
+    mysql_01.vm.hostname = "mysql-01"
+    mysql_01.vm.network :private_network, ip: '192.168.250.1', adapter:  2, netmask: "255.255.255.248"
+    mysql_01.vm.provision "ansible" do |ansible|
+      ansible.playbook ="playbooks/mysql_cluster.yml"
+      ansible.verbose = true
+    end
+  end
+
+  config.vm.define "mysql_02" do |mysql_02|
+    mysql_02.vm.box = "centos/7"
+    mysql_02.vm.hostname = "mysql-02"
+    mysql_02.vm.network :private_network, ip: '192.168.250.2', adapter:  2, netmask: "255.255.255.248"
+    mysql_02.vm.provision "ansible" do |ansible|
+      ansible.playbook ="playbooks/mysql_cluster.yml"
+      ansible.verbose = true
+    end
+  end
+
+  config.vm.define "mysql_03" do |mysql_03|
+    mysql_03.vm.box = "centos/7"
+    mysql_03.vm.hostname = "mysql-03"
+    mysql_03.vm.network :private_network, ip: "192.168.250.3", adapter:  2, netmask: "255.255.255.248"
+    mysql_03.vm.provision "ansible" do |ansible|
+      ansible.playbook ="playbooks/mysql_cluster.yml"
+      ansible.verbose = true
+    end
+  end
+
+  config.vm.provision "shell" do |shell|
+    shell.path = "./files/sshd_cfg.sh"
+  end 
+end

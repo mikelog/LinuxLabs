@@ -1,0 +1,6 @@
+---
+- import_playbook: base.yml
+- name: Configure MySQL InnoDB CLuster
+  hosts: all
+  roles:
+   - mysql_cluster
