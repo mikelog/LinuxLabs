@@ -38,35 +38,26 @@ LAST_RUN=$(($(cat $LAST_RUN_DATA)+1))
 LCYAN='\033[1;36m'     #  ${LCYAN}
 NORMAL='\033[0m'		# ${NORMAL}
 
-
-RESP_CODES='response.tmp'
-RATES_REQUESTS='rates_requests.tmp'
-
-  
-  tail -n +$LAST_RUN $LOG_FILE_PATH | awk '($4$5)' > total.tmp
-	
-  awk '{print $9}' total.tmp | sort | uniq -c | sort -rn -o $RESP_CODES &
-  awk '{ ind = match($6$7, /\?/)
+tail -n +$LAST_RUN $LOG_FILE_PATH | awk '($4$5)' > total.tmp
+RESP_CODES=$(awk '{print $9}' total.tmp | sort | uniq -c | sort -rn )
+RATES_REQUESTS=$(  awk '{ ind = match($6$7, /\?/)
          if (ind > 0)
            print substr($6$7, 0, ind)
          else
            print $6$7
-       }' total.tmp | sort | uniq -c | sort -rn -o $RATES_REQUESTS
-  
-      echo -e "${LCYAN}Коды ответа сервера ${NORMAL}"
-      awk '{print "\033[0;33m" $2, $1}' $RESP_CODES
-  
-      echo -e "${LCYAN}Топ запросов ${NORMAL}"
-      awk 'FNR <= 5 {print "\033[0;33m" $1, $2}' $RATES_REQUESTS
-	  
-	  tput sgr0
-	  wc -l $LOG_FILE_PATH | awk '{print $1}' > "$LAST_RUN_DATA"
-	  
-	  CBC=$(awk '{print "\043[0;33m" $2, $1}' $RESP_CODES)
-	  RQ=$(awk 'FNR <= 5 {print "\033[0;33m" $1, $2}' $RATES_REQUESTS)
-	  
-	  
-	  echo -e "Максимальное количество запросов в секунду:$MPS\n Коды ответа сервера:$CBC\n Топ запросов:$RBF\n" | mail -s "Nginx logs" $EMAIL_TO
+       }' total.tmp | sort | uniq -c | sort -rn )
+
+IP_TOPS=$(awk '{print $1}' total.tmp  | sort | uniq -c | sort -rn)
+ 
+  echo -e "${LCYAN}Коды ответа сервера ${NORMAL}"
+  echo  $RESP_CODES
+  echo -e "${LCYAN}Топ запросов ${NORMAL}"
+  echo $RATES_REQUESTS
+  echo -e "${LCYAN}Топ IP адресов по запросам ${NORMAL}"
+  echo $IP_TOPS
+  tput sgr0
+  wc -l $LOG_FILE_PATH | awk '{print $1}' > "$LAST_RUN_DATA"
+  echo -e "Топ IP адресов по запросам:$IP_TOPS\n Топ кодов ответа сервера: $RESP_CODES\n Топ запросов: $RATES_REQUESTS\n" | mail -s "Nginx logs" $EMAIL_TO
 }
 
 #cleanup funcrion
@@ -101,12 +92,10 @@ if [[ $is_runing -eq "1" ]]; then
      exit
   fi 
   if [ -n "$LOG_FILE" ] && [ -n "$EMAIL_TO" ];then
-    echo "Searching file $LOG_FILE"
     LOG_FILE_PATH=$(logfile_search)
     if ! (echo "$LOG_FILE_PATH" | grep -E -q "^-?[0-9]+$"); then
-        echo "LogFile $LOG_FILE found. Start parsing $LOG_FILE_PATH"
         ParseLogFile 
-        else echo "No found $LOG_FILE"
+        else echo "not string $LOG_FILE_PATH"
     fi
    else
     echo "No log file name and e-mail_to specified. Exit"
