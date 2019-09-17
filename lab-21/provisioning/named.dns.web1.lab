@@ -1,7 +1,7 @@
 $TTL 3600
-$ORIGIN dnsweb.lab.
+$ORIGIN dns.lab.
 @               IN      SOA     ns01.dns.lab. root.dns.lab. (
-                            2019082002 ; serial
+                            2019082003 ; serial
                             3600       ; refresh (1 hour)
                             600        ; retry (10 minutes)
                             86400      ; expire (1 day)
@@ -15,5 +15,5 @@ $ORIGIN dnsweb.lab.
 ns01            IN      A       192.168.50.10
 ns02            IN      A       192.168.50.11
 ; Clients
-client1         IN      A       192.168.50.15
-web1           IN      CNAME   client1
+web1         IN      A       192.168.50.15
+
