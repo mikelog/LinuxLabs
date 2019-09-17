@@ -83,9 +83,6 @@ Address: 192.168.50.25
 Server:         192.168.50.10
 Address:        192.168.50.10#53
 
-Name:   www.newdns.lab
-Address: 192.168.50.25
-Name:   www.newdns.lab
-Address: 192.168.50.15
+** server can't find www.newdns.lab: NXDOMAIN
 ```
 
