@@ -1,6 +1,6 @@
 # BIND. Split DNS
 
-Сиходный стенд https://github.com/erlong15/vagrant-bind
+Исходный стенд https://github.com/erlong15/vagrant-bind
 
 Добавляем еще один сервер client2
 
