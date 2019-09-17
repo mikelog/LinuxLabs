@@ -19,3 +19,4 @@ client1        IN      A       192.168.50.15
 client2        IN      A       192.168.50.25
 web1           IN      CNAME   client1
 web2           IN      CNAME   client2
+
