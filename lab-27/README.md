@@ -1,6 +1,6 @@
 # Postfix + Dovecot + Virtual domainx
-1. [postfix.cfg](./etc/postfix)
-2. [dovecot.cfg](./etc/dovecot)
+1. [postfix.cfg](./cfg/etc/postfix)
+2. [dovecot.cfg](./cfg/etc/dovecot)
 3. Для работы с почтой создаем:
 
     3.0. Ставим:
