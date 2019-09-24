@@ -14,7 +14,8 @@
     [  4]   0.00-40.00  sec   182 MBytes  38.1 Mbits/sec  105             sender
     [  4]   0.00-40.00  sec   181 MBytes  38.0 Mbits/sec                  receiver
     
-  В общем с сферической сети, в вакууме dev TAP показывает пропускную способосность повыше
+  В общем, в сферической сети, в вакууме, dev TAP показывает пропускную способосность повыше
+  
   Справка из доки:
     
     TAP benefits:
@@ -38,7 +39,7 @@
       Cannot be used in bridges
     
   Так сказать исходя и +/- и задачи юзаем или TAP или TUN
-  Ну и вот кейс и реальных условий:
+  Ну и вот кейс из реальных условий:
     
     I chose "tap" when setting up a VPN for a friend who owned a small business because his office uses a tangle of Windows machines, commercial printers, and a Samba file server. Some of them use pure TCP/IP, some seem to only use NetBIOS (and thus need Ethernet broadcast packets) to communicate, and some I'm not even sure of.
 
