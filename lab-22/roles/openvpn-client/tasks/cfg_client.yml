@@ -1,0 +1,36 @@
+---
+- name: Init PKI
+  become: true
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: 'files/server/etc/openvpn/pki/ca.crt', dest: '/etc/openvpn/ca.crt'}
+    - { src: 'files/server/etc/openvpn/pki/issued/client.crt', dest: '/etc/openvpn/client.crt'}
+    - { src: 'files/server/etc/openvpn/pki/private/client.key', dest: '/etc/openvpn/client.key'}
+  notify: reload_openvpn
+
+- name: Cfg Selinux for OpenVPN
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - setsebool -P nis_enabled 1
+    - setsebool -P openvpn_enable_homedirs 1
+  notify: reload_openvpn
+
+
+- name: Enable OpenVPN
+  become: true
+  systemd:
+    name: openvpn@client
+    enabled: yes
+  notify: reload_openvpn
+
+- name: Copy OpenVPN Client
+  become: true
+  template:
+    force: yes
+    src: ./etc/openvpn/openvpn.cfg.j2
+    dest: /etc/openvpn/client.conf
+  notify: reload_openvpn  
+    

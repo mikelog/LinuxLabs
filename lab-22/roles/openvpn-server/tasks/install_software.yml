@@ -1,0 +1,13 @@
+---
+- name: Add epel-release repo
+  become: true
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install OpenVPN Server&&easy-rsa
+  become: true
+  yum:
+    name: ['openvpn', 'easy-rsa', 'policycoreutils-python', 'selinux-policy-targeted']
+    state: present
+  notify: reload_openvpn

@@ -3,12 +3,23 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
   config.vm.define "server" do |server|
-  server.vm.hostname = "server.loc"
-  server.vm.network "private_network", ip: "192.168.10.10"
+    server.vm.synced_folder ".", "/vagrant", type: "rsync",    rsync__exclude: ".git/"
+    server.vm.hostname = "server"
+    server.vm.network "private_network", ip: "192.168.10.10"
+    server.vm.network "private_network", ip: "192.168.20.1"
   end
   config.vm.define "client" do |client|
-  client.vm.hostname = "client.loc"
-  client.vm.network "private_network", ip: "192.168.10.20"
+    client.vm.hostname = "client"
+    client.vm.network "private_network", ip: "192.168.10.20"
   end
-  
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = "vvv"
+    ansible.groups = {
+      "servers" => ["server"],
+      "clients" => ["client"],
+      "servers:vars" => {"host_client_catalog" => '../roles/openvpn-client/files'}
+    }
+    ansible.playbook = "playbooks/openvpn.yml"
+  end
  end

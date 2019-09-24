@@ -1,0 +1,51 @@
+---
+- name: Init PKI
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - /usr/share/easy-rsa/3/easyrsa --batch init-pki
+    - /usr/share/easy-rsa/3/easyrsa --batch build-ca nopass
+    - /usr/share/easy-rsa/3/easyrsa --batch gen-req server nopass
+    - /usr/share/easy-rsa/3/easyrsa --batch gen-dh
+    - /usr/share/easy-rsa/3/easyrsa --batch --req-cn={{ ansible_facts['hostname'] }} --req-c=RU --req-st=State --req-city=Moscow --req-org=HOME --req-email=mail@mail.ru --req-ou=HOME gen-req server nopass
+    - /usr/share/easy-rsa/3/easyrsa --batch sign-req server server 
+    - /usr/share/easy-rsa/3/easyrsa --batch --req-cn=client --req-c=RU --req-st=State --req-city=Moscow --req-org=HOME --req-email=mail@mail.ru --req-ou=HOME gen-req client nopass
+    - /usr/share/easy-rsa/3/easyrsa --batch sign-req client client
+  args:
+    chdir: /etc/openvpn
+  notify: reload_openvpn
+
+- name: Fetch client`s files
+  become: true
+  fetch:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: '/etc/openvpn/pki/ca.crt', dest: '{{ host_client_catalog }}/'}
+    - { src: '/etc/openvpn/pki/issued/client.crt', dest: '{{ host_client_catalog }}/'}
+    - { src: '/etc/openvpn/pki/private/client.key', dest: '{{ host_client_catalog }}/'}
+
+- name: Cfg Selinux for OpenVPN
+  become: true
+  command: "{{ item }}"
+  with_items:
+    - setsebool -P nis_enabled 1
+    - setsebool -P openvpn_enable_homedirs 1
+  notify: reload_openvpn
+
+
+- name: Enable OpenVPN
+  become: true
+  systemd:
+    name: openvpn@server
+    enabled: yes
+  notify: reload_openvpn
+
+- name: Copy OpenVPN Client
+  become: true
+  template:
+    force: yes
+    src: ./etc/openvpn/openvpn.cfg.j2
+    dest: /etc/openvpn/server.conf
+  notify: reload_openvpn  
+    

@@ -1,0 +1,16 @@
+---
+- import_playbook: base.yml
+
+- name: Configure OpenVPN Server
+  hosts: servers
+  roles:
+   - openvpn-server
+
+- name: Configure OpenVPN Client
+  hosts: client
+  roles:
+    - openvpn-client
+
+
+
+
