@@ -1,0 +1,14 @@
+- hosts: all
+  become: true
+  tasks: 
+    - name: Copy sshd for Password auth yes
+      copy:
+        force: yes
+        src: cfg/sshd_config
+        dest: /etc/ssh/sshd_config
+    - name: reload sshd
+      systemd:
+        name: sshd
+        state: restarted
+
+  

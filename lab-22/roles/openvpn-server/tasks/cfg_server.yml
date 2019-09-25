@@ -7,7 +7,7 @@
     - /usr/share/easy-rsa/3/easyrsa --batch build-ca nopass
     - /usr/share/easy-rsa/3/easyrsa --batch gen-req server nopass
     - /usr/share/easy-rsa/3/easyrsa --batch gen-dh
-    - /usr/share/easy-rsa/3/easyrsa --batch --req-cn={{ ansible_facts['hostname'] }} --req-c=RU --req-st=State --req-city=Moscow --req-org=HOME --req-email=mail@mail.ru --req-ou=HOME gen-req server nopass
+    - /usr/share/easy-rsa/3/easyrsa --batch --req-cn={{ ansible_hostname }} --req-c=RU --req-st=State --req-city=Moscow --req-org=HOME --req-email=mail@mail.ru --req-ou=HOME gen-req server nopass
     - /usr/share/easy-rsa/3/easyrsa --batch sign-req server server 
     - /usr/share/easy-rsa/3/easyrsa --batch --req-cn=client --req-c=RU --req-st=State --req-city=Moscow --req-org=HOME --req-email=mail@mail.ru --req-ou=HOME gen-req client nopass
     - /usr/share/easy-rsa/3/easyrsa --batch sign-req client client
@@ -48,4 +48,13 @@
     src: ./etc/openvpn/openvpn.cfg.j2
     dest: /etc/openvpn/server.conf
   notify: reload_openvpn  
+
+- name: Enable IPv4_Forwarding
+  become: true
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
     

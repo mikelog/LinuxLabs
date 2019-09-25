@@ -1,0 +1,57 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.provider :virtualbox do |v|
+    v.memory = 512
+  end
+
+  config.vm.define "inetRouter" do |inetRouter|
+    inetRouter.vm.box = "centos/7"
+    inetRouter.vm.hostname = "inetRouter"
+    inetRouter.vm.network :private_network, ip: '192.168.255.9', adapter:  2, netmask: "255.255.255.248", virtualbox__intnet: "link1"
+    inetRouter.vm.network :private_network, ip: '192.168.255.10', adapter:  3, netmask: "255.255.255.248", virtualbox__intnet: "link2"
+  end
+
+  config.vm.define "centralRouter" do |centralRouter|
+    centralRouter.vm.box = "centos/7"
+    centralRouter.vm.hostname = "centralRouter"
+    centralRouter.vm.network :private_network, ip: "192.168.255.11", netmask: "255.255.255.248", adapter:  2,  virtualbox__intnet: "link1"
+    centralRouter.vm.network :private_network, ip: "192.168.255.12", netmask: "255.255.255.248", adapter:  3,  virtualbox__intnet: "link2"
+    centralRouter.vm.network :private_network, ip: "192.168.255.13", netmask: "255.255.255.240", adapter:  4,  virtualbox__intnet: "crnet"
+  end
+  config.vm.define "office1Router" do |office1Router|
+    office1Router.vm.box = "centos/7"
+    office1Router.vm.hostname = "office1Router"
+    office1Router.vm.network :private_network, ip: '192.168.255.14', adapter:  2, netmask: "255.255.255.252", virtualbox__intnet: "crnet"
+    office1Router.vm.network :private_network, ip: '192.168.0.1', adapter:  3, netmask: "255.255.255.192", virtualbox__intnet: "localnet"
+  end
+
+
+  ###-----------hosts-------------------------------------------------------------------
+
+  config.vm.define "testServer1" do |testServer1|
+    testServer1.vm.box = "centos/7"
+    testServer1.vm.hostname = "TestServer1"
+    testServer1.vm.network :private_network, adapter:  2,  auto_config: false, virtualbox__intnet: "localnet"
+  end
+  config.vm.define "testServer2" do |testServer2|
+    testServer2.vm.box = "centos/7"
+    testServer2.vm.hostname = "TestServer2"
+    testServer2.vm.network :private_network, adapter:  2,  auto_config: false, virtualbox__intnet: "localnet"
+  end
+  config.vm.define "testClient1" do |testClient1|
+    testClient1.vm.box = "centos/7"
+    testClient1.vm.hostname = "TestClient1"
+    testClient1.vm.network :private_network, adapter:  2,  auto_config: false, virtualbox__intnet: "localnet"
+  end 
+  config.vm.define "testClient2" do |testClient2|
+    testClient2.vm.box = "centos/7"
+    testClient2.vm.hostname = "testClient2"
+    testClient2.vm.network :private_network, adapter:  2,  auto_config: false, virtualbox__intnet: "localnet"
+  end 
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbooks/network_provision.yml"
+  end
+end

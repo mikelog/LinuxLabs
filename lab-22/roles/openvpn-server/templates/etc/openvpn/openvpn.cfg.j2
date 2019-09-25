@@ -6,8 +6,8 @@ cert /etc/openvpn/pki/issued/server.crt
 key /etc/openvpn/pki/private/server.key
 dh /etc/openvpn/pki/dh.pem
 server 10.10.10.0 255.255.255.0
-route 192.168.20.0 255.255.255.0
-push "route 192.168.20.0 255.255.255.0"
+#route 192.168.20.0 255.255.255.0
+#push "route 192.168.20.0 255.255.255.0"
 ifconfig-pool-persist ipp.txt
 client-to-client
 client-config-dir /etc/openvpn/client
