@@ -48,6 +48,10 @@
         ifname: eth2
         master: bond01
         state: present
+    - name: Restart NetworkManager
+      systemd:
+        name: NetworkManager
+        state: restarted
 
         
 - hosts: centralRouter
@@ -79,12 +83,30 @@
         ifname: eth2
         master: bond01
         state: present
-
-    - name: Configure vlans
-      nmcli: type="vlan" conn_name="{{ item.conn_name }}" ip4="{{ item.ip4 }}" vlanid="{{ item.vlanid }}" ifname="{{ item.ifname }}" vlandev="{{ item.vlandev }}" autoconnect=yes state="present"
+    - name: Clear vlan`s
+      nmcli:
+        conn_name: '{{ item.conn_name }}'
+        state: absent
       with_items:
-          - { conn_name: "vlan10", ip4: "10.10.10.2", vlanid: "10", ifname: "vlan10", vlandev: "eth3" }
-          - { conn_name: "vlan20", ip4: "10.10.10.3", vlanid: "20", ifname: "vlan20", vlandev: "eth3" }
+      - conn_name: vlan10
+      - conn_name: vlan20
+    - name: Configure vlans
+      nmcli: 
+        type: vlan
+        conn_name: "{{ item.conn_name }}"
+        ip4: "{{ item.ip4 }}"
+        vlanid: "{{ item.vlanid }}"
+        ifname: "{{ item.ifname }}"
+        vlandev: "{{ item.vlandev }}"
+        autoconnect: yes
+        state: present
+      with_items:
+          - { conn_name: "vlan10", ip4: "10.10.10.2/24", vlanid: "10", ifname: "vlan10", vlandev: "eth3" }
+          - { conn_name: "vlan20", ip4: "10.10.10.3/24", vlanid: "20", ifname: "vlan20", vlandev: "eth3" }
+    - name: Restart NetworkManager
+      systemd:
+        name: NetworkManager
+        state: restarted
 
 
 - hosts: testServer1
