@@ -1,0 +1,3 @@
+---
+# handlers file for openvpn-client
+- include: reload_openvpn.yml
