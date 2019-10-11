@@ -1,0 +1,35 @@
+---
+- name:  Init DB
+  become: true
+  ignore_errors: yes
+  command: /usr/pgsql-11/bin/postgresql-11-setup initdb
+  notify: reload_pgsql
+
+- name: Copy REPLICA PGSQL CFG
+  become: true
+  template: 
+    force: true
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "recovery.conf.j2", dest: "/var/lib/pgsql/11/data/recovery.conf"}
+    - { src: "postgres.conf.j2", dest: "/var/lib/pgsql/11/data/postgresql.conf"}
+  notify: reload_pgsql
+
+- name: ENABLE REPLICA PGSQL
+  become: true
+  systemd:
+    name: postgresql-11
+    enabled: true
+  notify: reload_pgsql
+
+- name: MAKE BACKUP
+  become: true
+  become_user: postgres
+  ignore_errors: true
+  command: "{{ item }}"
+  with_items:
+    - mkdir -p /data/db
+    - chown -R postgres:postgres /data
+    - /usr/pgsql-11/bin/pg_basebackup -h 192.168.10.10 -U replica -D /data/db -X s
+    

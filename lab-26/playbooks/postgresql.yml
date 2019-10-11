@@ -1,0 +1,20 @@
+---
+- import_playbook: base.yml
+
+- name: Configure PGSQL-Main
+  hosts: servers
+  roles:
+   - pgsql-server
+
+- name: Configure PGSQL-Replica
+  hosts: clients
+  roles:
+    - pgsql-replica
+
+- name: Configure PGSQL-barman
+  hosts: clients
+  roles:
+    - pgsql-barman
+
+
+

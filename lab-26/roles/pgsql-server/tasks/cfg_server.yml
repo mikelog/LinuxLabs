@@ -1,0 +1,31 @@
+---
+- name:  Init DB
+  become: true
+  ignore_errors: yes
+  command: /usr/pgsql-11/bin/postgresql-11-setup initdb
+  notify: reload_pgsql
+
+- name: Copy Mster PGSQL CFG
+  become: true
+  template: 
+    force: true
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "pg_hba.conf.j2", dest: "/var/lib/pgsql/11/data/pg_hba.conf"}
+    - { src: "postgres.conf.j2", dest: "/var/lib/pgsql/11/data/postgresql.conf"}
+  notify: reload_pgsql
+
+- name: ENABLE MASTER PGSQL
+  become: true
+  systemd:
+    name: postgresql-11
+    enabled: true
+  notify: reload_pgsql
+
+- name: ADD USER REPLICA
+  become: true
+  become_user: postgres
+  ignore_errors: true
+  command: /usr/pgsql-11/bin/psql -U postgres -c "create user replica with replication encrypted password '123';"
+    

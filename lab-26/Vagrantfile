@@ -1,25 +1,29 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 Vagrant.configure(2) do |config|
+  config.vm.provider :virtualbox do |v|
+    v.memory = 512
+  end
   config.vm.box = "centos/7"
   config.vm.define "server" do |server|
-    server.vm.synced_folder ".", "/vagrant", type: "rsync",    rsync__exclude: ".git/"
     server.vm.hostname = "server"
     server.vm.network "private_network", ip: "192.168.10.10"
-    server.vm.network "private_network", ip: "192.168.20.1"
   end
-  config.vm.define "client" do |client|
-    client.vm.hostname = "client"
-    client.vm.network "private_network", ip: "192.168.10.20"
+  config.vm.define "replica" do |replica|
+    replica.vm.hostname = "replica"
+    replica.vm.network "private_network", ip: "192.168.10.20"
   end
 
   config.vm.provision "ansible" do |ansible|
-    ansible.verbose = "vvv"
+    #ansible.verbose = "vvv"
     ansible.groups = {
       "servers" => ["server"],
-      "clients" => ["client"],
-      "servers:vars" => {"host_client_catalog" => '../roles/openvpn-client/files'}
+      "clients" => ["replica"],
+      "servers:vars" => {"replica_host" => '192.168.10.20/32',
+        "replica_auth_type" => "md5",
+        "barman_host" => "192.168.10.20/32",
+        "barman_auth_type" => "md5"}
     }
-    ansible.playbook = "playbooks/openvpn.yml"
+    ansible.playbook = "playbooks/postgresql.yml"
   end
  end
