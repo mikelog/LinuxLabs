@@ -15,14 +15,20 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
-    #ansible.verbose = "vvv"
+    ansible.verbose = "v"
     ansible.groups = {
       "servers" => ["server"],
       "clients" => ["replica"],
       "servers:vars" => {"replica_host" => '192.168.10.20/32',
-        "replica_auth_type" => "md5",
+        "replica_auth_type" => "trust",
         "barman_host" => "192.168.10.20/32",
-        "barman_auth_type" => "md5"}
+        "barman_auth_type" => "trust"},
+      "clients:vars" => {"replica_host" => '192.168.10.20/32',
+        "replica_auth_type" => "trust",
+        "barman_host" => "192.168.10.20/32",
+        "barman_auth_type" => "trust"
+
+      }
     }
     ansible.playbook = "playbooks/postgresql.yml"
   end

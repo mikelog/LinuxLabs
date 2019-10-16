@@ -1,4 +1,0 @@
----
-# tasks file for openvpn-client
-- include: install_software.yml
-- include: cfg_client.yml

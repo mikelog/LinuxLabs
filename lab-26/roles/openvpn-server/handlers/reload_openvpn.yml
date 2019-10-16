@@ -1,6 +1,0 @@
----
-- name: reload_openvpn
-  become: true
-  systemd:
-    name: openvpn@server
-    state: restarted

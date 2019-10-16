@@ -1,0 +1,53 @@
+---
+- name: Copy Barman CFG
+  become: true
+  copy:
+    force: yes
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "files/barman_server_bk.conf", dest: "/etc/barman.d/server.conf" }
+    - { src: "files/barman.conf", dest: "/etc/barman.conf" }
+
+- name: Init replication slot
+  become: true
+  become_user: barman
+  ignore_errors: yes
+  command: barman receive-wal --create-slot server
+  notify: barman_check_server
+
+- name: Switch WAL
+  become: true
+  become_user: barman
+  ignore_errors: yes
+  command: "{{ item }}"
+  with_items:
+    - barman switch-wal server
+    - barman switch-wal --archive server
+  notify: barman_check_server
+
+- name: Barman cron
+  become: true
+  become_user: barman
+  ignore_errors: yes
+  command:  barman cron
+  notify: barman_check_server
+
+- name: Cron backup tasks
+  become: true
+  #become_user: barman
+  cron: 
+    name: "{{ item.name }}"
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    day: "{{ item.day }}"
+    month: "{{ item.month }}"
+    weekday: "{{ item.weekday }}"
+    job: "{{ item.job }}"
+    cron_file: "{{ item.cron_file }}"
+    user: barman
+  with_items:
+    - { name: "Backup SERVER cron", minute: "*", hour: "2",day: "*",month: "*",weekday: "*",job: "/usr/bin/barman -q backup server", cron_file: "barman" }
+  
+  
+

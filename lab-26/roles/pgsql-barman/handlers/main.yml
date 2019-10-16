@@ -1,2 +1,7 @@
 ---
 # handlers file for pgsql-barman
+- name: barman_check_server
+  become: true
+  become_user: barman
+  ignore_errors: yes
+  command: barman check server

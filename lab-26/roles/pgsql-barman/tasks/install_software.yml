@@ -4,15 +4,15 @@
   yum:
     name: epel-release
     state: present
+
 - name: Add PGSQL11 Repo
   become: true
   yum:
     name: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm
     state: present
 
-- name: Install PGSQL
+- name: Install barman
   become: true
   yum:
-    name: ['python2-psycopg2','barman-cli.noarch', 'postgresql11-server', 'postgresql11-contrib', 'python-devel', 'postgresql-devel', 'postgresql-libs']
+    name: barman
     state: present
-  notify: reload_pgsql

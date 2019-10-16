@@ -16,10 +16,11 @@
     - { src: "postgres.conf.j2", dest: "/var/lib/pgsql/11/data/postgresql.conf"}
   notify: reload_pgsql
 
-- name: ENABLE MASTER PGSQL
+- name: ENABLE&RUN MASTER PGSQL
   become: true
   systemd:
     name: postgresql-11
+    state: started
     enabled: true
   notify: reload_pgsql
 
@@ -27,5 +28,14 @@
   become: true
   become_user: postgres
   ignore_errors: true
-  command: /usr/pgsql-11/bin/psql -U postgres -c "create user replica with replication encrypted password '123';"
+  command: "{{ item }}"
+  with_items:
+    - /usr/pgsql-11/bin/psql -U postgres -c "create user replica with replication encrypted password '123';"
+    - /usr/pgsql-11/bin/psql -U postgres -c "create user streaming_barman with LOGIN REPLICATION encrypted password 'barman';"
+    - /usr/pgsql-11/bin/psql -U postgres -c "create user barman with SUPERUSER NOCREATEDB NOCREATEROLE encrypted password 'barman';"
+
+
+
+
+
     
