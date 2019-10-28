@@ -6,7 +6,7 @@
 5. [Скрип парсинга access.log nginx](./05-bash_awk_sed_grep)
 6. [Управление процессами, скрипт анализирующий /proc(аналог ps)](./06-proccess_management)
 7. [Собираем RPM из исходников и создаем свой репозиторий](./07-rpm_soft_distribution)
-8. [Инициализация системы. Systemd и SysV.  Поднимаем JIRA Atlassian в Vagrant с заменой init скрипта старта JIRA на Unit](./08-systemc_sysV)
+8. [Инициализация системы. Systemd и SysV.    Поднимаем JIRA Atlassian в Vagrant с заменой init скрипта старта JIRA на Unit](./08-systemc_sysV)
 9. [Поднимаем NGINX через Ansible роль из вагрант](./09-ansible_vagrant)
 10. [Знакомство с докер, докер-хаб, докер компоуз](./09-docker)
 11. [Авторизация по PAM,  только в рабочие дни и права на docker, docker демон только одному пользователю (testuser)](./11-pam)
