@@ -1,0 +1,29 @@
+api_host: m11618.contaboserver.net
+api_user: root@pam
+api_password: XXXXXXXXXXXX
+node: m11618
+clone_vm: template-centos7
+temp_keys_dir: ~/.ssh/temp_keys
+ssh_keys_dir: ~/.ssh
+vms:
+  k8smaster1:
+    name: k8smaster.devlab.ru
+    #ipaddress: 10.21.21.65/24
+    #vmid: 400
+    cores: 2
+    sockets: 1
+    memory: 2048
+  k8sworker1:
+    name: k8sworker-one.devlab.ru
+    #ipaddress: 10.21.21.66/24
+    #vmid: 401
+    cores: 2
+    sockets: 1
+    memory: 2048
+  k8sworker2:
+    name: k8sworker-two.devlab.ru
+    #ipaddress: 10.21.21.67/24
+    #vmid: 402
+    cores: 2
+    sockets: 1
+    memory: 2048

@@ -1,0 +1,15 @@
+---
+- name: Lalala
+  hosts: pve
+  gather_facts: false
+  vars_files:
+    - ../../../.creds.yml
+  tasks:
+    - name:
+      proxmox:
+        node: m11266
+        api_user: "{{ apiUser }}"
+        api_password: "{{ apiPass }}"
+        api_host: "https://m11266.contaboserver.net:8006"
+        name: test001
+        clone: centos-template
