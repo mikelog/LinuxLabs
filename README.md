@@ -17,3 +17,4 @@
 16. [Знакомство с Bacula](./backup_systems)
 17. SELinux.
 18. [Base static routing, создаем сеть со статической адресацией и маршрутизацией](./lab-18)
+19. [Фильтрация трафика](./19-ip_traffic_filter)
