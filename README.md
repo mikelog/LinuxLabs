@@ -21,4 +21,5 @@
 20. [Динамическая маршрутизация](./20-dynamic_routing_OSPF)
 21. [DNS/DHCP - настройка и обслуживание](./21-split_dns)
 22. [Мосты, туннели и VPN ](./22-bridges_tunnels_vpn)
-23. [Сетевые пакеты. VLAN'ы. LACP.](./)
+23. [Сетевые пакеты. VLAN'ы. LACP.](./23-vlans_lacp)
+24. IPV6
