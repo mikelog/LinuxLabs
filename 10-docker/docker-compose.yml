@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  web:
+    image: "mikelog/nginx:v1"
+    ports:
+      - "8080:80"
+    networks:
+      web_net:
+        ipv4_address: 172.16.172.10
+    depends_on:
+      - backend1
+      - backend2
+  backend1:
+    image: "mikelog/php-backend:v1"
+    networks: 
+      web_net:
+        aliases:
+          - backend1
+  backend2:
+    image: "mikelog/php-backend:v1"
+    networks: 
+      web_net:
+        aliases:
+          - backend2
+networks: 
+  web_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.172.0/24"
