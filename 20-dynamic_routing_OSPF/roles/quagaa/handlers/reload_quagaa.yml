@@ -1,0 +1,9 @@
+---
+- name: reload_quagaa
+  become: yes
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - ospfd
+    - zebra

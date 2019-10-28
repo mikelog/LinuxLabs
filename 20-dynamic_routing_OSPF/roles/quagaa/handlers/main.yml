@@ -1,0 +1,3 @@
+---
+# handlers file for quagaa
+- include: reload_quagaa.yml
