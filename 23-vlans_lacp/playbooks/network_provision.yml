@@ -1,0 +1,188 @@
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks: 
+    - name: Install python for Ansible if it doesn't exists
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal) || (yum -y update && yum install -y python-minimal)
+
+
+- hosts: all
+  become: true
+  tasks: 
+    - name: Copy sshd for Password auth yes
+      copy:
+        force: yes
+        src: cfg/sshd_config
+        dest: /etc/ssh/sshd_config
+    - name: reload sshd
+      systemd:
+        name: sshd
+        state: restarted
+
+- hosts: inetRouter
+  become: true
+  tasks:
+    - name: Install nmcli
+      yum:
+        name: ['NetworkManager','NetworkManager-glib.x86_64', 'NetworkManager-glib-devel.x86_64']
+        state: latest
+    - name: Configure Bonding
+      nmcli:
+        type: bond
+        conn_name: bond01
+        ip4: 192.168.255.1/30
+        gw4: ''
+        mode: active-backup
+        state: present
+    - name: Configure bond port01
+      nmcli:
+        type: bond-slave
+        conn_name: bond01-port01
+        ifname: eth1
+        master: bond01
+        state: present
+    - name: Configure bond port02
+      nmcli:
+        type: bond-slave
+        conn_name: bond01-port02
+        ifname: eth2
+        master: bond01
+        state: present
+    - name: Restart NetworkManager
+      systemd:
+        name: NetworkManager
+        state: restarted
+
+        
+- hosts: centralRouter
+  become: true
+  tasks:
+    - name: Install nmcli
+      yum:
+        name: ['NetworkManager','NetworkManager-glib.x86_64', 'NetworkManager-glib-devel.x86_64']
+        state: latest    
+    - name: Configure Bonding
+      nmcli:
+        type: bond
+        conn_name: bond01
+        ip4: 192.168.255.2/30
+        gw4: ''
+        mode: active-backup
+        state: present
+    - name: Configure bond port01
+      nmcli:
+        type: bond-slave
+        conn_name: bond01-port01
+        ifname: eth1
+        master: bond01
+        state: present
+    - name: Configure bond port02
+      nmcli:
+        type: bond-slave
+        conn_name: bond01-port02
+        ifname: eth2
+        master: bond01
+        state: present
+    - name: Clear vlan`s
+      nmcli:
+        conn_name: '{{ item.conn_name }}'
+        state: absent
+      with_items:
+      - conn_name: vlan10
+      - conn_name: vlan20
+    - name: Configure vlans
+      nmcli: 
+        type: vlan
+        conn_name: "{{ item.conn_name }}"
+        ip4: "{{ item.ip4 }}"
+        vlanid: "{{ item.vlanid }}"
+        ifname: "{{ item.ifname }}"
+        vlandev: "{{ item.vlandev }}"
+        autoconnect: yes
+        state: present
+      with_items:
+          - { conn_name: "vlan10", ip4: "10.10.10.2/24", vlanid: "10", ifname: "vlan10", vlandev: "eth3" }
+          - { conn_name: "vlan20", ip4: "10.10.10.3/24", vlanid: "20", ifname: "vlan20", vlandev: "eth3" }
+    - name: Restart NetworkManager
+      systemd:
+        name: NetworkManager
+        state: restarted
+
+
+- hosts: testServer1
+  become: true
+  tasks:
+    - name: Install nmcli
+      yum:
+        name: ['NetworkManager','NetworkManager-glib.x86_64', 'NetworkManager-glib-devel.x86_64']
+        state: latest
+
+    - name: Configure VLAN
+      nmcli:
+        type: vlan
+        conn_name: vlan10
+        ip4: 10.10.10.1/24
+        vlanid: 10
+        ifname: vlan10
+        vlandev: eth1
+        autoconnect: yes
+        state: present
+
+- hosts: testServer2
+  become: true
+  tasks:
+    - name: Install nmcli
+      yum:
+        name: ['NetworkManager','NetworkManager-glib.x86_64', 'NetworkManager-glib-devel.x86_64']
+        state: latest
+
+    - name: Configure VLAN
+      nmcli:
+        type: vlan
+        conn_name: vlan20
+        ip4: 10.10.10.1/24
+        vlanid: 20
+        ifname: vlan20
+        vlandev: eth1
+        autoconnect: yes
+        state: present
+
+- hosts: testClient1
+  become: true
+  tasks:
+    - name: Install nmcli
+      yum:
+        name: ['NetworkManager','NetworkManager-glib.x86_64', 'NetworkManager-glib-devel.x86_64']
+        state: latest
+
+    - name: Configure VLAN
+      nmcli:
+        type: vlan
+        conn_name: vlan10
+        ip4: 10.10.10.254/24
+        vlanid: 10
+        ifname: vlan10
+        vlandev: eth1
+        autoconnect: yes
+        state: present
+
+- hosts: testClient2
+  become: true
+  tasks:
+    - name: Install nmcli
+      yum:
+        name: ['NetworkManager','NetworkManager-glib.x86_64', 'NetworkManager-glib-devel.x86_64']
+        state: latest
+
+    - name: Configure VLAN
+      nmcli:
+        type: vlan
+        conn_name: vlan20
+        ip4: 10.10.10.254/24
+        vlanid: 20
+        ifname: vlan20
+        vlandev: eth1
+        autoconnect: yes
+        state: present
+  
+  
