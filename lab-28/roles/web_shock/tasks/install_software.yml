@@ -12,3 +12,55 @@
     state: present
   notify:
     - restart_nginx
+
+- name: Install repo for phpfpm7.1
+  become: yes
+  yum:
+    name:  https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+    state: present
+- name: Install packeges
+  become: yes
+  yum:
+    name: [unzip, php71w, php71w-curl, php71w-common, php71w-cli, php71w-mysql, 
+           php71w-mbstring, php71w-fpm, php71w-xml, php71w-pdo, php71w-zip,
+            policycoreutils-python, python-pip, gcc, python-devel, gcc-c++, make
+          ]
+    state: present
+
+- name:
+  become: yes
+  shell: "{{ item }}"
+  with_items:
+    - "curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/bin --filename=composer"
+    - "curl -sL https://rpm.nodesource.com/setup_10.x | sudo -E bash -"
+  args:
+    chdir: /usr/src
+- name: Upgrade pip
+  become: yes
+  command: pip install --upgrade pip
+
+- name: Install VirtEnv
+  become: yes
+  ignore_errors: yes
+  #become_user: nginx
+  pip:
+    name: ["virtualenv","gunicorn", "flask", "uwsgi"]
+    state: present
+    #extra_args: --user
+- name: Install npm 
+  become: yes
+  yum:
+    name: nodejs
+    state: present
+- name: Install  pm2
+  become: yes
+  command: npm install -g pm2
+  
+
+
+  
+
+
+
+
+

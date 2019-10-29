@@ -1,2 +1,18 @@
 ---
-- include: restart_nginx.yml
+- name: php-fpm_reload
+  become: yes
+  service:
+    name: php-fpm.service
+    state: restarted
+
+- name: restart_nginx
+  become: yes
+  service:
+    name: nginx.service
+    state: restarted
+
+- name: restart_uwsgi
+  become: yes
+  service:
+    name: uwsgi.service
+    state: restarted

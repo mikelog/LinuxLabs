@@ -1,0 +1,126 @@
+---
+- name: deploy nginx config
+  become: true
+  template:
+    force: yes
+    src: ./etc/nginx/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify:
+    - restart_nginx
+
+- name: Configure service
+  become: true
+  systemd:
+    name: nginx
+    enabled: yes
+
+- name: Uwsgi dir
+  become: yes
+  file:
+    path: /run/uwsgi
+    state: directory
+    owner: nginx
+    group: nginx 
+    mode: '0755'
+    recurse: yes
+  notify: 
+    - php-fpm_reload
+
+- name: copy cfg files
+  become: yes
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "templates/etc/php-fpm_www.conf", dest: "/etc/php-fpm.d/www.conf"}
+    - { src: "templates/etc/php.ini", dest: "/etc/php.ini"}
+    - { src: "templates/etc/laravel.conf", dest: "/etc/nginx/conf.d/laravel.conf"}
+    - { src: "templates/etc/uwsgi.service", dest: "/etc/systemd/system/uwsgi.service"}
+    - { src: "templates/etc/nginx/uwsgi.conf", dest: "/etc/nginx/conf.d/uwsgi.conf"}
+    - { src: "templates/etc/nginx/react.conf", dest: "/etc/nginx/conf.d/react.conf"}
+  notify: 
+    - php-fpm_reload
+    - restart_nginx
+    - restart_uwsgi
+
+
+- name: Clean laravel dir
+  become: yes
+  file:
+    state: absent
+    path: /var/www/laravel/
+
+- name: Lavarel
+  become: yes
+  file:
+    path:  "{{ item }}"
+    state: directory
+  with_items:
+    - /var/www/laravel
+    - /var/www/react
+
+- name: Install Laravel
+  become: yes
+  command: composer create-project laravel/laravel .
+  args:
+    chdir: /var/www/laravel
+
+- name: Laravel access to dir
+  become: yes
+  file:
+    path: "{{ item }}"
+    owner: nginx
+    group: root 
+    mode: '0755'
+    recurse: yes
+  with_items:
+    - "/var/www/uwsgi_app"
+    - "/var/www/laravel"
+    - "/var/www/react"
+  notify: restart_nginx
+
+- name: SELinux for lavarel
+  become: yes
+  command: "{{ item }}"
+  with_items:
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/public(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/storage(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/app(/.*)?' 
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/bootstrap(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/config(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/database(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/resources(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/routes(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/vendor(/.*)?'
+    - semanage fcontext -a -t httpd_sys_rw_content_t '/var/www/laravel/tests(/.*)?'
+    - semanage permissive -a httpd_t
+    - restorecon -Rv '/var/www/laravel/'
+
+- name: create virtual enviroment
+  become: yes
+  become_user: nginx
+  command: "{{ item }}"
+  with_items:
+    - virtualenv /var/www/uwsgi_app/myprojectenv
+  args:
+    chdir: /var/www/uwsgi_app/
+
+- name: Flask copy app
+  become: yes
+  become_user: nginx
+  copy: 
+    src: "{{ item.src }}" 
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "templates/myapp.ini", dest: "/var/www/uwsgi_app/myapp.ini"}
+    - { src: "templates/flask_app.py", dest: "/var/www/uwsgi_app/flask_app.py"}
+    - { src: "templates/wsgi.py", dest: "/var/www/uwsgi_app/wsgi.py"}
+    - { src: "templates/demo_server.js", dest: "/var/www/react/demo_server.js"}
+
+- name: start demo react
+  become: yes
+  become_user: nginx
+  command:  pm2 start demo_server.js
+  args:
+    chdir: /var/www/react/
