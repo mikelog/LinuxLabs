@@ -6,4 +6,43 @@
     state: restarted
 
 - name: get_slave_status
-    import_tasks: tasks/check_slave.yml
+  mysql_replication:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    mode: getslave
+  when: inventory_hostname == "slave"
+  register: get_slave
+  listen: get_slave_status
+
+- debug:
+    msg: "{{ get_slave }}"
+  listen: get_slave_status
+  
+
+
+- name: get data after backup
+  shell: mysql -h localhost -uroot -p{{ new_root_mysql_pass }} -e"use bet; select * from bookmaker;"
+  register: mysql_data_before_repl
+  listen: get_slave_status
+
+- debug:
+    var: mysql_data_before_repl.stdout_lines
+  listen: get_slave_status
+
+- name: insert_into_master
+  shell: mysql -h192.168.11.150 -ubob -p7ksah}MS8B?fPP -e"use bet; INSERT INTO bookmaker (id,bookmaker_name) VALUES(1,'1xbet');"
+  register: mysql_insert_into_master
+  listen: get_slave_status
+
+- debug:
+    msg: "{{ mysql_insert_into_master }}"
+  listen: get_slave_status
+
+- name: check_slave
+  shell: mysql -h localhost -uroot -p{{ new_root_mysql_pass }} -e"use bet; select * from bookmaker;"
+  register: select_from_slave
+  listen: get_slave_status
+  
+- debug:
+    var: select_from_slave.stdout_lines
+  listen: get_slave_status

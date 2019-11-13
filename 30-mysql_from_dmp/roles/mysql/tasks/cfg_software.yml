@@ -107,6 +107,7 @@
   when: inventory_hostname == "slave"
 
 - name: Cfg replication
+  ignore_errors: yes
   mysql_replication:
     login_user: root
     login_password: "{{ new_root_mysql_pass }}"
