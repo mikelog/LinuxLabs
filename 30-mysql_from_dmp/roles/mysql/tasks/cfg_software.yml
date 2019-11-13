@@ -1,0 +1,132 @@
+---
+- name: Deploy MySQL configs
+  become: yes
+  template:
+    src: "{{ item }}"
+    dest: /etc/my.cnf.d/{{ item | basename | regex_replace('\.j2','') }}
+  with_fileglob:
+    - templates/conf/conf.d/*
+
+- name: Start MySQL server
+  become: true
+  systemd:
+    name: mysqld
+    state: started
+    enabled: true
+
+- name: Get mysql root init password
+  become: true
+  ignore_errors: yes
+  shell:  mysql_pass=$(cat /var/log/mysqld.log | grep 'root@localhost:' | awk '{print $11}'); mysql -uroot -p$mysql_pass --connect-expired-password -e "alter user 'root'@'localhost' identified by '{{ new_root_mysql_pass }}';"
+  register: mysql_password
+
+- name: Copy database dump file
+  copy:
+    src: files/bet.dmp
+    dest: /tmp
+  when: inventory_hostname == "master"
+  
+- name: Restore database
+  mysql_db:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    name: bet
+    state: import
+    target: /tmp/bet.dmp
+  when: inventory_hostname == "master"
+
+- name: Create replication user
+  mysql_user:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    host: "%"
+    name: "{{ repl_user }}"
+    password: "{{ repl_password }}"
+    priv: "*.*:REPLICATION SLAVE"
+    state: present
+
+- name: Create database user with name 'bob'  for test slave
+  mysql_user:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    name: bob
+    host: "%"
+    password: 7ksah}MS8B?fPP
+    priv: 'bet.*:ALL'
+    state: present
+  when: inventory_hostname == "master"
+
+
+- name: Command line dump
+  shell: 'mysqldump --all-databases --triggers --routines --master-data --ignore-table=bet.events_on_demand --ignore-table=bet.v_same_event -uroot -p"{{ new_root_mysql_pass }}" >  /tmp/dump.sql'
+  register: command_dump
+  when: inventory_hostname == "master"
+
+- debug:
+    msg: "{{ command_dump }}"
+    
+#- name: Dump for slave
+#  mysql_db:
+#    login_user: root
+#    login_password: "{{ new_root_mysql_pass }}"
+#    state: dump
+#    name: all
+#    target: /tmp/dump.sql
+#    ignore_tables: [bet.events_on_demand,bet.v_same_event]
+#  when: inventory_hostname == "master"
+
+- name: Get dump from master for slave
+  fetch:
+    src: /tmp/dump.sql
+    dest: files/dump.sql
+    flat: yes
+  when: inventory_hostname == "master"
+
+- name: Copy dump to slave
+  copy: 
+    src: files/dump.sql
+    dest: /tmp/dump.sql
+  when: inventory_hostname == "slave"
+
+- name: Reset master on slave
+  shell: 'mysql -uroot -p{{ new_root_mysql_pass }} -e "RESET MASTER"'
+  when: inventory_hostname == "slave"
+  register: reset_master
+
+- debug:
+    msg: "{{ reset_master }}"
+  
+- name: Restore database on slave
+  ignore_errors: yes
+  mysql_db:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    name: all
+    state: import
+    target: /tmp/dump.sql
+  when: inventory_hostname == "slave"
+
+- name: Cfg replication
+  mysql_replication:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    mode: changemaster
+    master_host: 192.168.11.150
+    master_user: "{{ repl_user }}"
+    master_password: "{{ repl_password }}"
+    master_auto_position: 1
+    master_port: 3306
+  when: inventory_hostname == "slave"
+  
+- name: Activate SLAVE
+  mysql_replication:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    mode: startslave
+  when: inventory_hostname == "slave"
+  notify: get_slave_status
+     
+
+
+
+

@@ -1,0 +1,36 @@
+---
+- name: import percona repo a key from a url
+  become: true
+  rpm_key:
+    key: https://www.percona.com/downloads/RPM-GPG-KEY-percona
+    state: present
+
+- name: Install percona repo
+  become: true
+  yum:
+    name: [
+          'https://repo.percona.com/yum/percona-release-latest.noarch.rpm',
+          'http://repo.percona.com/centos/7/RPMS/x86_64/Percona-Server-selinux-56-5.6.42-rel84.2.el7.noarch.rpm'
+          ] 
+    state: present
+
+- name: Install mysql
+  become: true
+  yum:
+    name: ['Percona-Server-server-57', 'MySQL-python']
+    state: present
+  notify:
+    - restart_mysql
+
+
+
+
+  
+
+
+  
+
+
+
+
+

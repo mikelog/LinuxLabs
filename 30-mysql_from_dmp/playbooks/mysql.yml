@@ -1,0 +1,9 @@
+---
+- import_playbook: base.yml
+- name: Configure web
+  hosts: all
+  roles:
+   - mysql
+
+
+

@@ -1,0 +1,9 @@
+---
+- name: restart_mysql
+  become: yes
+  service:
+    name: mysqld.service
+    state: restarted
+
+- name: get_slave_status
+    import_tasks: tasks/check_slave.yml

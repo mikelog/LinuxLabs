@@ -1,0 +1,7 @@
+---
+# tasks file for n_p_l
+# tasks file for web_cfg
+- name: Install software
+  include: install_software.yml
+- name: Configure software
+  include: cfg_software.yml

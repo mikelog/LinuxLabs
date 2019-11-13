@@ -1,0 +1,29 @@
+---
+- name: get slave status
+  mysql_replication:
+    login_user: root
+    login_password: "{{ new_root_mysql_pass }}"
+    mode: getslave
+  when: inventory_hostname == "slave"
+  register: get_slave
+
+- debug:
+    msg: "{{ get_slave }}"
+
+
+- name: get data after backup
+  shell: mysql -h localhost -uroot -p{{ new_root_mysql_pass }} -e"use bet; select * from bookmaker;"
+  register: mysql_data_before_repl
+
+- debug:
+    var: mysql_data_before_repl.stdout_lines
+
+- name: check_slave
+  shell: "{{ item }}"
+  with_items:
+    - mysql -h192.168.11.150 -ubob -p7ksah}MS8B?fPP -e"use bet; INSERT INTO bookmaker (id,bookmaker_name) VALUES(1,'1xbet');"
+    - mysql -h localhost -uroot -p{{ new_root_mysql_pass }} -e"use bet; select * from bookmaker;"
+  register: mysql_repl_check
+
+- debug:
+    var:  mysql_repl_check.stdout_lines
