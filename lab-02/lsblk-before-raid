@@ -1,6 +1,0 @@
-NAME                            FSTYPE      LABEL   MOUNTPOINT
-sda
-├─sda1                          xfs                  /boot
-└─sda2                          LVM2_member
-  ├─centos_linuxlab2--par2-root xfs                  /
-  └─centos_linuxlab2--par2-swap swap                 [SWAP]

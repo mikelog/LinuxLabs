@@ -1,7 +1,0 @@
----
-- name: Install Quagaa
-  become: yes
-  yum:
-    name: quagga
-    state: present
-  notify: reload_quagaa

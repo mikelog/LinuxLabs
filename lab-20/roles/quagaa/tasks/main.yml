@@ -1,4 +1,0 @@
----
-# tasks file for quagaa
-- include: install_software.yml
-- include: cfg_software.yml

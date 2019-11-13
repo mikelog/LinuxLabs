@@ -1,6 +1,0 @@
----
-# tasks file for app
-- name: Install FreeIPA
-  include: install_ipa_serv.yml
-- name: Configure FreeIPA
-  include: cfg_ipa_server.yml

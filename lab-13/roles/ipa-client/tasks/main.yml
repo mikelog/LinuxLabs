@@ -1,6 +1,0 @@
----
-# tasks file for ipa-client
-- name: Install FreeIPA Client
-  include: install_ipaclient.yml
-- name: Configure FreeIPA Client
-  include: cfg_ipaclient.yml
