@@ -21,7 +21,7 @@ yum update -y
 Либо просто идем на https://www.kernel.org/ и тянем интересующее нас ядро.
 Я выбрал последнее из longterm
 Я сохраняю все сорсы в /usr/src, мне так удобнее, поэтому
-cd /usr/src
+``cd /usr/src``
 wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.xz
 Распаковываем архив
 unzx -v linux-4.19.36.tar.xz
