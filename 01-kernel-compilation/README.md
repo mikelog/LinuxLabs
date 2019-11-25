@@ -24,7 +24,7 @@ uname -sr
 ``cd /usr/src    
 wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.xz``    
 Распаковываем архив    
-``unzx -v linux-4.19.36.tar.xz``
+``unzx -v linux-4.19.36.tar.xz``    
 или    
 ``xz -d -v linux-4.19.36.tar.xz``
 
