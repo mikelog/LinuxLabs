@@ -60,54 +60,54 @@ gpg: WARNING: This key is not certified with a trusted signature!
 gpg:          There is no indication that the signature belongs to the owner.
 Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
 ```
-идем дальше
-tar xvf linux-4.19.36.tar.sign
-cd linux-4.19.36
-cp -v /boot/config-$(uname -r) .config
-Вывод команды:
-```‘/boot/config-3.10.0-957.5.1.el7.x86_64’ -> ‘.config’```
+идем дальше    
+tar xvf linux-4.19.36.tar.sign    
+cd linux-4.19.36    
+cp -v /boot/config-$(uname -r) .config    
+Вывод команды:    
+```‘/boot/config-3.10.0-957.5.1.el7.x86_64’ -> ‘.config’```    
 
-Ставим  пакет для разработки
-yum groupinstall "Development Tools" -y
-И дополнительные пакеты:
-yum install ncurses-devel bison flex elfutils-libelf-devel openssl-devel
+Ставим  пакет для разработки    
+yum groupinstall "Development Tools" -y    
+И дополнительные пакеты:    
+yum install ncurses-devel bison flex elfutils-libelf-devel openssl-devel    
 
-И переходим к самому таинству, а именно:
- make menuconfig
- и настраиваем конфиг в текстовом гуе.
-В принципе, если вы знаете точные названия параметров, то можно обойтись и vim .config
+И переходим к самому таинству, а именно:    
+ make menuconfig    
+ и настраиваем конфиг в текстовом гуе.    
+В принципе, если вы знаете точные названия параметров, то можно обойтись и vim .config    
 
-После того, как изменили конфиг и сохранили его.
-make
-Чтобы ускорить можно в несколько потоков это сделать
-make -j 4
-или в зависимости от количества ядер CPU
-make -j $(nproc)
-у меня не хватило места, я потушишил машину, расширил диск и далее:
-в моем случае случаее всего две партиции и поэтому
-fdisk -l /dev/sda
-d 2 - удаляем вторую партицию
-n p - добавляем ее  и по дефолту дальше все
-t 8e  делаем ее Linux LVM
-w - записываем
-в ребут, после ребута
-pvresize
-pvdisplay
+После того, как изменили конфиг и сохранили его.    
+make    
+Чтобы ускорить можно в несколько потоков это сделать    
+make -j 4    
+или в зависимости от количества ядер CPU    
+make -j $(nproc)    
+у меня не хватило места, я потушил машину, расширил диск и далее:    
+в моем случае случаее всего две партиции и поэтому    
+fdisk -l /dev/sda    
+d 2 - удаляем вторую партицию    
+n p - добавляем ее  и по дефолту дальше все    
+t 8e  делаем ее Linux LVM    
+w - записываем    
+в ребут, после ребута    
+**pvresize**    
+**pvdisplay**    
 
-должны увидеть
-``` Free PE               2048```
-Далее в моем случае
-lvextend -l +2048 /dev/centos/root
-и так как я профавлил на установке и у меня xfs то
- xfs_growfs /dev/centos/root
+должны увидеть    
+``` Free PE               2048```    
+Далее в моем случае    
+lvextend -l +2048 /dev/centos/root    
+и так как я профавлил на установке и у меня xfs то    
+ xfs_growfs /dev/centos/root    
 
-и
+и    
 
 ```df -h
 Filesystem               Size  Used Avail Use% Mounted on
 /dev/mapper/centos-root   15G  6.1G  8.2G  43% /
-```
-И далее:
+```    
+И далее:    
 ```make modules_install ```
 ```grub2-mkconfig -o /boot/grub2/grub.cfg
 Generating grub configuration file ...
@@ -122,14 +122,14 @@ Found initrd image: /boot/initramfs-3.10.0-957.5.1.el7.x86_64.img
 Found linux image: /boot/vmlinuz-0-rescue-d9f5cf103bf448d3b3ff84ba8b528f9e
 Found initrd image: /boot/initramfs-0-rescue-d9f5cf103bf448d3b3ff84ba8b528f9e.img
 ```
-```grubby --set-default /boot/vmlinuz-4.19.36```
+```grubby --set-default /boot/vmlinuz-4.19.36```    
 
 
-И проверим какое ядро по дефолту в буте:
+И проверим какое ядро по дефолту в буте:    
 ```# grubby --default-kernel
 /boot/vmlinuz-4.19.36
 ```
-```/sbin/reboot```
-и надеюсь у вас все удачно как у меня =)
+```/sbin/reboot```    
+и надеюсь у вас все удачно как у меня =)    
 ```[mikelog@localhost ~]$ uname -r
 4.19.36```
