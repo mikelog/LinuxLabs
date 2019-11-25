@@ -1,37 +1,37 @@
-## Начнем-с, а не собрать ли нам ядро?
-Имеем в наличии
+## Начнем-с, а не собрать ли нам ядро?    
+Имеем в наличии    
 
-cat /etc/redhat-release
+cat /etc/redhat-release    
 
  ``` CentOS Linux release 7.6.1810 (Core) ```
 
-uname -sr
+uname -sr    
 
-``` Linux 3.10.0-957.10.1.el7.x86_64 ```
+``` Linux 3.10.0-957.10.1.el7.x86_64 ```    
 
-Нам понадобится:
+Нам понадобятся:    
 
-* wget
-* gcc
-* vim, но  можно и обойтись vi  или nano, тут кому как привычнее.
-Сначала лучше обновиться, а то вдруг все уже интересующие вкусности нового ядра с обновками придут.
+* wget    
+* gcc    
+* vim, но  можно и обойтись vi  или nano, тут кому как привычнее.    
+Сначала лучше обновиться, а то вдруг все уже интересующие вкусности нового ядра с обновками придут.    
 
-yum update -y
+``yum update -y``    
 
-Либо просто идем на https://www.kernel.org/ и тянем интересующее нас ядро.
-Я выбрал последнее из longterm
-Я сохраняю все сорсы в /usr/src, мне так удобнее, поэтому
-``cd /usr/src``
-wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.xz
-Распаковываем архив
+Либо просто идем на https://www.kernel.org/ и тянем интересующее нас ядро.    
+Я выбрал последнее из longterm    
+Я сохраняю все сорсы в /usr/src, мне так удобнее, поэтому    
+``cd /usr/src    
+wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.xz``    
+Распаковываем архив    
 ``unzx -v linux-4.19.36.tar.xz``
-или
+или    
 ``xz -d -v linux-4.19.36.tar.xz``
 
-Проверяем исходники ядра
-wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.sign
-gpg --verify linux-4.19.36.tar.sign
-и если получаем
+Проверяем исходники ядра    
+``wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.36.tar.sign
+gpg --verify linux-4.19.36.tar.sign``    
+и если получаем    
 ``gpg: Signature made Sat 20 Apr 2019 10:16:42 AM MSK using RSA key ID 6092693E
 gpg: Can't check signature: No public key``    
 
