@@ -1,4 +1,4 @@
-# LinuxLabs
+# Linux practice
 1.  [Компиляция ядра из исходников](./01-kernel-compilation)
 2.  [Перенос работающей системы на одном диске в рейд1 массив(mdadm)](./02-migrate-to-mdadm-raid)
 3.  [Уменьшение /,  когда он в XFS на LVM,  экперименты с BTRFS](./03-lvm_btrfs)
