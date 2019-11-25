@@ -61,11 +61,11 @@ gpg:          There is no indication that the signature belongs to the owner.
 Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
 ```
 идем дальше    
-tar xvf linux-4.19.36.tar.sign    
-cd linux-4.19.36    
-cp -v /boot/config-$(uname -r) .config    
+ ```tar xvf linux-4.19.36.tar.sign    
+  cd linux-4.19.36    
+  cp -v /boot/config-$(uname -r) .config```        
 Вывод команды:    
-```‘/boot/config-3.10.0-957.5.1.el7.x86_64’ -> ‘.config’```    
+ ```‘/boot/config-3.10.0-957.5.1.el7.x86_64’ -> ‘.config’```    
 
 Ставим  пакет для разработки    
 yum groupinstall "Development Tools" -y    
