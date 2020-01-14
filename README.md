@@ -15,9 +15,9 @@
 12. Мониторинг производительности
 14. [Централизованное хранение логов, отправка логов в ELK через FileBeat или напрямую в формате syslog, использование journal-remote](./14-cetralization_logger)
 15. [Мониторинг](./15-monitoring_alerting)
-16. [Знакомство с Bacula](./backup_systems)
+16. [Знакомство с Bacula](./16-backup_systems)
 17. SELinux.
-18. [Base static routing, создаем сеть со статической адресацией и маршрутизацией](./lab-18)
+18. [Base static routing, создаем сеть со статической адресацией и маршрутизацией](./18-basic_routing)
 19. [Фильтрация трафика](./19-ip_traffic_filter)
 20. [Динамическая маршрутизация](./20-dynamic_routing_OSPF)
 21. [DNS/DHCP - настройка и обслуживание](./21-split_dns)
