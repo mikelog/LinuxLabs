@@ -1,6 +1,6 @@
 ---
 - import_playbook: base.yml
-- name: Configure web
+- name: Configure mysql master  slave
   hosts: all
   roles:
    - mysql
